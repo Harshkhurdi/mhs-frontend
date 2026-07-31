@@ -22,6 +22,8 @@ export default function Contact() {
   useEffect(() => {
     if (items.length > 0 && !formData.department) {
       const itemList = items.map((i) => `${i.name} (Qty: ${i.quantity})`).join(', ')
+      // Initialize the RFQ fields when an RFQ list first arrives.
+      // eslint-disable-next-line react-hooks/set-state-in-effect
       setFormData((prev) => ({
         ...prev,
         department: `RFQ for: ${itemList}`,
@@ -30,7 +32,7 @@ export default function Contact() {
           .join('\n')}`,
       }))
     }
-  }, [items])
+  }, [items, formData.department])
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value })

@@ -13,11 +13,6 @@ export function RFQProvider({ children }) {
   })
   const [isOpen, setIsOpen] = useState(false)
 
-  const saveItems = (newItems) => {
-    setItems(newItems)
-    sessionStorage.setItem('rfqItems', JSON.stringify(newItems))
-  }
-
   const addItem = useCallback((product) => {
     setItems((prev) => {
       const existing = prev.find((i) => i.id === product.id)

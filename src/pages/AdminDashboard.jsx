@@ -89,6 +89,8 @@ export default function AdminDashboard() {
   }
 
   useEffect(() => {
+    // Initial data load deliberately updates state after mount.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     fetchProducts()
   }, [])
 
@@ -106,7 +108,7 @@ export default function AdminDashboard() {
   }
 
   // Upload a file to Supabase Storage and return the public URL
-  const uploadFile = async (file, folder) => {
+  const uploadFile = async (file) => {
     const filePath = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
     const { error: uploadError } = await supabase.storage
       .from('product-media')

@@ -19,6 +19,8 @@ export default function Navbar() {
   const { user } = useAuth()
 
   useEffect(() => {
+    // Closing the menu is the intended navigation side effect.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setIsMobileOpen(false)
   }, [location])
 
