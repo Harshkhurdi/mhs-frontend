@@ -3,6 +3,7 @@ import { Helmet } from 'react-helmet-async'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import ScrollReveal from '../components/ScrollReveal'
 import { useRFQ } from '../components/RFQContext'
+import { supabase } from '../config/supabaseClient'
 import { HiLocationMarker, HiPhone, HiMail, HiClock } from 'react-icons/hi'
 
 const position = [30.7046, 76.7179]
@@ -18,6 +19,7 @@ export default function Contact() {
     message: '',
   })
   const [submitted, setSubmitted] = useState(false)
+  const [submitting, setSubmitting] = useState(false)
 
   useEffect(() => {
     if (items.length > 0 && !formData.department) {
@@ -38,24 +40,45 @@ export default function Contact() {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const subject = `RFQ Inquiry from ${formData.hospital || formData.name}`
-    const body = `Name: ${formData.name}
-Hospital: ${formData.hospital}
-Department/Equipment: ${formData.department}
-Email: ${formData.email}
-Phone: ${formData.phone}
+    setSubmitting(true)
 
-${formData.message}
+    const rfqItems = items.map((i) => ({ id: i.id, name: i.name, quantity: i.quantity }))
 
----
-Items from RFQ List:
-${items.length > 0 ? items.map((i) => `- ${i.name} (Qty: ${i.quantity})`).join('\n') : 'None'}`
+    try {
+      // Persist the inquiry to the Supabase `inquiries` table
+      const { error: insertError } = await supabase.from('inquiries').insert([
+        {
+          name: formData.name,
+          hospital: formData.hospital,
+          department: formData.department,
+          email: formData.email,
+          phone: formData.phone,
+          message: formData.message,
+          items: rfqItems,
+        },
+      ])
 
-    window.location.href = `mailto:info@medelec.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
-    setSubmitted(true)
-    clearAll()
+      if (insertError) throw insertError
+
+      setSubmitted(true)
+      clearAll()
+    } catch {
+      // Fallback: open the visitor's email client with the same details
+      const subject = `RFQ Inquiry from ${formData.hospital || formData.name}`
+      const body = `Name: ${formData.name}\nHospital: ${formData.hospital}\nDepartment/Equipment: ${formData.department}\nEmail: ${formData.email}\nPhone: ${formData.phone}\n\n${formData.message}\n\n---\nItems from RFQ List:\n${
+        rfqItems.length > 0
+          ? rfqItems.map((i) => `- ${i.name} (Qty: ${i.quantity})`).join('\n')
+          : 'None'
+      }`
+
+      window.location.href = `mailto:info@medelec.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`
+      setSubmitted(true)
+      clearAll()
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -170,8 +193,8 @@ ${items.length > 0 ? items.map((i) => `- ${i.name} (Qty: ${i.quantity})`).join('
                         <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                       </svg>
                     </div>
-                    <h3 className="text-lg font-bold text-primary-blue mb-2">Email Client Opened</h3>
-                    <p className="text-sm text-text-muted mb-6">Your email client should now be open with your RFQ details. Our team will respond within one business day.</p>
+                    <h3 className="text-lg font-bold text-primary-blue mb-2">Inquiry Received</h3>
+                    <p className="text-sm text-text-muted mb-6">Your inquiry has been submitted successfully. Our team will review it and respond within one business day.</p>
                     <button onClick={() => { setSubmitted(false); setFormData({ name: '', hospital: '', department: '', email: '', phone: '', message: '' }) }} className="btn-outline">Send Another Inquiry</button>
                   </div>
                 ) : (
@@ -202,7 +225,7 @@ ${items.length > 0 ? items.map((i) => `- ${i.name} (Qty: ${i.quantity})`).join('
                       <label className="block text-sm font-medium text-primary-blue mb-1.5">Additional Details</label>
                       <textarea name="message" rows={4} value={formData.message} onChange={handleChange} className="input-field resize-none" placeholder="Any specific requirements, timelines, or questions..." />
                     </div>
-                    <button type="submit" className="btn-teal w-full">Submit RFQ Inquiry →</button>
+                    <button type="submit" disabled={submitting} className="btn-teal w-full">{submitting ? 'Submitting...' : 'Submit RFQ Inquiry →'}</button>
                     <p className="text-xs text-text-muted text-center">Your inquiry will be sent directly to our Managing Director's office for prompt attention.</p>
                   </form>
                 )}
