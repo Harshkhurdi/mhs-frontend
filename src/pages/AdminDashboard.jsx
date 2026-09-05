@@ -1,7 +1,16 @@
 import { useState, useEffect } from 'react'
 import { useAuth } from '../context/AuthContext'
 import { Helmet } from 'react-helmet-async'
-import { supabase } from '../config/supabaseClient'
+import {
+  collection,
+  deleteDoc,
+  doc,
+  getDocs,
+  orderBy,
+  query,
+  setDoc,
+} from 'firebase/firestore'
+import { db } from '../config/firebaseClient'
 
 // Mapping dictionaries for display name ↔ internal ID conversion
 const brandDisplayToId = {
@@ -40,8 +49,8 @@ export default function AdminDashboard() {
   const [error, setError] = useState('')
   const [showAddForm, setShowAddForm] = useState(false)
   const [editId, setEditId] = useState(null)
-  const [imageFile, setImageFile] = useState(null)
-  const [pdfFile, setPdfFile] = useState(null)
+  const [imageInput, setImageInput] = useState('')
+  const [pdfInput, setPdfInput] = useState('')
   const [existingImageUrl, setExistingImageUrl] = useState('')
   const [existingPdfUrl, setExistingPdfUrl] = useState('')
   const [form, setForm] = useState({
@@ -55,30 +64,30 @@ export default function AdminDashboard() {
   })
   const [saveLoading, setSaveLoading] = useState(false)
 
-  // Fetch all products from Supabase on mount
+  // Fetch all products from Firestore on mount
   const fetchProducts = async () => {
     setLoading(true)
     setError('')
     try {
-      const { data, error: fetchError } = await supabase
-        .from('products')
-        .select('*')
-        .order('created_at', { ascending: false })
+      const snap = await getDocs(
+        query(collection(db, 'products'), orderBy('created_at', 'desc'))
+      )
 
-      if (fetchError) throw new Error(fetchError.message)
-
-      // Map DB columns to React-friendly shape for the table
-      const mapped = (data || []).map((item) => ({
-        id: item.id,
-        slug: item.slug,
-        name: item.name,
-        brand: brandIdToDisplay[item.brand] || item.brand,
-        category: specialtyIdToDisplay[item.specialty] || item.specialty,
-        description: item.description,
-        imageUrls: item.image_url ? [item.image_url] : [],
-        pdfUrl: item.pdf_url || '',
-        isPublished: item.is_published ?? true,
-      }))
+      // Map Firestore docs to React-friendly shape for the table
+      const mapped = snap.docs.map((docSnap) => {
+        const item = docSnap.data()
+        return {
+          id: docSnap.id,
+          slug: item.slug,
+          name: item.name,
+          brand: brandIdToDisplay[item.brand] || item.brand,
+          category: specialtyIdToDisplay[item.specialty] || item.specialty,
+          description: item.description,
+          imageUrls: item.image_url ? [item.image_url] : [],
+          pdfUrl: item.pdf_url || '',
+          isPublished: item.is_published ?? true,
+        }
+      })
 
       setProducts(mapped)
     } catch (err) {
@@ -98,26 +107,8 @@ export default function AdminDashboard() {
     const { name, value, type, checked } = e.target
     setForm((prev) => ({
       ...prev,
-      [name]:
-        type === 'checkbox'
-          ? checked
-          : type === 'file'
-            ? Array.from(e.target.files)
-            : value,
+      [name]: type === 'checkbox' ? checked : value,
     }))
-  }
-
-  // Upload a file to Supabase Storage and return the public URL
-  const uploadFile = async (file) => {
-    const filePath = `${Date.now()}-${file.name.replace(/\s+/g, '-')}`
-    const { error: uploadError } = await supabase.storage
-      .from('product-media')
-      .upload(filePath, file)
-    if (uploadError) throw new Error(`Upload failed: ${uploadError.message}`)
-    const { data: { publicUrl } } = supabase.storage
-      .from('product-media')
-      .getPublicUrl(filePath)
-    return publicUrl
   }
 
   const handleSubmit = async (e) => {
@@ -131,53 +122,31 @@ export default function AdminDashboard() {
       const dbSpecialty = specialtyDisplayToId[form.category] || form.category.toLowerCase().replace(/\s+/g, '-')
       const slug = generateSlug(form.name)
 
-      // Upload new image if a file was selected; otherwise keep existing
-      let imageUrl = existingImageUrl || null
-      if (imageFile) {
-        imageUrl = await uploadFile(imageFile, 'images')
-      }
+      // Media is referenced by URL (any file host or manufacturer site);
+      // the inputs arrive prefilled with the current values on edit.
+      const imageUrl = imageInput.trim() || null
+      const pdfUrl = pdfInput.trim() || null
 
-      // Upload new PDF if a file was selected; otherwise keep existing
-      let pdfUrl = existingPdfUrl || null
-      if (pdfFile) {
-        pdfUrl = await uploadFile(pdfFile, 'pdfs')
+      const payload = {
+        slug,
+        name: form.name,
+        specialty: dbSpecialty,
+        brand: dbBrand,
+        description: form.description,
+        image_url: imageUrl,
+        pdf_url: pdfUrl,
+        is_published: form.isPublished,
       }
 
       if (editId) {
-        // UPDATE existing product
-        const { error: updateError } = await supabase
-          .from('products')
-          .update({
-            slug,
-            name: form.name,
-            specialty: dbSpecialty,
-            brand: dbBrand,
-            description: form.description,
-            image_url: imageUrl,
-            pdf_url: pdfUrl,
-            is_published: form.isPublished,
-          })
-          .eq('id', editId)
-
-        if (updateError) throw new Error(updateError.message)
+        // UPDATE existing product (created_at is preserved by the merge)
+        await setDoc(doc(db, 'products', editId), payload, { merge: true })
       } else {
         // INSERT new product
-        const { error: insertError } = await supabase
-          .from('products')
-          .insert([
-            {
-              slug,
-              name: form.name,
-              specialty: dbSpecialty,
-              brand: dbBrand,
-              description: form.description,
-              image_url: imageUrl,
-              pdf_url: pdfUrl,
-              is_published: form.isPublished,
-            },
-          ])
-
-        if (insertError) throw new Error(insertError.message)
+        await setDoc(doc(collection(db, 'products')), {
+          ...payload,
+          created_at: Date.now(),
+        })
       }
 
       // Reset form and re-fetch to sync UI with DB
@@ -190,8 +159,8 @@ export default function AdminDashboard() {
         pdfUrl: '',
         isPublished: true,
       })
-      setImageFile(null)
-      setPdfFile(null)
+      setImageInput('')
+      setPdfInput('')
       setExistingImageUrl('')
       setExistingPdfUrl('')
       setEditId(null)
@@ -207,12 +176,11 @@ export default function AdminDashboard() {
   const togglePublish = async (id, currentPublished) => {
     setError('')
     try {
-      const { error: updateError } = await supabase
-        .from('products')
-        .update({ is_published: !currentPublished })
-        .eq('id', id)
-
-      if (updateError) throw new Error(updateError.message)
+      await setDoc(
+        doc(db, 'products', id),
+        { is_published: !currentPublished },
+        { merge: true }
+      )
 
       await fetchProducts()
     } catch (err) {
@@ -224,12 +192,7 @@ export default function AdminDashboard() {
     if (!window.confirm('Are you sure you want to archive this product?')) return
     setError('')
     try {
-      const { error: deleteError } = await supabase
-        .from('products')
-        .delete()
-        .eq('id', id)
-
-      if (deleteError) throw new Error(deleteError.message)
+      await deleteDoc(doc(db, 'products', id))
 
       await fetchProducts()
     } catch (err) {
@@ -377,7 +340,7 @@ export default function AdminDashboard() {
 
                   <div>
                     <label className="block text-sm font-medium text-primary-blue mb-1">
-                      Product Image
+                      Product Image URL
                     </label>
                     {existingImageUrl && (
                       <div className="mb-2 flex items-center gap-2">
@@ -397,24 +360,18 @@ export default function AdminDashboard() {
                       </div>
                     )}
                     <input
-                      type="file"
-                      accept="image/*"
-                      onChange={(e) => {
-                        const file = e.target.files[0]
-                        setImageFile(file || null)
-                      }}
-                      className="input-field w-full file:mr-3 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-sm file:font-medium file:bg-surgical-teal/10 file:text-surgical-teal hover:file:bg-surgical-teal/20"
+                      type="url"
+                      name="imageUrl"
+                      value={imageInput}
+                      onChange={(e) => setImageInput(e.target.value)}
+                      className="input-field w-full"
+                      placeholder="https://... (host the image anywhere and paste the link)"
                     />
-                    {imageFile && (
-                      <p className="text-xs text-text-muted mt-1">
-                        Selected: {imageFile.name}
-                      </p>
-                    )}
                   </div>
 
                   <div>
                     <label className="block text-sm font-medium text-primary-blue mb-1">
-                      Product PDF Brochure
+                      Product PDF Brochure URL
                     </label>
                     {existingPdfUrl && (
                       <div className="mb-2">
@@ -432,19 +389,13 @@ export default function AdminDashboard() {
                       </div>
                     )}
                     <input
-                      type="file"
-                      accept="application/pdf"
-                      onChange={(e) => {
-                        const file = e.target.files[0]
-                        setPdfFile(file || null)
-                      }}
-                      className="input-field w-full file:mr-3 file:py-2 file:px-4 file:rounded-sm file:border-0 file:text-sm file:font-medium file:bg-surgical-teal/10 file:text-surgical-teal hover:file:bg-surgical-teal/20"
+                      type="url"
+                      name="pdfUrl"
+                      value={pdfInput}
+                      onChange={(e) => setPdfInput(e.target.value)}
+                      className="input-field w-full"
+                      placeholder="https://... (link to the PDF brochure)"
                     />
-                    {pdfFile && (
-                      <p className="text-xs text-text-muted mt-1">
-                        Selected: {pdfFile.name}
-                      </p>
-                    )}
                   </div>
 
                   <div className="flex justify-end space-x-3">
@@ -453,8 +404,8 @@ export default function AdminDashboard() {
                       onClick={() => {
                         setShowAddForm(false)
                         setEditId(null)
-                        setImageFile(null)
-                        setPdfFile(null)
+                        setImageInput('')
+                        setPdfInput('')
                         setExistingImageUrl('')
                         setExistingPdfUrl('')
                         setForm({
@@ -476,7 +427,7 @@ export default function AdminDashboard() {
                       disabled={saveLoading}
                       className="btn-teal"
                     >
-                      {saveLoading ? 'Uploading Media...' : 'Save Product'}
+                      {saveLoading ? 'Saving...' : 'Save Product'}
                     </button>
                   </div>
                 </form>
@@ -544,8 +495,12 @@ export default function AdminDashboard() {
                           <button
                             onClick={() => {
                               setEditId(product.id)
-                              setImageFile(null)
-                              setPdfFile(null)
+                              setImageInput(
+                                product.imageUrls && product.imageUrls.length > 0
+                                  ? product.imageUrls[0]
+                                  : ''
+                              )
+                              setPdfInput(product.pdfUrl || '')
                               setExistingImageUrl(
                                 product.imageUrls && product.imageUrls.length > 0
                                   ? product.imageUrls[0]

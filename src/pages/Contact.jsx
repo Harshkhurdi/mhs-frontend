@@ -3,7 +3,8 @@ import { Helmet } from 'react-helmet-async'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import ScrollReveal from '../components/ScrollReveal'
 import { useRFQ } from '../components/RFQContext'
-import { supabase } from '../config/supabaseClient'
+import { addDoc, collection } from 'firebase/firestore'
+import { db } from '../config/firebaseClient'
 import { HiLocationMarker, HiPhone, HiMail, HiClock } from 'react-icons/hi'
 
 const position = [30.7046, 76.7179]
@@ -47,23 +48,21 @@ export default function Contact() {
     const rfqItems = items.map((i) => ({ id: i.id, name: i.name, quantity: i.quantity }))
 
     try {
-      // Persist the inquiry to the Supabase `inquiries` table
-      const { error: insertError } = await supabase.from('inquiries').insert([
-        {
-          name: formData.name,
-          hospital: formData.hospital,
-          department: formData.department,
-          email: formData.email,
-          phone: formData.phone,
-          message: formData.message,
-          items: rfqItems,
-        },
-      ])
+      // Persist the inquiry to the Firestore `inquiries` collection
+      await addDoc(collection(db, 'inquiries'), {
+        name: formData.name,
+        hospital: formData.hospital,
+        department: formData.department,
+        email: formData.email,
+        phone: formData.phone,
+        message: formData.message,
+        items: rfqItems,
+        status: 'new',
+        created_at: Date.now(),
+      })
 
-      if (insertError) throw insertError
-
-      setSubmitted(true)
       clearAll()
+      setSubmitted(true)
     } catch {
       // Fallback: open the visitor's email client with the same details
       const subject = `RFQ Inquiry from ${formData.hospital || formData.name}`

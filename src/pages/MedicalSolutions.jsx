@@ -5,7 +5,8 @@ import ScrollReveal from '../components/ScrollReveal'
 import ProductCard from '../components/ProductCard'
 import { useRFQ } from '../components/RFQContext'
 import { clinicalSpecialties, manufacturerBrands } from '../data/products'
-import { supabase } from '../config/supabaseClient'
+import { collection, getDocs, query, where } from 'firebase/firestore'
+import { db } from '../config/firebaseClient'
 
 export default function MedicalSolutions() {
   const [viewMode, setViewMode] = useState('specialty') // 'specialty' | 'brand'
@@ -23,27 +24,25 @@ export default function MedicalSolutions() {
       setError(null)
 
       try {
-        const { data, error: fetchError } = await supabase
-          .from('products')
-          .select('*')
-          .eq('is_published', true)
+        const snap = await getDocs(
+          query(collection(db, 'products'), where('is_published', '==', true))
+        )
 
         if (cancelled) return
 
-        if (fetchError) {
-          throw new Error(fetchError.message)
-        }
-
-        // Map database fields to the component's expected shape
-        const mapped = (data || []).map((item) => ({
-          id: item.slug,
-          name: item.name,
-          specialty: item.specialty,
-          brand: item.brand,
-          description: item.description,
-          image: item.image_url,
-          pdfUrl: item.pdf_url,
-        }))
+        // Map Firestore docs to the component's expected shape
+        const mapped = snap.docs.map((docSnap) => {
+          const item = docSnap.data()
+          return {
+            id: item.slug || docSnap.id,
+            name: item.name,
+            specialty: item.specialty,
+            brand: item.brand,
+            description: item.description,
+            image: item.image_url,
+            pdfUrl: item.pdf_url,
+          }
+        })
 
         setProducts(mapped)
       } catch (err) {

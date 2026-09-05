@@ -1,5 +1,11 @@
 import { createContext, useContext, useState, useEffect } from 'react'
-import { supabase } from '../config/supabaseClient'
+import {
+  createUserWithEmailAndPassword,
+  onAuthStateChanged,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth'
+import { auth } from '../config/firebaseClient'
 
 const AuthContext = createContext(null)
 
@@ -11,52 +17,33 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     let mounted = true
 
-    // Check for existing session on mount
-    const initSession = async () => {
-      try {
-        const { data: { session: currentSession } } = await supabase.auth.getSession()
-        if (!mounted) return
-        setSession(currentSession)
-        setUser(currentSession?.user ?? null)
-      } catch {
-        // Ignore session fetch errors on initial load
-      } finally {
-        if (mounted) {
-          setLoading(false)
-        }
-      }
-    }
-
-    initSession()
-
-    // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, newSession) => {
+    // Firebase delivers the current auth state on subscribe (covers page
+    // reloads and token refreshes) and pushes changes on login/logout.
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
       if (!mounted) return
-      setSession(newSession)
-      setUser(newSession?.user ?? null)
+      setSession(firebaseUser)
+      setUser(firebaseUser)
+      setLoading(false)
     })
 
     return () => {
       mounted = false
-      subscription?.unsubscribe()
+      unsubscribe()
     }
   }, [])
 
   const login = async (email, password) => {
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) throw error
-    return data
+    const credentials = await signInWithEmailAndPassword(auth, email, password)
+    return credentials
   }
 
   const register = async (email, password) => {
-    const { data, error } = await supabase.auth.signUp({ email, password })
-    if (error) throw error
-    return data
+    const credentials = await createUserWithEmailAndPassword(auth, email, password)
+    return credentials
   }
 
   const logout = async () => {
-    const { error } = await supabase.auth.signOut()
-    if (error) throw error
+    await signOut(auth)
   }
 
   // Prevent UI flash — only render children once initial session check completes
