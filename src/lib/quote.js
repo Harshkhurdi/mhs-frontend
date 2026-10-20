@@ -30,6 +30,17 @@ export function safeExternalUrl(value) {
   }
 }
 
+export function safeImageUrl(value) {
+  if (
+    typeof value === 'string' &&
+    /^\/images\/(products|brand)\/[a-zA-Z0-9._-]+\.(webp|png|jpe?g)$/.test(
+      value,
+    )
+  )
+    return value
+  return safeExternalUrl(value)
+}
+
 export async function withTimeout(promise, milliseconds = 12000) {
   let timer
   try {

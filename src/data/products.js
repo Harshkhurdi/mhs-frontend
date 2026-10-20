@@ -19,6 +19,21 @@ export const clinicalSpecialties = [
     name: 'Patient Monitoring',
     description: 'High-acuity patient monitors, telemetry networks',
   },
+  {
+    id: 'cardiology',
+    name: 'Diagnostic Cardiology',
+    description: 'ECG, Holter and ambulatory blood pressure systems',
+  },
+  {
+    id: 'pressure-care',
+    name: 'Pressure Care',
+    description: 'Active, hybrid and passive support surfaces',
+  },
+  {
+    id: 'accessories',
+    name: 'Accessories & Consumables',
+    description: 'Equipment accessories, respiratory circuits and bed fittings',
+  },
 ]
 
 export const manufacturerBrands = [

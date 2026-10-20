@@ -5,11 +5,12 @@ The MHS medical equipment website, built with React, Vite and Firebase. The exis
 ## Website
 
 - Responsive home, company, service and contact pages.
-- Published Firestore equipment catalogue with search, specialty and manufacturer filters. Filters are reflected in the URL.
+- Manufacturer reference library with 108 distinct equipment models and product families, official photography and direct manufacturer links. Published Firestore listings enrich matching entries and append custom equipment. Search, clinical and manufacturer filters, sorting and pagination are reflected in the URL.
 - Quote list with quantities, removal and local browser persistence. Legacy session quote lists are migrated.
 - Contact and service inquiries saved to the existing `inquiries` collection. Failed submissions retain the form and selection; email fallback explicitly opens a draft and never claims delivery.
 - Staff sign-in at `/admin/login`; catalogue creation, editing, reversible archive/publish and inquiry inbox at `/admin`.
-- Brochure links appear only when a product has a web URL. Missing images use clearly labelled category illustrations.
+- Product details with official product pages on all reference entries and literature links on 51 entries (42 distinct documents). Images are served locally as WebP; unavailable photographs have a clear text fallback.
+- Official MHS logo, contained laptop equipment showcase, responsive cobalt/navy/warm-neutral design and five service engineer profiles.
 - Keyboard-accessible quote dialog, labelled forms, reduced-motion support and a recovery page for loading errors.
 
 ## Local development
@@ -46,11 +47,11 @@ Firebase Email/Password sign-in, staff users and security rules are managed in t
 
 `inquiries/{documentId}`: `name`, `hospital`, `department`, `email`, `phone`, `message`, `items` (`id`, `name`, `quantity`), `status`, `created_at`; new inquiries also include `type` (`equipment` or `service`). Existing inquiries without `type` remain readable. Dates support numeric timestamps, Firestore timestamps and date strings, displayed in Asia/Kolkata.
 
-The public catalogue shows only `is_published == true`. Archive changes this flag and preserves the record. The inbox reads inquiries; it does not require broader update/delete permissions. Quote selections and contact drafts stay in the visitor's browser until submission or clearing.
+The public catalogue includes the local manufacturer reference range and Firestore records with `is_published == true`. The dashboard manages Firestore listings; archive changes this flag and preserves the record. Manufacturer entries are maintained in `src/data/manufacturerCatalogue.json`; publishing or archiving a Firestore record does not remove its separate manufacturer reference entry. The inbox reads inquiries; it does not require broader update/delete permissions. Quote selections and contact drafts stay in the visitor's browser until submission or clearing.
 
 ## Verification
 
-Automated checks cover malformed saved quote data, safe media URLs, email encoding and connection timeouts. Browser verification should cover:
+Seven automated checks cover catalogue identities, local image files, official resource domains, merge stability, search/filter/sort behavior, malformed saved quote data, safe media URLs, email encoding and connection timeouts. Browser verification should cover:
 
 1. Load the published catalogue; search and combine/reset specialty and manufacturer filters.
 2. Add equipment, change quantities, close with Escape, reload and continue to the contact form.
@@ -60,4 +61,4 @@ Automated checks cover malformed saved quote data, safe media URLs, email encodi
 
 The redesign was checked against the live public catalogue. Submission and staff mutations were verified through an isolated local Firebase adapter so no test records were written to production. A real staff sign-in and production write still depend on the existing account and deployed Firebase rules.
 
-Photos and source attribution are listed in [public/images/README.md](public/images/README.md). Clinical photos are illustrative and are not presented as Medelec projects or premises.
+Photos and source attribution are listed in [public/images/README.md](public/images/README.md) and the complete [manufacturer source ledger](docs/manufacturer-sources.md). Clinical photos are illustrative and are not presented as Medelec projects or premises.

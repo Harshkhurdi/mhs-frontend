@@ -22,13 +22,13 @@ export default function About() {
         <div className="wrap about-story">
           <div className="about-photo">
             <img
-              src="/images/clinical-care.jpg"
-              alt="A welcoming clinical environment"
+              src="/images/products/hamilton-hf90.webp"
+              alt="HAMILTON-HF90 high flow therapy system"
               width="1500"
               height="1021"
             />
             <div className="photo-caption">
-              MOHALI, PUNJAB / SERVING NORTH INDIA
+              HAMILTON MEDICAL / HF90 HIGH FLOW THERAPY
             </div>
           </div>
           <div>
@@ -89,12 +89,12 @@ export default function About() {
               <h2>
                 One team.
                 <br />
-                Every step covered.
+                Service engineers.
               </h2>
             </div>
             <p>
-              Technical operations, applications, service and logistics —
-              working together around your facility.
+              Our service engineers install, maintain and service the medical
+              equipment we supply, supporting your facility throughout its life.
             </p>
           </div>
           <div className="team-grid">

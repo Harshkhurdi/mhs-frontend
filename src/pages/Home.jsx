@@ -1,246 +1,393 @@
+import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import PageMeta from '../components/PageMeta'
 import {
   HiArrowUpRight,
   HiArrowRight,
-  HiOutlineShieldCheck,
   HiOutlineWrenchScrewdriver,
-  HiOutlineAcademicCap,
-  HiOutlineBuildingOffice2,
+  HiOutlineShieldCheck,
+  HiOutlineDocumentText,
+  HiOutlinePhone,
+  HiOutlineCheck,
 } from 'react-icons/hi2'
-import { clinicalSpecialties } from '../data/products'
-import { partners } from '../data/partners'
-import EquipmentArt from '../components/EquipmentArt'
+import PageMeta from '../components/PageMeta'
 import CallToAction from '../components/CallToAction'
+import catalogue from '../data/manufacturerCatalogue.json'
+import { manufacturerBrands } from '../data/products'
 
-const support = [
-  [
-    HiOutlineShieldCheck,
-    'The right technology',
-    'Equipment from established global manufacturers, matched to your clinical requirements.',
-  ],
-  [
-    HiOutlineBuildingOffice2,
-    'From plan to practice',
-    'Practical support with procurement, installation and commissioning for your facility.',
-  ],
-  [
-    HiOutlineAcademicCap,
-    'Confidence for your team',
-    'Application training that helps your clinical staff make the most of their equipment.',
-  ],
-  [
-    HiOutlineWrenchScrewdriver,
-    'Support that stays',
-    'Preventive maintenance, calibration and service coordination throughout the equipment lifecycle.',
-  ],
+const range = catalogue.products
+const showcaseIds = [
+  'hamilton-c6',
+  'samsung-r20',
+  'linet-multicare-x',
+  'spacelabs-qube',
+]
+const showcases = showcaseIds
+  .map((id) => range.find((p) => p.id === id))
+  .filter(Boolean)
+const categories = [
+  {
+    id: 'critical-care',
+    name: 'Respiratory & critical care',
+    note: 'Ventilation. High flow. Humidification.',
+    imageId: 'hamilton-c6',
+  },
+  {
+    id: 'radiology',
+    name: 'Imaging & diagnostics',
+    note: 'Ultrasound. Radiography. Mobile CT.',
+    imageId: 'samsung-r20',
+  },
+  {
+    id: 'ward-infrastructure',
+    name: 'Beds & patient mobility',
+    note: 'Intensive care. Ward care. Transport.',
+    imageId: 'linet-multicare-x',
+  },
+  {
+    id: 'patient-monitoring',
+    name: 'Patient monitoring',
+    note: 'Bedside. Transport. Central surveillance.',
+    imageId: 'spacelabs-qube',
+  },
+  {
+    id: 'cardiology',
+    name: 'Diagnostic cardiology',
+    note: 'ECG. Holter. Blood pressure.',
+    imageId: 'spacelabs-cardioexpress-sl18a',
+  },
+  {
+    id: 'pressure-care',
+    name: 'Pressure care & support',
+    note: 'Active. Passive. Hybrid surfaces.',
+    imageId: 'linet-virtuoso',
+  },
+]
+const featuredIds = [
+  'hamilton-hf90',
+  'samsung-hera-z20',
+  'linet-eleganza-5',
+  'spacelabs-xprezzon',
+  'samsung-gm85-elite',
+  'linet-sprint-200',
 ]
 
 export default function Home() {
+  const [selectedBrand, setSelectedBrand] = useState('hamilton')
+  const featured =
+    showcases.find((p) => p.brand === selectedBrand) || showcases[0]
   return (
     <>
       <PageMeta
-        title="Medelec Healthcare Solutions | Medical Equipment & Biomedical Support"
-        description="Medical equipment, hospital installations and biomedical support across North India. Explore critical care, imaging, hospital beds and patient monitoring with Medelec."
+        title="Medelec Healthcare Solutions | Equipment. Expertise. Care."
+        description="Explore medical equipment from Hamilton Medical, Samsung Healthcare, LINET and Spacelabs, with product literature and local service engineering support from Medelec."
       />
-      <section className="hero">
-        <div className="wrap hero-grid">
-          <div className="hero-copy">
+      <section className="home-hero">
+        <div className="wrap home-hero-grid">
+          <div className="home-hero-copy">
             <p className="eyebrow">
-              <span className="status-dot" /> YOUR PARTNER IN HEALTHCARE
-              TECHNOLOGY
+              <span className="status-dot" /> MEDELEC HEALTHCARE SOLUTIONS
             </p>
             <h1>
-              Better technology.
+              Technology,
               <br />
-              <span>Better care.</span>
+              with a <em>human side.</em>
             </h1>
-            <p className="hero-description">
-              The right equipment makes all the difference.
-              <br className="desktop-break" /> We bring global medical
-              technology and dependable local support to your hospital.
+            <p className="hero-lede">
+              Global medical equipment.
+              <br />
+              Local engineers who stand behind it.
+            </p>
+            <p className="hero-explainer">
+              From selecting the right system to keeping it working, we help
+              healthcare teams across North India move forward with confidence.
             </p>
             <div className="hero-actions">
               <Link to="/solutions" className="button">
-                Explore medical solutions <HiArrowUpRight />
+                Find your equipment <HiArrowUpRight />
               </Link>
-              <Link to="/contact" className="text-link">
-                Talk to our team <HiArrowRight />
+              <Link to="/service" className="text-link">
+                Meet your support team <HiArrowRight />
               </Link>
             </div>
-            <div className="hero-assurance">
-              <HiOutlineShieldCheck size={23} />
-              <span>
-                Global equipment partners.
-                <br />
-                <strong>A local team you can count on.</strong>
-              </span>
+            <div className="hero-facts">
+              <div>
+                <strong>{range.length}</strong>
+                <span>equipment & product families</span>
+              </div>
+              <div>
+                <strong>04</strong>
+                <span>global manufacturer ranges</span>
+              </div>
+              <div>
+                <HiOutlineWrenchScrewdriver />
+                <span>
+                  Local service
+                  <br />
+                  engineering support
+                </span>
+              </div>
             </div>
           </div>
-          <div className="hero-image">
-            <img
-              src="/images/hospital-room.jpg"
-              alt="A clinical room equipped with medical monitoring and surgical equipment"
-              fetchPriority="high"
-              width="1600"
-              height="1067"
-            />
-            <span className="image-index">01 / BUILT AROUND PATIENT CARE</span>
-            <div className="hero-image-note">
-              <span className="note-icon">
-                <HiOutlineWrenchScrewdriver size={23} />
+          <div className={`equipment-showcase showcase-${featured.brand}`}>
+            <div className="showcase-top">
+              <span>
+                IN FOCUS /{' '}
+                {manufacturerBrands.find((b) => b.id === featured.brand)?.name}
               </span>
+              <span className="showcase-number">
+                0{showcases.indexOf(featured) + 1}—04
+              </span>
+            </div>
+            <div className="showcase-image">
+              <img
+                key={featured.id}
+                src={featured.image}
+                alt={`${featured.name} — official manufacturer product photograph`}
+                width="760"
+                height="660"
+                fetchPriority="high"
+              />
+            </div>
+            <div className="showcase-description">
               <div>
-                <strong>More than equipment.</strong>
-                <p>A partner through every stage.</p>
+                <span>{featured.categoryLabel}</span>
+                <h2>{featured.name}</h2>
               </div>
-              <HiArrowUpRight size={23} />
+              <Link
+                to={`/solutions?q=${encodeURIComponent(featured.name)}`}
+                aria-label={`Explore ${featured.name}`}
+              >
+                <HiArrowUpRight size={24} />
+              </Link>
+            </div>
+            <div
+              className="showcase-tabs"
+              role="group"
+              aria-label="Featured manufacturer"
+            >
+              {showcases.map((p) => (
+                <button
+                  key={p.brand}
+                  className={selectedBrand === p.brand ? 'selected' : ''}
+                  aria-pressed={selectedBrand === p.brand}
+                  onClick={() => setSelectedBrand(p.brand)}
+                >
+                  {p.brand === 'hamilton'
+                    ? 'Hamilton'
+                    : p.brand === 'samsung'
+                      ? 'Samsung'
+                      : p.brand === 'linet'
+                        ? 'LINET'
+                        : 'Spacelabs'}
+                </button>
+              ))}
             </div>
           </div>
         </div>
       </section>
-      <section className="partners-strip">
+      <section className="brand-navigation">
         <div className="wrap">
-          <p className="eyebrow">GLOBAL INNOVATION. LOCAL EXPERTISE.</p>
-          <div className="partner-wordmarks">
-            {partners.map((p) => (
-              <a
-                key={p.id}
-                href={p.url}
-                target="_blank"
-                rel="noreferrer"
-                className={`partner-${p.id}`}
-                aria-label={`Visit ${p.name}`}
-              >
-                {p.id === 'hamilton' ? (
-                  <>
-                    <span className="hamilton-symbol">H</span>
-                    <span>
-                      HAMILTON<small>MEDICAL</small>
-                    </span>
-                  </>
-                ) : p.id === 'samsung' ? (
-                  <span>
-                    SAMSUNG<small>HEALTHCARE</small>
-                  </span>
-                ) : p.id === 'linet' ? (
-                  <span>
-                    LINET<span className="linet-plus">+</span>
-                  </span>
-                ) : (
-                  <span>
-                    spacelabs<small>HEALTHCARE</small>
-                  </span>
-                )}
-              </a>
+          <span className="eyebrow">THE NAMES BEHIND THE TECHNOLOGY</span>
+          <div>
+            {manufacturerBrands.map((b) => (
+              <Link key={b.id} to={`/solutions?brand=${b.id}`}>
+                <span>{b.name}</span>
+                <HiArrowUpRight />
+              </Link>
             ))}
           </div>
         </div>
       </section>
-      <section className="section solutions-section">
+      <section className="section clinical-ranges">
         <div className="wrap">
           <div className="section-heading">
             <div>
-              <p className="eyebrow">OUR MEDICAL SOLUTIONS</p>
+              <p className="eyebrow">START WITH THE CLINICAL NEED</p>
               <h2>
-                Equipped for every
+                Different departments.
                 <br />
-                critical moment.
+                <em>One dependable partner.</em>
               </h2>
             </div>
             <div>
               <p>
-                From intensive care to everyday diagnostics, explore solutions
-                built around your clinical needs.
+                Find the right category, explore real equipment, and build a
+                quotation around your facility.
               </p>
-              <Link to="/solutions" className="text-link">
-                View all solutions <HiArrowUpRight />
+              <Link className="text-link" to="/solutions">
+                Explore the full catalogue <HiArrowUpRight />
               </Link>
             </div>
           </div>
-          <div className="specialty-grid">
-            {clinicalSpecialties.map((s, i) => (
-              <Link
-                key={s.id}
-                to={`/solutions?specialty=${s.id}`}
-                className="specialty-card"
-              >
-                <div className="specialty-art">
-                  <span className="card-index">0{i + 1}</span>
-                  <EquipmentArt specialty={s.id} />
-                </div>
-                <div className="specialty-copy">
-                  <h3>
-                    {s.name}
-                    <HiArrowUpRight />
-                  </h3>
-                  <p>{s.description}</p>
-                </div>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-      <section className="section approach-section">
-        <div className="wrap approach-grid">
-          <div className="approach-photo">
-            <img
-              src="/images/clinical-care.jpg"
-              alt="Hospital reception and clinical facilities"
-              loading="lazy"
-              width="1500"
-              height="1021"
-            />
-            <div className="photo-caption">
-              <span className="status-dot" /> PEOPLE FIRST. ALWAYS.
-            </div>
-          </div>
-          <div className="approach-copy">
-            <p className="eyebrow">THE MEDELEC APPROACH</p>
-            <h2>
-              Good equipment is
-              <br />
-              only the beginning.
-            </h2>
-            <p className="intro-copy">
-              We stay involved beyond delivery. Our team works with yours to
-              help turn a purchase into lasting clinical value.
-            </p>
-            <div className="approach-points">
-              {support.map(([Icon, title, text]) => (
-                <div key={title}>
-                  <Icon size={24} />
-                  <div>
-                    <h3>{title}</h3>
-                    <p>{text}</p>
+          <div className="clinical-grid">
+            {categories.map((c, i) => {
+              const p = range.find((p) => p.id === c.imageId)
+              return (
+                <Link
+                  className={`clinical-card clinical-card-${i + 1}`}
+                  to={`/solutions?specialty=${c.id}`}
+                  key={c.id}
+                >
+                  <div className="clinical-image">
+                    <span>0{i + 1}</span>
+                    {p && (
+                      <img
+                        src={p.image}
+                        alt={p.name}
+                        loading="lazy"
+                        width="760"
+                        height="660"
+                      />
+                    )}
                   </div>
-                </div>
-              ))}
-            </div>
-            <Link to="/about" className="text-link">
-              Get to know Medelec <HiArrowUpRight />
+                  <div className="clinical-card-copy">
+                    <h3>
+                      {c.name}
+                      <HiArrowUpRight />
+                    </h3>
+                    <p>{c.note}</p>
+                  </div>
+                </Link>
+              )
+            })}
+          </div>
+          <div className="accessory-link">
+            <span>
+              Looking for consumables, mounting options or equipment
+              accessories?
+            </span>
+            <Link to="/solutions?specialty=accessories" className="text-link">
+              Browse accessories <HiArrowUpRight />
             </Link>
           </div>
         </div>
       </section>
-      <section className="service-band">
+      <section className="section selected-equipment">
         <div className="wrap">
-          <div>
-            <span className="service-band-icon">
-              <HiOutlineWrenchScrewdriver size={34} />
-            </span>
+          <div className="section-heading">
             <div>
-              <p className="eyebrow">HERE FOR THE LONG RUN</p>
-              <h2>
-                Care for the equipment.
+              <p className="eyebrow">A CLOSER LOOK</p>
+              <h2>Explore the possibilities.</h2>
+            </div>
+            <p>
+              Discover respiratory care, imaging and patient support systems
+              from our manufacturer ranges.
+            </p>
+          </div>
+          <div className="featured-equipment-grid">
+            {featuredIds
+              .map((id) => range.find((p) => p.id === id))
+              .filter(Boolean)
+              .map((p) => (
+                <Link
+                  key={p.id}
+                  to={`/solutions?q=${encodeURIComponent(p.name)}`}
+                  className="featured-equipment"
+                >
+                  <div className="featured-product-image">
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      loading="lazy"
+                      width="760"
+                      height="660"
+                    />
+                  </div>
+                  <div>
+                    <span>
+                      {manufacturerBrands.find((b) => b.id === p.brand)?.name}
+                    </span>
+                    <h3>
+                      {p.name}
+                      <HiArrowUpRight />
+                    </h3>
+                    <p>{p.categoryLabel}</p>
+                  </div>
+                </Link>
+              ))}
+          </div>
+        </div>
+      </section>
+      <section className="engineering-story">
+        <div className="wrap engineering-grid">
+          <div className="engineering-photo">
+            <img
+              src="/images/hospital-room.jpg"
+              alt="Medical equipment in a clinical environment"
+              loading="lazy"
+              width="1600"
+              height="1067"
+            />
+            <div className="engineering-caption">
+              <HiOutlineWrenchScrewdriver />
+              <span>
+                Equipment is only half the story.
                 <br />
-                Confidence for the people using it.
-              </h2>
+                <strong>People keep it working.</strong>
+              </span>
             </div>
           </div>
-          <Link to="/service" className="button button-outline">
-            Discover our support <HiArrowUpRight />
-          </Link>
+          <div className="engineering-copy">
+            <p className="eyebrow">SERVICE IS PART OF THE SOLUTION</p>
+            <h2>
+              Delivery is a milestone.
+              <br />
+              <em>Support is a relationship.</em>
+            </h2>
+            <p>
+              Our service engineers look after the medical equipment we supply —
+              from installation and commissioning to maintenance and servicing.
+            </p>
+            <ul>
+              {[
+                'Installation & commissioning',
+                'Preventive maintenance & calibration',
+                'Equipment servicing & technical support',
+              ].map((s) => (
+                <li key={s}>
+                  <HiOutlineCheck />
+                  {s}
+                </li>
+              ))}
+            </ul>
+            <Link to="/service" className="button button-light">
+              Discover our engineering support <HiArrowUpRight />
+            </Link>
+          </div>
+        </div>
+      </section>
+      <section className="how-to-buy section">
+        <div className="wrap">
+          <p className="eyebrow">FROM EXPLORATION TO INSTALLATION</p>
+          <h2>A simpler way to get equipped.</h2>
+          <div className="buying-steps">
+            {[
+              [
+                HiOutlineShieldCheck,
+                'Explore with confidence',
+                'Browse equipment and follow direct links to official manufacturer information.',
+              ],
+              [
+                HiOutlineDocumentText,
+                'Build your requirements',
+                'Save equipment to your quote list and choose the quantities your facility needs.',
+              ],
+              [
+                HiOutlinePhone,
+                'Talk to the right people',
+                'Our team helps confirm configuration, availability, installation and support.',
+              ],
+            ].map(([Icon, title, text], i) => (
+              <article key={title}>
+                <div>
+                  <span>0{i + 1}</span>
+                  <Icon />
+                </div>
+                <h3>{title}</h3>
+                <p>{text}</p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
       <CallToAction />

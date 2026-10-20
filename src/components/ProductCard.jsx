@@ -1,37 +1,65 @@
 import { useState } from 'react'
-import { HiArrowUpRight, HiOutlinePlus, HiOutlineCheck } from 'react-icons/hi2'
+import {
+  HiArrowUpRight,
+  HiOutlinePlus,
+  HiOutlineCheck,
+  HiOutlineDocumentText,
+} from 'react-icons/hi2'
 import { useRFQ } from './RFQContext'
-import EquipmentArt from './EquipmentArt'
-import { safeExternalUrl } from '../lib/quote'
+import { safeExternalUrl, safeImageUrl } from '../lib/quote'
 
-export default function ProductCard({ product, brandName, specialtyName }) {
+export default function ProductCard({ product, brandName, onDetails }) {
   const { addItem, items, setIsOpen } = useRFQ()
-  const [imageFailed, setImageFailed] = useState(false)
+  const [failed, setFailed] = useState(false)
   const inQuote = items.some((i) => i.id === product.id)
-  const image = safeExternalUrl(product.image)
+  const image = safeImageUrl(product.image)
   const brochure = safeExternalUrl(product.pdfUrl)
+  const source = safeExternalUrl(product.sourceUrl)
   return (
     <article className="product-card">
-      <div className="product-image">
-        {image && !imageFailed ? (
+      <button
+        className="product-image product-image-button"
+        onClick={() => onDetails(product)}
+        aria-label={`View details: ${product.name}`}
+      >
+        {image && !failed ? (
           <img
             src={image}
             alt={product.name}
             loading="lazy"
-            onError={() => setImageFailed(true)}
+            width="760"
+            height="660"
+            onError={() => setFailed(true)}
           />
         ) : (
-          <>
-            <EquipmentArt specialty={product.specialty} />
-            <span className="illustration-label">Category illustration</span>
-          </>
+          <span className="image-unavailable">
+            Product photograph unavailable
+          </span>
         )}
-        <span className="product-brand">{brandName}</span>
-      </div>
+        <span className="product-image-open">
+          <HiArrowUpRight />
+        </span>
+      </button>
       <div className="product-info">
-        <p className="eyebrow">{specialtyName}</p>
-        <h2>{product.name}</h2>
-        <p>{product.description}</p>
+        <p className="product-manufacturer">{brandName}</p>
+        <h2>
+          <button onClick={() => onDetails(product)}>{product.name}</button>
+        </h2>
+        <p className="product-category-label">
+          {product.categoryLabel || 'Medical equipment'}
+        </p>
+        <div className="product-resource-links">
+          {source && (
+            <a href={source} target="_blank" rel="noreferrer">
+              Official product page <HiArrowUpRight />
+            </a>
+          )}
+          {brochure && (
+            <a href={brochure} target="_blank" rel="noreferrer">
+              <HiOutlineDocumentText /> Literature <HiArrowUpRight />
+            </a>
+          )}
+        </div>
         <div className="product-actions">
           <button
             className={`button ${inQuote ? 'button-added' : ''}`}
@@ -40,7 +68,7 @@ export default function ProductCard({ product, brandName, specialtyName }) {
           >
             {inQuote ? (
               <>
-                <HiOutlineCheck /> Added to quote
+                <HiOutlineCheck /> In your quote list
               </>
             ) : (
               <>
@@ -48,18 +76,12 @@ export default function ProductCard({ product, brandName, specialtyName }) {
               </>
             )}
           </button>
-          {brochure ? (
-            <a
-              href={brochure}
-              className="text-link brochure-link"
-              target="_blank"
-              rel="noreferrer"
-            >
-              Product brochure <HiArrowUpRight />
-            </a>
-          ) : (
-            <span className="fine-print">Ask our team for specifications</span>
-          )}
+          <button
+            className="product-detail-button"
+            onClick={() => onDetails(product)}
+          >
+            Details <HiArrowUpRight />
+          </button>
         </div>
       </div>
     </article>
