@@ -2,6 +2,12 @@
 
 The MHS medical equipment website, built with React, Vite and Firebase. The existing Vercel project and Firebase database remain the deployment targets; no separate application server is required.
 
+## User and admin documentation
+
+Read the [complete user and admin guide](docs/MHS-User-and-Admin-Guide.md) for daily operation, enquiry handling, Firebase database access, staff accounts, catalogue management, backups, deployment and troubleshooting.
+
+To check an incoming enquiry: open https://medelec.vercel.app/admin/login, sign in, select **Customer inquiries**, then **Refresh**. Enquiries are stored in Firestore; the supplied app does not send automatic email alerts.
+
 ## Website
 
 - Responsive home, company, service and contact pages.
