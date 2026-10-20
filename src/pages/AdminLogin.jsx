@@ -1,94 +1,89 @@
 import { useState } from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
+import PageMeta from '../components/PageMeta'
+import { HiArrowUpRight } from 'react-icons/hi2'
 import { useAuth } from '../context/AuthContext'
-import { useNavigate } from 'react-router-dom'
-import { Helmet } from 'react-helmet-async'
-import ScrollReveal from '../components/ScrollReveal'
+import { withTimeout } from '../lib/quote'
 
 export default function AdminLogin() {
-  const { login } = useAuth()
+  const { login, user } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({ email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
-
-  const handleSubmit = async (e) => {
+  async function submit(e) {
     e.preventDefault()
     setLoading(true)
     setError('')
     try {
-      await login(form.email, form.password)
-      navigate('/admin')
+      await withTimeout(login(form.email.trim(), form.password))
+      navigate('/admin', { replace: true })
     } catch (err) {
-      setError(err.message || 'Login failed')
+      const errors = {
+        'auth/invalid-credential': 'The email or password is incorrect.',
+        'auth/too-many-requests':
+          'Too many attempts. Please wait before trying again.',
+        'auth/network-request-failed':
+          'Unable to connect. Check your internet connection and try again.',
+      }
+      setError(
+        errors[err.code] ||
+          'Sign-in is unavailable. Please check your details or contact the site administrator.',
+      )
     } finally {
       setLoading(false)
     }
   }
-
+  if (user) return <Navigate to="/admin" replace />
   return (
-    <>
-      <Helmet>
-        <title>Admin Login | Medelec Healthcare Solutions</title>
-      </Helmet>
-
-      <section className="min-h-screen bg-bg-platinum flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-        <ScrollReveal>
-          <div className="w-full max-w-md space-y-8">
-            <div>
-              <h2 className="text-center text-2xl font-bold text-primary-blue">
-                Admin Login
-              </h2>
+    <section className="login-section">
+      <PageMeta title="Staff sign in | Medelec Healthcare Solutions" noindex />
+      <div className="login-panel">
+        <p className="eyebrow">MEDELEC / STAFF ACCESS</p>
+        <h1>Welcome back.</h1>
+        <p className="muted text-sm">
+          Manage the equipment portfolio and review customer inquiries.
+        </p>
+        <form onSubmit={submit}>
+          <fieldset disabled={loading}>
+            <div className="login-field">
+              <label htmlFor="login-email">Email address</label>
+              <input
+                id="login-email"
+                type="email"
+                autoComplete="username"
+                required
+                value={form.email}
+                onChange={(e) => setForm({ ...form, email: e.target.value })}
+              />
             </div>
-            <form onSubmit={handleSubmit} className="space-y-6">
-              <div>
-                <label htmlFor="email" className="block text-sm font-medium text-primary-blue mb-2">
-                  Email Address
-                </label>
-                <input
-                  id="email"
-                  type="email"
-                  required
-                  value={form.email}
-                  onChange={(e) => setForm({ ...form, email: e.target.value })}
-                  className="input-field w-full"
-                  placeholder="Enter your email"
-                />
-              </div>
-
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-primary-blue mb-2">
-                  Password
-                </label>
-                <input
-                  id="password"
-                  type="password"
-                  required
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
-                  className="input-field w-full"
-                  placeholder="Enter your password"
-                />
-              </div>
-
-              {error && (
-                <p className="text-sm text-red-600">{error}</p>
-              )}
-
-              <button
-                type="submit"
-                disabled={loading}
-                className="btn-teal w-full"
-              >
-                {loading ? 'Logging in...' : 'Sign In'}
-              </button>
-            </form>
-
-            <div className="text-center text-xs text-text-muted">
-              <p>Authorized Medelec administrative personnel only.</p>
+            <div className="login-field">
+              <label htmlFor="login-password">Password</label>
+              <input
+                id="login-password"
+                type="password"
+                autoComplete="current-password"
+                required
+                value={form.password}
+                onChange={(e) => setForm({ ...form, password: e.target.value })}
+              />
             </div>
-          </div>
-        </ScrollReveal>
-      </section>
-    </>
+            {error && (
+              <p className="form-error" role="alert">
+                {error}
+              </p>
+            )}
+            <button className="button" type="submit">
+              {loading ? 'Signing in…' : 'Sign in'}
+              <HiArrowUpRight />
+            </button>
+          </fieldset>
+        </form>
+        <p className="fine-print">
+          For authorised Medelec staff. Account access is managed by your
+          administrator.
+        </p>
+      </div>
+    </section>
   )
 }

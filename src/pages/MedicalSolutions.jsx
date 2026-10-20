@@ -1,305 +1,243 @@
-import { useState, useMemo, useEffect } from 'react'
-import { Link } from 'react-router-dom'
-import { Helmet } from 'react-helmet-async'
-import ScrollReveal from '../components/ScrollReveal'
-import ProductCard from '../components/ProductCard'
-import { useRFQ } from '../components/RFQContext'
+import { useEffect, useState } from 'react'
+import { useSearchParams, Link } from 'react-router-dom'
+import { collection, getDocs, query, where } from 'firebase/firestore/lite'
+import { HiOutlineMagnifyingGlass, HiArrowUpRight } from 'react-icons/hi2'
+import { db } from '../config/firebaseDatabase'
 import { clinicalSpecialties, manufacturerBrands } from '../data/products'
-import { collection, getDocs, query, where } from 'firebase/firestore'
-import { db } from '../config/firebaseClient'
+import { withTimeout } from '../lib/quote'
+import ProductCard from '../components/ProductCard'
+import PageIntro from '../components/PageIntro'
 
 export default function MedicalSolutions() {
-  const [viewMode, setViewMode] = useState('specialty') // 'specialty' | 'brand'
-  const [activeFilter, setActiveFilter] = useState('critical-care')
+  const [params, setParams] = useSearchParams()
   const [products, setProducts] = useState([])
   const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-  const { items, isOpen, setIsOpen, removeItem, updateQuantity, totalItems } = useRFQ()
-
+  const [error, setError] = useState('')
+  const [attempt, setAttempt] = useState(0)
+  const specialty = params.get('specialty') || ''
+  const brand = params.get('brand') || ''
+  const search = params.get('q') || ''
+  const setFilter = (key, value) => {
+    const next = new URLSearchParams(params)
+    if (value) next.set(key, value)
+    else next.delete(key)
+    setParams(next, { replace: true })
+  }
   useEffect(() => {
     let cancelled = false
-
-    const fetchProducts = async () => {
+    async function load() {
       setLoading(true)
-      setError(null)
-
+      setError('')
       try {
-        const snap = await getDocs(
-          query(collection(db, 'products'), where('is_published', '==', true))
+        if (!db) throw new Error('Catalogue connection unavailable')
+        const snapshot = await withTimeout(
+          getDocs(
+            query(
+              collection(db, 'products'),
+              where('is_published', '==', true),
+            ),
+          ),
         )
-
         if (cancelled) return
-
-        // Map Firestore docs to the component's expected shape
-        const mapped = snap.docs.map((docSnap) => {
-          const item = docSnap.data()
-          return {
-            id: item.slug || docSnap.id,
-            name: item.name,
-            specialty: item.specialty,
-            brand: item.brand,
-            description: item.description,
-            image: item.image_url,
-            pdfUrl: item.pdf_url,
-          }
-        })
-
-        setProducts(mapped)
-      } catch (err) {
-        if (!cancelled) {
-          setError(err.message || 'Failed to load products')
-        }
+        setProducts(
+          snapshot.docs
+            .map((d) => ({
+              ...d.data(),
+              id: d.id,
+              image: d.data().image_url,
+              pdfUrl: d.data().pdf_url,
+            }))
+            .filter((p) => typeof p.name === 'string' && p.name.trim())
+            .sort((a, b) => a.name.localeCompare(b.name)),
+        )
+      } catch {
+        if (!cancelled)
+          setError(
+            'We couldn’t load the current catalogue. Try again, or contact our team for product availability.',
+          )
       } finally {
-        if (!cancelled) {
-          setLoading(false)
-        }
+        if (!cancelled) setLoading(false)
       }
     }
-
-    fetchProducts()
-
+    load()
     return () => {
       cancelled = true
     }
-  }, [])
-
-  const filters = viewMode === 'specialty' ? clinicalSpecialties : manufacturerBrands
-
-  const filteredProducts = useMemo(() => {
-    const key = viewMode === 'specialty' ? 'specialty' : 'brand'
-    return products.filter((p) => p[key] === activeFilter)
-  }, [viewMode, activeFilter, products])
-
-  const activeFilterObj = filters.find((f) => f.id === activeFilter)
-
-  const getBrandName = (brandId) =>
-    manufacturerBrands.find((b) => b.id === brandId)?.name || ''
-  const getSpecialtyName = (specialtyId) =>
-    clinicalSpecialties.find((s) => s.id === specialtyId)?.name || ''
-
+  }, [attempt])
+  const filtered = products.filter(
+    (p) =>
+      (!specialty || p.specialty === specialty) &&
+      (!brand || p.brand === brand) &&
+      `${p.name} ${p.description} ${manufacturerBrands.find((b) => b.id === p.brand)?.name || p.brand}`
+        .toLowerCase()
+        .includes(search.trim().toLowerCase()),
+  )
+  const hasFilters = specialty || brand || search
   return (
     <>
-      <Helmet>
-        <title>Medical Solutions | Medelec Healthcare Solutions</title>
-      </Helmet>
-
-      {/* Page Header */}
-      <section className="pt-32 pb-12 bg-bg-platinum border-b border-border-light">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <ScrollReveal>
-            <span className="text-xs font-medium uppercase tracking-[0.2em] text-surgical-teal">
-              Dynamic Product Catalog
-            </span>
-            <h1 className="text-4xl sm:text-5xl font-bold text-primary-blue mt-4 mb-4">
-              Medical Solutions
-            </h1>
-            <p className="text-text-muted max-w-2xl text-lg">
-              Browse our premium equipment portfolio by clinical specialty or manufacturer brand.
-              Request technical specifications for any product — no e-commerce, just expert consultation.
-            </p>
-          </ScrollReveal>
-        </div>
-      </section>
-
-      {/* Dual-Filter Tabs */}
-      <section className="sticky top-16 lg:top-20 z-30 bg-white border-b border-border-light">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* View Mode Switch */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 py-4">
-            <div className="flex border border-border-light rounded-sm overflow-hidden">
+      <PageIntro
+        eyebrow="Medical solutions"
+        title={
+          <>
+            Technology for
+            <br />
+            <span>better clinical care.</span>
+          </>
+        }
+        description="Find the right equipment for your facility. Explore our portfolio, build your quote list, and talk to our team about specifications and availability."
+      />
+      <section className="section catalogue-section">
+        <div className="wrap catalogue-layout">
+          <aside className="catalogue-sidebar">
+            <p className="eyebrow">FIND YOUR SOLUTION</p>
+            <label className="search-field">
+              <HiOutlineMagnifyingGlass size={20} />
+              <input
+                type="search"
+                aria-label="Search equipment"
+                placeholder="Search equipment…"
+                value={search}
+                onChange={(e) => setFilter('q', e.target.value)}
+              />
+            </label>
+            <h2>Clinical specialty</h2>
+            <div className="category-filters">
               <button
-                onClick={() => {
-                  setViewMode('specialty')
-                  setActiveFilter('critical-care')
-                }}
-                className={`px-5 py-2.5 text-sm font-medium transition-all duration-300 ${
-                  viewMode === 'specialty'
-                    ? 'bg-primary-blue text-white'
-                    : 'bg-white text-primary-blue hover:bg-bg-platinum'
-                }`}
+                aria-pressed={!specialty}
+                className={!specialty ? 'selected' : ''}
+                onClick={() => setFilter('specialty', '')}
               >
-                Browse by Clinical Specialty
+                All specialties <span>{products.length}</span>
               </button>
-              <button
-                onClick={() => {
-                  setViewMode('brand')
-                  setActiveFilter('hamilton')
-                }}
-                className={`px-5 py-2.5 text-sm font-medium transition-all duration-300 ${
-                  viewMode === 'brand'
-                    ? 'bg-primary-blue text-white'
-                    : 'bg-white text-primary-blue hover:bg-bg-platinum'
-                }`}
-              >
-                Browse by Manufacturer Brand
-              </button>
-            </div>
-
-            {totalItems > 0 && (
-              <button
-                onClick={() => setIsOpen(!isOpen)}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-surgical-teal/10 text-surgical-teal text-sm font-medium rounded-sm hover:bg-surgical-teal/20 transition-all"
-              >
-                <span className="relative flex h-2 w-2">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-surgical-teal opacity-75" />
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-surgical-teal" />
-                </span>
-                RFQ List ({totalItems})
-              </button>
-            )}
-          </div>
-
-          {/* Filter Pills */}
-          <div className="flex flex-wrap gap-2 pb-4">
-            {filters.map((filter) => (
-              <button
-                key={filter.id}
-                onClick={() => setActiveFilter(filter.id)}
-                className={`px-4 py-2 text-sm font-medium rounded-sm transition-all duration-300 ${
-                  activeFilter === filter.id
-                    ? 'bg-surgical-teal text-white'
-                    : 'bg-bg-platinum text-primary-blue hover:bg-border-light'
-                }`}
-              >
-                {filter.name}
-              </button>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Products Grid */}
-      <section className="py-12 lg:py-16">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Filter Info */}
-          <ScrollReveal>
-            <div className="mb-8 flex items-center gap-3">
-              <h2 className="text-xl font-bold text-primary-blue">{activeFilterObj?.name}</h2>
-              <span className="text-text-muted">·</span>
-              <p className="text-sm text-text-muted">{activeFilterObj?.description}</p>
-            </div>
-          </ScrollReveal>
-
-          {loading ? (
-            <div className="flex items-center justify-center py-20">
-              <div className="flex flex-col items-center gap-4">
-                <div className="w-10 h-10 border-4 border-surgical-teal/30 border-t-surgical-teal rounded-full animate-spin" />
-                <p className="text-sm text-text-muted">Loading products...</p>
-              </div>
-            </div>
-          ) : error ? (
-            <div className="text-center py-20">
-              <div className="inline-flex items-center justify-center w-14 h-14 rounded-full bg-red-50 mb-4">
-                <svg className="w-7 h-7 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
-              </div>
-              <p className="text-text-muted mb-2">Unable to load products</p>
-              <p className="text-sm text-red-500 mb-4">{error}</p>
-              <button
-                onClick={() => window.location.reload()}
-                className="px-4 py-2 text-sm font-medium text-surgical-teal border border-surgical-teal rounded-sm hover:bg-surgical-teal/10 transition-all"
-              >
-                Try Again
-              </button>
-            </div>
-          ) : filteredProducts.length > 0 ? (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 items-stretch">
-              {filteredProducts.map((product, i) => (
-                <ScrollReveal key={product.id} delay={i * 80} className="h-full">
-                  <ProductCard
-                    product={product}
-                    brandName={getBrandName(product.brand)}
-                    specialtyName={getSpecialtyName(product.specialty)}
-                  />
-                </ScrollReveal>
+              {clinicalSpecialties.map((s) => (
+                <button
+                  key={s.id}
+                  aria-pressed={specialty === s.id}
+                  className={specialty === s.id ? 'selected' : ''}
+                  onClick={() => setFilter('specialty', s.id)}
+                >
+                  {s.name}
+                  <HiArrowUpRight />
+                </button>
               ))}
             </div>
-          ) : (
-            <div className="text-center py-20">
-              <p className="text-text-muted">No products found in this category.</p>
-            </div>
-          )}
-        </div>
-      </section>
-
-      {/* Floating RFQ Panel */}
-      {isOpen && totalItems > 0 && (
-        <div className="fixed bottom-4 right-4 left-4 sm:left-auto z-40 w-auto sm:w-96 bg-white rounded-sm shadow-2xl border border-border-light animate-fade-up max-h-[80vh] flex flex-col">
-          <div className="flex items-center justify-between p-5 border-b border-border-light">
-            <div>
-              <h3 className="font-bold text-primary-blue">Your RFQ List</h3>
-              <p className="text-xs text-text-muted">{totalItems} item(s) selected</p>
-            </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="text-text-muted hover:text-primary-blue text-2xl leading-none"
+            <label className="filter-label" htmlFor="manufacturer">
+              Manufacturer
+            </label>
+            <select
+              id="manufacturer"
+              value={brand}
+              onChange={(e) => setFilter('brand', e.target.value)}
             >
-              &times;
-            </button>
-          </div>
-
-          <div className="overflow-y-auto flex-1 p-5 space-y-3">
-            {items.map((item) => (
-              <div
-                key={item.id}
-                className="flex items-center gap-3 p-3 bg-bg-platinum rounded-sm"
+              <option value="">All manufacturers</option>
+              {manufacturerBrands.map((b) => (
+                <option value={b.id} key={b.id}>
+                  {b.name}
+                </option>
+              ))}
+            </select>
+            {hasFilters && (
+              <button
+                className="text-link reset-filters"
+                onClick={() => setParams({}, { replace: true })}
               >
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-primary-blue truncate">{item.name}</p>
-                  <div className="flex items-center gap-2 mt-1">
-                    <button
-                      onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="w-6 h-6 flex items-center justify-center border border-border-light rounded-sm text-primary-blue hover:border-surgical-teal text-sm"
-                    >
-                      &minus;
-                    </button>
-                    <span className="text-sm text-primary-blue w-8 text-center">{item.quantity}</span>
-                    <button
-                      onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="w-6 h-6 flex items-center justify-center border border-border-light rounded-sm text-primary-blue hover:border-surgical-teal text-sm"
-                    >
-                      +
-                    </button>
-                  </div>
-                </div>
-                <button
-                  onClick={() => removeItem(item.id)}
-                  className="text-text-muted hover:text-red-500 text-sm"
-                >
-                  Remove
-                </button>
-              </div>
-            ))}
-          </div>
-
-          <div className="p-5 border-t border-border-light">
-            <Link
-              to="/contact"
-              className="btn-teal w-full"
-            >
-              Submit RFQ Inquiry →
-            </Link>
-          </div>
-        </div>
-      )}
-
-      {/* Info Banner */}
-      <section className="bg-bg-platinum py-12 border-t border-border-light">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row items-center gap-6 text-center md:text-left">
-            <div className="w-14 h-14 bg-surgical-teal/10 rounded-sm flex items-center justify-center shrink-0">
-              <svg className="w-7 h-7 text-surgical-teal" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-              </svg>
+                Clear all filters
+              </button>
+            )}
+            <div className="sidebar-help">
+              <h3>Not sure where to start?</h3>
+              <p>
+                We’ll help you match equipment to your clinical requirements.
+              </p>
+              <Link to="/contact" className="text-link">
+                Ask our team <HiArrowUpRight />
+              </Link>
             </div>
-            <div className="flex-1">
-              <h3 className="text-lg font-semibold text-primary-blue mb-1">
-                No Online Pricing — Direct Consultation Only
-              </h3>
-              <p className="text-sm text-text-muted">
-                All medical equipment procurements are handled through personalized RFQ submissions.
-                Our team provides detailed quotations including installation, training, and warranty terms.
+          </aside>
+          <div>
+            <div className="catalogue-results-heading">
+              <h2>
+                {clinicalSpecialties.find((s) => s.id === specialty)?.name ||
+                  'Our equipment portfolio'}
+              </h2>
+              <p role="status" aria-live="polite">
+                {loading
+                  ? 'Loading catalogue…'
+                  : `${filtered.length} ${filtered.length === 1 ? 'product' : 'products'}`}
+              </p>
+            </div>
+            {loading ? (
+              <div className="product-grid" aria-label="Loading equipment">
+                {[1, 2, 3, 4].map((n) => (
+                  <div key={n} className="product-skeleton">
+                    <div />
+                    <span />
+                    <span />
+                  </div>
+                ))}
+              </div>
+            ) : error ? (
+              <div className="empty-state" role="alert">
+                <h3>Let’s reconnect.</h3>
+                <p>{error}</p>
+                <button
+                  className="button"
+                  onClick={() => setAttempt((n) => n + 1)}
+                >
+                  Try again
+                </button>
+                <Link to="/contact" className="text-link">
+                  Contact Medelec <HiArrowUpRight />
+                </Link>
+              </div>
+            ) : filtered.length ? (
+              <div className="product-grid">
+                {filtered.map((p) => (
+                  <ProductCard
+                    key={p.id}
+                    product={p}
+                    brandName={
+                      manufacturerBrands.find((b) => b.id === p.brand)?.name ||
+                      p.brand
+                    }
+                    specialtyName={
+                      clinicalSpecialties.find((s) => s.id === p.specialty)
+                        ?.name || p.specialty
+                    }
+                  />
+                ))}
+              </div>
+            ) : (
+              <div className="empty-state">
+                <HiOutlineMagnifyingGlass size={40} />
+                <h3>
+                  {hasFilters
+                    ? 'No equipment matches these filters.'
+                    : 'Tell us what you’re looking for.'}
+                </h3>
+                <p>
+                  {hasFilters
+                    ? 'Try a different search or clear your filters to browse the full portfolio.'
+                    : 'Our team can share current equipment options and help you plan your requirements.'}
+                </p>
+                {hasFilters && (
+                  <button
+                    className="button button-outline"
+                    onClick={() => setParams({}, { replace: true })}
+                  >
+                    Clear filters
+                  </button>
+                )}
+                <Link to="/contact" className="text-link">
+                  Discuss your requirements <HiArrowUpRight />
+                </Link>
+              </div>
+            )}
+            <div className="catalogue-note">
+              <strong>A quotation tailored to your facility.</strong>
+              <p>
+                Availability, specifications, installation, training and
+                warranty terms are confirmed with your quotation.
               </p>
             </div>
           </div>

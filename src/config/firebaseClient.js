@@ -1,6 +1,5 @@
 import { initializeApp } from 'firebase/app'
 import { getAuth } from 'firebase/auth'
-import { getFirestore } from 'firebase/firestore'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -11,25 +10,18 @@ const firebaseConfig = {
   appId: import.meta.env.VITE_FIREBASE_APP_ID,
 }
 
-const requiredKeys = [
-  'apiKey',
-  'authDomain',
-  'projectId',
-  'storageBucket',
-  'messagingSenderId',
-  'appId',
-]
+const requiredKeys = ['apiKey', 'authDomain', 'projectId', 'appId']
 const missing = requiredKeys.filter((k) => !firebaseConfig[k])
 
 if (missing.length > 0) {
   console.warn(
     'Medelec environment variables are missing: ' +
       missing.join(', ') +
-      '. Please set the VITE_FIREBASE_* variables in your .env file.'
+      '. Please set the VITE_FIREBASE_* variables in your .env file.',
   )
 }
 
-const app = initializeApp(firebaseConfig)
+export const isFirebaseConfigured = missing.length === 0
+export const app = isFirebaseConfigured ? initializeApp(firebaseConfig) : null
 
-export const auth = getAuth(app)
-export const db = getFirestore(app)
+export const auth = app ? getAuth(app) : null

@@ -1,63 +1,68 @@
-import { createContext, useContext, useState, useCallback } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react'
+import { MAX_QUANTITY, validItems } from '../lib/quote'
 
 const RFQContext = createContext(null)
+function readItems() {
+  for (const key of ['medelec-quote', 'rfqItems']) {
+    for (const storageName of ['localStorage', 'sessionStorage']) {
+      try {
+        const saved = window[storageName].getItem(key)
+        if (saved) return validItems(JSON.parse(saved))
+      } catch {
+        /* Storage can be disabled. The basket still works in memory. */
+      }
+    }
+  }
+  return []
+}
 
 export function RFQProvider({ children }) {
-  const [items, setItems] = useState(() => {
-    try {
-      const saved = sessionStorage.getItem('rfqItems')
-      return saved ? JSON.parse(saved) : []
-    } catch {
-      return []
-    }
-  })
+  const [items, setItems] = useState(readItems)
   const [isOpen, setIsOpen] = useState(false)
-
+  useEffect(() => {
+    try {
+      localStorage.setItem('medelec-quote', JSON.stringify(items))
+    } catch {
+      /* Keep the current in-memory selection. */
+    }
+    try {
+      sessionStorage.removeItem('rfqItems')
+    } catch {
+      /* Legacy draft cleanup is optional. */
+    }
+  }, [items])
   const addItem = useCallback((product) => {
-    setItems((prev) => {
-      const existing = prev.find((i) => i.id === product.id)
-      let newItems
-      if (existing) {
-        newItems = prev.map((i) =>
-          i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
-        )
-      } else {
-        newItems = [...prev, { id: product.id, name: product.name, quantity: 1 }]
-      }
-      sessionStorage.setItem('rfqItems', JSON.stringify(newItems))
-      return newItems
-    })
+    setItems((prev) =>
+      prev.some((i) => i.id === product.id)
+        ? prev.map((i) =>
+            i.id === product.id
+              ? { ...i, quantity: Math.min(MAX_QUANTITY, i.quantity + 1) }
+              : i,
+          )
+        : [...prev, { id: product.id, name: product.name, quantity: 1 }],
+    )
     setIsOpen(true)
   }, [])
-
-  const removeItem = useCallback((id) => {
-    setItems((prev) => {
-      const newItems = prev.filter((i) => i.id !== id)
-      sessionStorage.setItem('rfqItems', JSON.stringify(newItems))
-      if (newItems.length === 0) setIsOpen(false)
-      return newItems
-    })
+  const removeItem = useCallback(
+    (id) => setItems((prev) => prev.filter((i) => i.id !== id)),
+    [],
+  )
+  const updateQuantity = useCallback((id, value) => {
+    const quantity = Number(value)
+    if (!Number.isInteger(quantity) || quantity < 1 || quantity > MAX_QUANTITY)
+      return
+    setItems((prev) => prev.map((i) => (i.id === id ? { ...i, quantity } : i)))
   }, [])
-
-  const updateQuantity = useCallback((id, quantity) => {
-    if (quantity < 1) return
-    setItems((prev) => {
-      const newItems = prev.map((i) =>
-        i.id === id ? { ...i, quantity } : i
-      )
-      sessionStorage.setItem('rfqItems', JSON.stringify(newItems))
-      return newItems
-    })
-  }, [])
-
   const clearAll = useCallback(() => {
     setItems([])
     setIsOpen(false)
-    sessionStorage.removeItem('rfqItems')
   }, [])
-
-  const totalItems = items.reduce((sum, i) => sum + i.quantity, 0)
-
   return (
     <RFQContext.Provider
       value={{
@@ -68,16 +73,15 @@ export function RFQProvider({ children }) {
         clearAll,
         isOpen,
         setIsOpen,
-        totalItems,
+        totalItems: items.reduce((n, i) => n + i.quantity, 0),
       }}
     >
       {children}
     </RFQContext.Provider>
   )
 }
-
 export function useRFQ() {
-  const ctx = useContext(RFQContext)
-  if (!ctx) throw new Error('useRFQ must be used within RFQProvider')
-  return ctx
+  const context = useContext(RFQContext)
+  if (!context) throw new Error('useRFQ must be used within RFQProvider')
+  return context
 }
