@@ -9,7 +9,7 @@ export default function Brand() {
         alt="MHS"
       />
       <span className="brand-name">
-        <strong>MEDELEC</strong>
+        <strong>Medelec</strong>
         <small>HEALTHCARE SOLUTIONS</small>
       </span>
     </span>

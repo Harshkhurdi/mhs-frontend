@@ -3037,17 +3037,24 @@ em {
   flex-shrink: 0;
 }
 .brand strong {
-  font-size: 20px;
-  letter-spacing: 0.065em;
-  font-weight: 800;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 36px;
+  line-height: 0.98;
+  letter-spacing: -0.055em;
+  font-weight: 400;
 }
 .brand small {
-  font-size: 7.4px;
-  letter-spacing: 0.19em;
-  margin-top: 8px;
+  font-size: 7px;
+  line-height: 1.4;
+  letter-spacing: 0.17em;
+  font-weight: 600;
+  margin-top: 7px;
 }
 .brand-name {
-  display: block;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding-bottom: 1px;
 }
 .site-footer .brand {
   color: white;
@@ -4301,12 +4308,13 @@ em {
     height: 43px;
   }
   .brand strong {
-    font-size: 17px;
-    letter-spacing: 0.055em;
+    font-size: 30px;
+    letter-spacing: -0.055em;
   }
   .brand small {
-    font-size: 6.1px;
-    margin-top: 7px;
+    font-size: 6px;
+    letter-spacing: 0.14em;
+    margin-top: 6px;
   }
   .brand {
     gap: 9px;

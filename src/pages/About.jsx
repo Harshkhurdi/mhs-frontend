@@ -75,7 +75,7 @@ export default function About() {
           <figure className="founder-portrait">
             <img
               src={director.image}
-              alt={`${director.name}, Founder and Managing Director of Medelec Healthcare Solutions`}
+              alt={`${director.name}, ${director.title} of Medelec Healthcare Solutions`}
               width="404"
               height="551"
               loading="lazy"
@@ -133,10 +133,10 @@ export default function About() {
             <figure className="engineers-photo">
               <div className="engineers-photo-frame">
                 <img
-                  src="/images/karl-storz-or1-room.webp"
+                  src="/images/products/karl-storz-or1-integration-hd.webp"
                   alt="KARL STORZ integrated operating room equipment"
-                  width="1000"
-                  height="667"
+                  width="2540"
+                  height="1429"
                   loading="lazy"
                   decoding="async"
                 />

@@ -11,4 +11,6 @@ The six event photos are representative Unsplash photographs, not records of Med
 | `public/images/events/demo-learning.webp` | https://images.unsplash.com/photo-1516321318423-f06f85e504b3 |
 | `public/images/events/demo-connections.webp` | https://images.unsplash.com/photo-1515169067868-5387ec356754 |
 
-The homepage and team feature use official KARL STORZ OR1 operating room photography from https://www.karlstorz.com/in/en/or-integration-platform.htm, original asset https://www.karlstorz.com/static_2x/static/file_img/HM_OR1/5225871_rdax_544x306_60.webp. This replaces the Dräger OT-light stock photo and the previous generic equipment-service photograph in those sections.
+The homepage and team feature use official KARL STORZ OR1 operating room photography from https://www.karlstorz.com/in/en/or-integration-platform.htm, original asset https://www.karlstorz.com/static_2x/static/file_img/HM_OR1/5225871_rdax_2540x1429_60.webp. This replaces the Dräger OT-light stock photo and the previous generic equipment-service photograph in those sections.
+
+Resolution update: the OR1 photograph now uses the manufacturer’s native 2540 × 1429 WebP from the desktop 2× picture source. The downloaded image was verified at that resolution, without upscaling, and is shared by the homepage, team feature and OR1 product listing.

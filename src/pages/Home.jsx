@@ -348,11 +348,11 @@ export default function Home() {
         <div className="wrap engineering-grid">
           <div className="engineering-photo">
             <img
-              src="/images/karl-storz-or1-room.webp"
+              src="/images/products/karl-storz-or1-integration-hd.webp"
               alt="KARL STORZ OR1 integrated operating room"
               loading="lazy"
-              width="1600"
-              height="1067"
+              width="2540"
+              height="1429"
             />
             <div className="engineering-caption">
               <HiOutlineWrenchScrewdriver />
