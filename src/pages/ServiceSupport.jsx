@@ -128,8 +128,8 @@ export default function ServiceSupport() {
                 </p>
               </div>
             </div>
-            <a href="mailto:info@medelec.com" className="button service-email-button">
-              info@medelec.com <HiArrowUpRight />
+            <a href="mailto:info@medelec.in" className="button service-email-button">
+              info@medelec.in <HiArrowUpRight />
             </a>
           </div>
         </div>

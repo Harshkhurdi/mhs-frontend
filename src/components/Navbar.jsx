@@ -27,8 +27,8 @@ export default function Navbar() {
       <div className="topbar">
         <div className="wrap">
           <span>Medical technology. Personal commitment.</span>
-          <a href="mailto:info@medelec.com">
-            Speak to our team <span>info@medelec.com ↗</span>
+          <a href="mailto:info@medelec.in">
+            Speak to our team <span>info@medelec.in ↗</span>
           </a>
         </div>
       </div>

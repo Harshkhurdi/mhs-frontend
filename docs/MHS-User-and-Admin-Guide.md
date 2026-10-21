@@ -23,7 +23,7 @@ Source baseline: the current frontend, including `firebase/firestore.rules` for 
 7. Record the follow-up in your existing enquiry register or CRM. The current dashboard has no assignment, reply editor, status update or mark-as-read action.
 8. Select **Sign out** when finished on a shared computer.
 
-**Where does the enquiry go?** A successful website submission creates a document in the Firestore collection named `inquiries`. It appears in the staff inbox after loading or refreshing that section. It does not automatically arrive in `info@medelec.com` or send an email, SMS or WhatsApp alert through the code supplied with this app.
+**Where does the enquiry go?** A successful website submission creates a document in the Firestore collection named `inquiries`. It appears in the staff inbox after loading or refreshing that section. It does not automatically arrive in `info@medelec.in` or send an email, SMS or WhatsApp alert through the code supplied with this app.
 
 If the inbox does not show it, use section 8 to check the same Firebase project directly. Do not ask the customer to submit repeated copies before checking: a slow connection can leave the outcome uncertain even if a record was saved.
 
@@ -56,7 +56,7 @@ No passwords, private keys or service account credentials belong in this manual 
 
 Visitors do not need an account to browse equipment, build a quote list or submit the contact form.
 
-1. Start at the homepage. The eight manufacturer buttons change the featured equipment image. A manufacturer name below the hero opens its filtered catalogue. The top **Speak to our team** link opens an email to **info@medelec.com**.
+1. Start at the homepage. The eight manufacturer buttons change the featured equipment image. A manufacturer name below the hero opens its filtered catalogue. The top **Speak to our team** link opens an email to **info@medelec.in**.
 2. Select **Find your equipment** or **Medical solutions** to open the catalogue.
 3. Enter a model, brand or application in **Search equipment**. Search is case-insensitive; multiple words narrow the results together.
 4. Choose a manufacturer and a clinical category. On a phone, use **Filters** to show the category controls. Filters combine with the search term.
@@ -102,7 +102,7 @@ The following fields are required:
 
 Select **Send inquiry** once and wait. The confirmation heading is **Your inquiry is with us.** This means the application received a successful database-write response. The quote selection and saved form draft are cleared after success. It does not mean a staff member has reviewed the request or that a quotation has been issued.
 
-If an error appears, the page retains the form details and quote list. Check the connection and try again from the same page. The **Open an email with these details** fallback creates a draft addressed to `info@medelec.com`; the visitor must send it from their email application. That email is separate from Firestore and is not automatically added to the staff inbox.
+If an error appears, the page retains the form details and quote list. Check the connection and try again from the same page. The **Open an email with these details** fallback creates a draft addressed to `info@medelec.in`; the visitor must send it from their email application. That email is separate from Firestore and is not automatically added to the staff inbox.
 
 The form draft is saved in session storage as fields change. It can survive a reload in the same browser tab/session, but it is not a server-side saved enquiry. Do not rely on it after the tab/session ends. A timeout can mean the write result is unknown: check the staff inbox before creating another submission from a fresh page.
 

@@ -152,8 +152,8 @@ export default function Contact() {
                 <HiOutlineEnvelope />
                 <div>
                   <h3>Email us</h3>
-                  <a href="mailto:info@medelec.com">
-                    info@medelec.com <HiArrowUpRight />
+                  <a href="mailto:info@medelec.in">
+                    info@medelec.in <HiArrowUpRight />
                   </a>
                 </div>
               </div>

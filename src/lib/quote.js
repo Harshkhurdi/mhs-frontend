@@ -63,5 +63,5 @@ export async function withTimeout(promise, milliseconds = 12000) {
 
 export function inquiryEmail(form, items) {
   const body = `Name: ${form.name}\nHospital / organisation: ${form.hospital}\nDepartment: ${form.department}\nEmail: ${form.email}\nPhone: ${form.phone}\n\n${form.message}\n\nEquipment requested:\n${items.map((i) => `${i.name} — quantity ${i.quantity}`).join('\n') || 'Please see message above.'}`
-  return `mailto:info@medelec.com?subject=${encodeURIComponent(`Equipment inquiry — ${form.hospital || form.name}`)}&body=${encodeURIComponent(body)}`
+  return `mailto:info@medelec.in?subject=${encodeURIComponent(`Equipment inquiry — ${form.hospital || form.name}`)}&body=${encodeURIComponent(body)}`
 }
