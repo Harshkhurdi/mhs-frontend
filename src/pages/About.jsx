@@ -84,7 +84,7 @@ export default function About() {
       </section>
       <section className="section">
         <div className="wrap">
-          <div className="section-heading">
+          <div className="section-heading team-heading">
             <div>
               <p className="eyebrow">THE PEOPLE BEHIND THE PROMISE</p>
               <h2>

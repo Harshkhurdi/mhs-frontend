@@ -844,7 +844,7 @@
 .footer-grid a:hover {
   color: #c9d4ff;
 }
-.footer-grid .footer-phone {
+.footer-grid .footer-email {
   font-size: 15px !important;
   color: #fff !important;
   font-weight: 500;
@@ -2796,8 +2796,33 @@ em {
 .brand-navigation a:hover {
   color: var(--cobalt);
 }
-.section-heading {
+.team-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr);
   align-items: end;
+  gap: clamp(24px, 4vw, 56px);
+}
+.team-heading > div {
+  min-width: 0;
+}
+.team-heading h2 {
+  font-size: clamp(32px, 4.5vw, 54px);
+  line-height: 1.12;
+}
+.team-heading > p {
+  justify-self: end;
+  margin: 0;
+}
+@media (max-width: 800px) {
+  .team-heading {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: start;
+    gap: 20px;
+  }
+  .team-heading > p {
+    justify-self: start;
+    max-width: 60ch;
+  }
 }
 .section-heading > div:last-child {
   max-width: 365px;
