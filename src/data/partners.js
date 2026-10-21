@@ -1,5 +1,19 @@
 export const partners = [
   {
+    id: 'karl-storz',
+    name: 'KARL STORZ',
+    description: 'Endoscopy, surgical imaging & operating room systems',
+    color: '#005395',
+    url: 'https://www.karlstorz.com/in/en/online-catalog.htm',
+  },
+  {
+    id: 'kiran',
+    name: 'Kiran Medical',
+    description: 'Medical imaging & radiation protection',
+    color: '#c72632',
+    url: 'https://www.kiranxray.com/store/in/shop',
+  },
+  {
     id: 'hamilton',
     name: 'Hamilton Medical',
     description: 'Intelligent ventilators for critical care',

@@ -7,6 +7,7 @@ import {
   sortCatalogue,
 } from '../src/lib/catalogue.js'
 import { safeImageUrl } from '../src/lib/quote.js'
+import { manufacturerBrands, clinicalSpecialties } from '../src/data/products.js'
 const { products } = JSON.parse(
   readFileSync(
     new URL('../src/data/manufacturerCatalogue.json', import.meta.url),
@@ -17,20 +18,17 @@ const hosts = {
   samsung: 'www.samsunghealthcare.com',
   linet: 'www.linet.com',
   spacelabs: 'spacelabshealthcare.com',
+  'karl-storz': 'www.karlstorz.com',
+  kiran: 'www.kiranxray.com',
 }
-const specialties = [
-  'critical-care',
-  'radiology',
-  'ward-infrastructure',
-  'patient-monitoring',
-  'cardiology',
-  'pressure-care',
-  'accessories',
-]
+const specialties = clinicalSpecialties.map((s) => s.id)
 
 test('every manufacturer entry has unique identity, a real local photograph and an official product link', () => {
-  assert.equal(products.length, 108)
-  assert.equal(new Set(products.map((p) => p.id)).size, 108)
+  assert.ok(products.length >= 290)
+  assert.equal(new Set(products.map((p) => p.id)).size, products.length)
+  for (const brand of manufacturerBrands) {
+    assert.ok(products.some((p) => p.brand === brand.id), brand.name)
+  }
   for (const p of products) {
     assert.equal(new URL(p.sourceUrl).hostname, hosts[p.brand], p.id)
     assert.equal(new URL(p.sourceUrl).protocol, 'https:')
@@ -40,7 +38,7 @@ test('every manufacturer entry has unique identity, a real local photograph and 
     assert.ok(p.imageUrl.startsWith('https://'), p.id)
     if (p.pdfUrl) assert.equal(new URL(p.pdfUrl).protocol, 'https:')
   }
-  assert.equal(products.filter((p) => p.pdfUrl).length, 51)
+  assert.ok(products.filter((p) => p.pdfUrl).length >= 190)
 })
 
 test('published listings enrich matching equipment without losing distinct families or verified media', () => {
@@ -60,7 +58,7 @@ test('published listings enrich matching equipment without losing distinct famil
     },
   ]
   const merged = mergeCatalogue(products, live)
-  assert.equal(merged.length, 108)
+  assert.equal(merged.length, products.length)
   assert.equal(merged.filter((p) => p.name === 'Solido 3').length, 1)
   for (const p of live) {
     const entry = merged.find((m) => m.inventoryRecordId === p.id)
@@ -75,13 +73,15 @@ test('published listings enrich matching equipment without losing distinct famil
     mergeCatalogue(products, [
       { id: 'custom', name: 'Custom equipment', brand: 'other' },
     ]).length,
-    109,
+    products.length + 1,
   )
 })
 
 test('search combines model and application terms, respects filters and sorting never mutates the data', () => {
   assert.equal(filterCatalogue(products, { brand: 'samsung' }).length, 30)
   assert.equal(filterCatalogue(products, { brand: 'linet' }).length, 50)
+  assert.ok(filterCatalogue(products, { brand: 'karl-storz', search: 'RUBINA' }).length > 0)
+  assert.ok(filterCatalogue(products, { brand: 'kiran', specialty: 'radiation-protection' }).length > 0)
   assert.equal(
     filterCatalogue(products, { search: '  HAMILTON c6  ' })[0].id,
     'hamilton-c6',

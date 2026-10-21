@@ -20,11 +20,31 @@ const showcaseIds = [
   'samsung-r20',
   'linet-multicare-x',
   'spacelabs-qube',
+  'karl-storz-th121',
+  'kiran-flat-panel-based-digital-carm',
 ]
 const showcases = showcaseIds
   .map((id) => range.find((p) => p.id === id))
   .filter(Boolean)
 const categories = [
+  {
+    id: 'endoscopy-surgery',
+    name: 'Endoscopy & surgery',
+    note: 'Visualisation. Endoscopy. Surgical systems.',
+    imageId: 'karl-storz-th121',
+  },
+  {
+    id: 'radiation-protection',
+    name: 'Radiation protection',
+    note: 'Aprons. Eyewear. Protective shields.',
+    imageId: 'kiran-coat-apron-flex-back',
+  },
+  {
+    id: 'accessories',
+    name: 'Equipment accessories',
+    note: 'Circuits. Consumables. Compatible fittings.',
+    imageId: 'hamilton-breathing-circuit-sets',
+  },
   {
     id: 'critical-care',
     name: 'Respiratory & critical care',
@@ -63,6 +83,9 @@ const categories = [
   },
 ]
 const featuredIds = [
+  'karl-storz-ui600',
+  'kiran-flat-panel-based-digital-carm',
+  'karl-storz-tp101',
   'hamilton-hf90',
   'samsung-hera-z20',
   'linet-eleganza-5',
@@ -79,7 +102,7 @@ export default function Home() {
     <>
       <PageMeta
         title="Medelec Healthcare Solutions | Equipment. Expertise. Care."
-        description="Explore medical equipment from Hamilton Medical, Samsung Healthcare, LINET and Spacelabs, with product literature and local service engineering support from Medelec."
+        description="Explore medical equipment from Hamilton Medical, Samsung Healthcare, LINET, Spacelabs, KARL STORZ and Kiran Medical, with official product literature and local service engineering support."
       />
       <section className="home-hero">
         <div className="wrap home-hero-grid">
@@ -115,7 +138,9 @@ export default function Home() {
                 <span>equipment & product families</span>
               </div>
               <div>
-                <strong>04</strong>
+                <strong>
+                  {String(manufacturerBrands.length).padStart(2, '0')}
+                </strong>
                 <span>global manufacturer ranges</span>
               </div>
               <div>
@@ -135,7 +160,8 @@ export default function Home() {
                 {manufacturerBrands.find((b) => b.id === featured.brand)?.name}
               </span>
               <span className="showcase-number">
-                0{showcases.indexOf(featured) + 1}—04
+                {String(showcases.indexOf(featured) + 1).padStart(2, '0')}—
+                {String(showcases.length).padStart(2, '0')}
               </span>
             </div>
             <div className="showcase-image">
@@ -172,13 +198,7 @@ export default function Home() {
                   aria-pressed={selectedBrand === p.brand}
                   onClick={() => setSelectedBrand(p.brand)}
                 >
-                  {p.brand === 'hamilton'
-                    ? 'Hamilton'
-                    : p.brand === 'samsung'
-                      ? 'Samsung'
-                      : p.brand === 'linet'
-                        ? 'LINET'
-                        : 'Spacelabs'}
+                  {manufacturerBrands.find((b) => b.id === p.brand)?.shortName}
                 </button>
               ))}
             </div>
@@ -270,8 +290,8 @@ export default function Home() {
               <h2>Explore the possibilities.</h2>
             </div>
             <p>
-              Discover respiratory care, imaging and patient support systems
-              from our manufacturer ranges.
+              Discover respiratory care, surgical imaging, diagnostics and
+              patient support systems from our manufacturer ranges.
             </p>
           </div>
           <div className="featured-equipment-grid">

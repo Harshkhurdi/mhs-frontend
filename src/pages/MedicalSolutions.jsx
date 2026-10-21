@@ -11,6 +11,7 @@ import {
 } from 'react-icons/hi2'
 import { db } from '../config/firebaseDatabase'
 import { clinicalSpecialties, manufacturerBrands } from '../data/products'
+import { partners } from '../data/partners'
 import reference from '../data/manufacturerCatalogue.json'
 import { withTimeout } from '../lib/quote'
 import {
@@ -23,6 +24,12 @@ import ProductDetails from '../components/ProductDetails'
 import PageMeta from '../components/PageMeta'
 
 const pageSize = 18
+const checkedDate = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'long',
+  year: 'numeric',
+  timeZone: 'UTC',
+}).format(new Date(reference.verifiedAt))
 export default function MedicalSolutions() {
   const [params, setParams] = useSearchParams()
   const [liveProducts, setLiveProducts] = useState([])
@@ -109,7 +116,7 @@ export default function MedicalSolutions() {
     <>
       <PageMeta
         title="Medical Equipment Catalogue | Medelec Healthcare Solutions"
-        description="Explore equipment and product families from Hamilton Medical, Samsung Healthcare, LINET and Spacelabs, with real images and official product literature."
+        description="Explore equipment from Hamilton Medical, Samsung Healthcare, LINET, Spacelabs, KARL STORZ and Kiran Medical, with real photographs and official product literature."
       />
       <section className="catalogue-intro">
         <div className="wrap">
@@ -240,7 +247,7 @@ export default function MedicalSolutions() {
               <p className="catalogue-verification">
                 Manufacturer range checked
                 <br />
-                <strong>20 October 2026</strong>
+                <strong>{checkedDate}</strong>
               </p>
             </aside>
             <div className="catalogue-results" id="equipment-results">
@@ -373,6 +380,26 @@ export default function MedicalSolutions() {
                   quotation. Images and literature belong to their respective
                   manufacturers.
                 </p>
+              </div>
+              <div className="manufacturer-resources">
+                <h3>Looking for another model or a specific document?</h3>
+                <p>
+                  Browse the manufacturers’ full directories for additional
+                  variants and resources, or ask our service team to help
+                  identify the right equipment and literature.
+                </p>
+                <div>
+                  {partners.map((partner) => (
+                    <a
+                      key={partner.id}
+                      href={partner.url}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {partner.name} <HiArrowUpRight />
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
           </div>

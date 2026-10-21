@@ -111,7 +111,9 @@ export default function ProductDetails({ product, onClose }) {
                 <HiOutlineDocumentText />
                 <span>
                   <strong>Product literature</strong>
-                  <small>Manufacturer brochure or technical document</small>
+                  <small>
+                    {product.literatureTitle || 'Manufacturer brochure or technical document'}
+                  </small>
                 </span>
                 <HiArrowUpRight />
               </a>

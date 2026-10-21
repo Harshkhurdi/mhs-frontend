@@ -4,7 +4,7 @@ Medelec Healthcare Solutions
 
 Website: [medelec.vercel.app](https://medelec.vercel.app/)
 
-Version 1.0 | 20 October 2026 | For the business owner, service engineers, staff and website maintainer
+Version 1.1 | 21 October 2026 | For the business owner, service engineers, staff and website maintainer
 
 This manual explains how visitors request equipment or service, how staff find and follow up enquiries, and how the owner manages Firebase and Vercel. It describes the current application, including its limits. It does not add features or change database permissions.
 
@@ -56,7 +56,7 @@ No passwords, private keys or service account credentials belong in this manual 
 
 Visitors do not need an account to browse equipment, build a quote list or submit the contact form.
 
-1. Start at the homepage. The four manufacturer buttons change the featured equipment image. A manufacturer name below the hero opens its filtered catalogue.
+1. Start at the homepage. The six manufacturer buttons change the featured equipment image. A manufacturer name below the hero opens its filtered catalogue. The top **Speak to our team** link opens an email to **info@medelec.com**.
 2. Select **Find your equipment** or **Medical solutions** to open the catalogue.
 3. Enter a model, brand or application in **Search equipment**. Search is case-insensitive; multiple words narrow the results together.
 4. Choose a manufacturer and a clinical category. On a phone, use **Filters** to show the category controls. Filters combine with the search term.
@@ -67,7 +67,7 @@ Visitors do not need an account to browse equipment, build a quote list or submi
 
 The address bar contains the catalogue filters. Staff can copy the full filtered URL and send it to a customer. For example, [Samsung equipment](https://medelec.vercel.app/solutions?brand=samsung) opens that manufacturer range.
 
-The reference library currently contains 108 equipment models and product families: Hamilton Medical 15, Samsung Healthcare 30, LINET 50 and Spacelabs Healthcare 13. A family may cover several variants. This is a manufacturer reference range, not a real-time stock list. Confirm availability, configurations, accessories and service scope before quoting. All reference entries have official product links; 51 entries also have literature links, representing 42 distinct documents shared across some models.
+The reference library currently contains 298 equipment models, accessories and product families: Hamilton Medical 15, Samsung Healthcare 30, LINET 50, Spacelabs Healthcare 13, KARL STORZ 139 and Kiran Medical 51. A family may cover several variants. This is a manufacturer reference range, not a real-time stock list. Confirm availability, configurations, accessories and service scope before quoting. All reference entries have official product links; 192 entries also have PDF literature links, representing 164 distinct documents shared across some models.
 
 ## 4 Building and managing a quote list
 
@@ -218,7 +218,7 @@ Deleting an enquiry is not the normal follow-up action. It removes the record an
 
 ## 11 Adding and editing equipment through Admin
 
-The **Equipment catalogue** tab manages documents in the `products` collection. It does not edit the separate 108-entry manufacturer reference file.
+The **Equipment catalogue** tab manages documents in the `products` collection. It does not edit the separate 298-entry manufacturer reference file.
 
 1. Sign in and open **Equipment catalogue**.
 2. Select **Add product**, or **Edit** beside an existing row.
@@ -314,7 +314,7 @@ For a forgotten password, an authorised administrator can use the Firebase Authe
 
 **Permission model to understand:** the repository Firestore rules check `request.auth != null` for privileged catalogue access and enquiry reads. They do not check a staff role, engineer assignment or an approved UID allowlist. Hiding a signup page does not itself enforce a backend staff allowlist. Treat this Authentication project as privileged, and have the maintainer review access rules before adding customer accounts or non-staff login flows. The deployed rules may differ and must be inspected in the console.
 
-The five employee profiles say **Service Engineer**. Those website profile labels do not create accounts or grant database privileges.
+Bahudar, Prikshit and Ashish are labelled **Senior Service Engineer**; Surender and Virender are labelled **Service Engineer**. Those website profile labels do not create accounts or grant database privileges.
 
 ## 16 Data permissions and routine safeguards
 

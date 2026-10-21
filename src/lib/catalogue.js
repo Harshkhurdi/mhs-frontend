@@ -2,7 +2,7 @@
 export function productKey(product) {
   const model = String(product.name || '')
     .toLowerCase()
-    .replace(/the new|spacelabs|healthcare|hamilton|samsung|linet/g, '')
+    .replace(/the new|karl storz|kiran medical|spacelabs|healthcare|hamilton|samsung|linet/g, '')
     .replace(
       /compact|bedside|patient|monitor|ventilator|icu|hospital|ultrasound|system|\bbed\b/g,
       '',
@@ -73,6 +73,8 @@ const featured = [
   'samsung-r20',
   'linet-multicare-x',
   'spacelabs-qube',
+  'karl-storz-th121',
+  'kiran-flat-panel-based-digital-carm',
   'hamilton-hf90',
   'samsung-gm85-elite',
   'linet-eleganza-5',

@@ -55,7 +55,12 @@ export default function ProductCard({ product, brandName, onDetails }) {
             </a>
           )}
           {brochure && (
-            <a href={brochure} target="_blank" rel="noreferrer">
+            <a
+              href={brochure}
+              target="_blank"
+              rel="noreferrer"
+              title={product.literatureTitle || 'Manufacturer brochure or technical document'}
+            >
               <HiOutlineDocumentText /> Literature <HiArrowUpRight />
             </a>
           )}

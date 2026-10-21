@@ -26,8 +26,8 @@ export default function Navbar() {
       <div className="topbar">
         <div className="wrap">
           <span>Medical technology. Personal commitment.</span>
-          <a href="tel:+919316666888">
-            Speak to our team <span>+91 93166 66888 ↗</span>
+          <a href="mailto:info@medelec.com">
+            Speak to our team <span>info@medelec.com ↗</span>
           </a>
         </div>
       </div>

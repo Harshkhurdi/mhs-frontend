@@ -2,22 +2,22 @@ export const teamMembers = [
   {
     id: 'bahudar',
     name: 'Mr. Bahudar Singh',
-    role: 'Service Engineer',
-    focus: 'Installation, maintenance and servicing of medical equipment',
+    role: 'Senior Service Engineer',
+    focus: 'Guiding equipment installations, diagnosing service issues and coordinating dependable after-sales support.',
     initials: 'BS',
   },
   {
     id: 'prikshit',
     name: 'Prikshit',
-    role: 'Service Engineer',
-    focus: 'Installation, maintenance and servicing of medical equipment',
+    role: 'Senior Service Engineer',
+    focus: 'Supporting equipment commissioning, preventive maintenance and troubleshooting to help clinical teams keep systems ready for use.',
     initials: 'PR',
   },
   {
     id: 'ashish',
     name: 'Ashish',
-    role: 'Service Engineer',
-    focus: 'Installation, maintenance and servicing of medical equipment',
+    role: 'Senior Service Engineer',
+    focus: 'Managing equipment fault diagnosis, repair follow-ups and ongoing service support for the systems we supply.',
     initials: 'AS',
   },
   {

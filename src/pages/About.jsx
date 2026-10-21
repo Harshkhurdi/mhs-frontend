@@ -50,7 +50,8 @@ export default function About() {
             </p>
             <p>
               We work with established manufacturers including Hamilton Medical,
-              Samsung Healthcare, LINET and Spacelabs Healthcare. From equipment
+              Samsung Healthcare, LINET, Spacelabs Healthcare, KARL STORZ and
+              Kiran Medical. From equipment
               selection to installation and ongoing service, our team helps you
               move forward with confidence.
             </p>

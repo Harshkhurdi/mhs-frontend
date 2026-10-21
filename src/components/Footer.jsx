@@ -37,12 +37,6 @@ export default function Footer() {
         </div>
         <div>
           <h2>Get in touch</h2>
-          <a className="footer-phone" href="tel:+919316666888">
-            +91 93166 66888
-          </a>
-          <a href="mailto:info@medelec.com">
-            info@medelec.com <HiArrowUpRight />
-          </a>
           <a
             href="https://maps.google.com/?q=F-382,Asha+Towers,Phase+8B,Industrial+Area,Sector+74,Mohali,Punjab"
             target="_blank"
@@ -51,6 +45,12 @@ export default function Footer() {
             F-382, Asha Towers, Phase 8B,
             <br />
             Sector 74, Mohali, Punjab — 160055
+          </a>
+          <a href="mailto:info@medelec.com">
+            info@medelec.com <HiArrowUpRight />
+          </a>
+          <a className="footer-phone" href="tel:+919316666888">
+            +91 93166 66888
           </a>
         </div>
       </div>
