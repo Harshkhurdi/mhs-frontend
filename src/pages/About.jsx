@@ -51,8 +51,8 @@ export default function About() {
             <p>
               We work with established manufacturers including Hamilton Medical,
               Samsung Healthcare, LINET, Spacelabs Healthcare, KARL STORZ and
-              Kiran Medical. From equipment
-              selection to installation and ongoing service, our team helps you
+              Kiran Medical. From equipment selection to installation and
+              ongoing service, our team helps you
               move forward with confidence.
             </p>
             <Link to="/solutions" className="text-link">
@@ -61,28 +61,50 @@ export default function About() {
           </div>
         </div>
       </section>
-      <section className="leadership-section">
-        <div className="wrap leadership-grid">
-          <div>
-            <p className="eyebrow">A NOTE FROM OUR LEADERSHIP</p>
-            <div className="director-profile">
-              <span>{director.initials}</span>
-              <div>
-                <h2>{director.name}</h2>
-                <p>{director.title}</p>
-              </div>
+      <section className="founder-section" aria-labelledby="founder-heading">
+        <div className="wrap founder-grid">
+          <figure className="founder-portrait">
+            <img
+              src={director.image}
+              alt={`${director.name}, Founder and Managing Director of Medelec Healthcare Solutions`}
+              width="404"
+              height="551"
+              loading="lazy"
+              decoding="async"
+            />
+            <figcaption>
+              <span className="founder-caption-label">THE PERSON BEHIND THE PURPOSE</span>
+              <h3>{director.name}</h3>
+              <p>{director.title}</p>
+            </figcaption>
+          </figure>
+          <div className="founder-copy">
+            <p className="eyebrow">A NOTE FROM OUR FOUNDER</p>
+            <h2 id="founder-heading">
+              Better equipment.
+              <br />
+              <em>Lasting relationships.</em>
+            </h2>
+            <blockquote>
+              <p>“{director.quote}”</p>
+            </blockquote>
+            <p className="founder-commitment">
+              Equipment is the starting point. Our commitment continues through
+              installation, maintenance and the everyday work of keeping your
+              systems ready for care.
+            </p>
+            <div className="founder-values" aria-label="Our commitments">
+              <span>Practical expertise</span>
+              <span>Personal support</span>
+              <span>Ongoing service</span>
             </div>
+            <a href="#service-engineers" className="founder-link">
+              Meet the engineers who carry it forward <HiArrowUpRight />
+            </a>
           </div>
-          <blockquote>
-            “{director.quote}”
-            <span>
-              Equipment is the starting point. The relationship is what makes it
-              work.
-            </span>
-          </blockquote>
         </div>
       </section>
-      <section className="section">
+      <section className="section" id="service-engineers">
         <div className="wrap">
           <div className="section-heading team-heading">
             <div>

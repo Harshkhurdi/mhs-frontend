@@ -38,7 +38,8 @@ export const teamMembers = [
 
 export const director = {
   name: 'Mr. Ramesh Khurdi',
-  title: 'Owner & Managing Director',
+  title: 'Founder & Managing Director',
+  image: '/images/ramesh-khurdi-founder.jpg',
   quote:
     'At Medelec Healthcare Solutions, we bridge the gap between world-class medical engineering and critical healthcare delivery across India.',
   initials: 'RK',
