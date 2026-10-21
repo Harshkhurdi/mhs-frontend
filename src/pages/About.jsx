@@ -121,14 +121,15 @@ export default function About() {
             </p>
           </div>
           <div className="engineer-roster">
-            {teamMembers.map((m, i) => (
-              <article className={`engineer-profile${i > 2 ? ' engineer-profile-wide' : ''}`} key={m.id}>
-                <div className="engineer-profile-top">
+            {teamMembers.map((m) => (
+              <article className="engineer-profile" key={m.id}>
+                <div className="engineer-identity">
                   <span className="engineer-monogram" aria-hidden="true">{m.initials}</span>
-                  <span className="engineer-number" aria-hidden="true">0{i + 1}</span>
+                  <div>
+                    <h3>{m.name}</h3>
+                    <p className="engineer-role">{m.role}</p>
+                  </div>
                 </div>
-                <p className="engineer-role">{m.role}</p>
-                <h3>{m.name}</h3>
                 <p className="engineer-focus">{m.focus}</p>
               </article>
             ))}
