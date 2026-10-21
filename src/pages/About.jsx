@@ -104,15 +104,15 @@ export default function About() {
           </div>
         </div>
       </section>
-      <section className="section" id="service-engineers">
+      <section className="section engineers-section" id="service-engineers" aria-labelledby="engineers-heading">
         <div className="wrap">
-          <div className="section-heading team-heading">
+          <div className="engineers-heading">
             <div>
               <p className="eyebrow">THE PEOPLE BEHIND THE PROMISE</p>
-              <h2>
+              <h2 id="engineers-heading">
                 One team.
                 <br />
-                Service engineers.
+                <span>Service engineers.</span>
               </h2>
             </div>
             <p>
@@ -120,15 +120,24 @@ export default function About() {
               equipment we supply, supporting your facility throughout its life.
             </p>
           </div>
-          <div className="team-grid">
-            {teamMembers.map((m) => (
-              <article className="team-card" key={m.id}>
-                <span className="team-initials">{m.initials}</span>
+          <div className="engineer-roster">
+            {teamMembers.map((m, i) => (
+              <article className={`engineer-profile${i > 2 ? ' engineer-profile-wide' : ''}`} key={m.id}>
+                <div className="engineer-profile-top">
+                  <span className="engineer-monogram" aria-hidden="true">{m.initials}</span>
+                  <span className="engineer-number" aria-hidden="true">0{i + 1}</span>
+                </div>
+                <p className="engineer-role">{m.role}</p>
                 <h3>{m.name}</h3>
-                <p className="team-role">{m.role}</p>
-                <p>{m.focus}</p>
+                <p className="engineer-focus">{m.focus}</p>
               </article>
             ))}
+          </div>
+          <div className="engineers-followthrough">
+            <p>From installation to ongoing care, a team you can come back to.</p>
+            <Link to="/service" className="text-link">
+              How we support your equipment <HiArrowUpRight />
+            </Link>
           </div>
         </div>
       </section>

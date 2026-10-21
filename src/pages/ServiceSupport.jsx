@@ -5,7 +5,7 @@ import {
   HiOutlineShieldCheck,
   HiOutlineWrenchScrewdriver,
   HiOutlineAcademicCap,
-  HiOutlinePhone,
+  HiOutlineEnvelope,
 } from 'react-icons/hi2'
 import PageIntro from '../components/PageIntro'
 import CallToAction from '../components/CallToAction'
@@ -61,66 +61,75 @@ export default function ServiceSupport() {
         }
         description="Keep your facility moving with practical biomedical support, preventive maintenance and a team that understands your equipment."
       />
-      <section className="section">
+      <section className="section lifecycle-section" aria-labelledby="lifecycle-heading">
         <div className="wrap">
-          <div className="section-heading">
+          <div className="lifecycle-heading">
             <div>
               <p className="eyebrow">BEYOND THE INSTALLATION</p>
-              <h2>
+              <h2 id="lifecycle-heading">
                 Support for the
                 <br />
-                whole equipment lifecycle.
+                <span>whole equipment lifecycle.</span>
               </h2>
             </div>
-            <p>
-              From the first day of use to routine maintenance, we help you take
-              care of the technology your team depends on.
-            </p>
+            <div className="lifecycle-intro">
+              <p>
+                From the first day of use to routine maintenance, we help you take
+                care of the technology your team depends on.
+              </p>
+              <Link to="/contact?type=service" className="text-link">
+                Discuss your equipment <HiArrowUpRight />
+              </Link>
+            </div>
           </div>
-          <div className="service-grid">
+          <div className="lifecycle-grid">
             {services.map(([Icon, title, text], i) => (
-              <article key={title} className="service-card">
-                <div>
-                  <Icon size={30} />
-                  <span>0{i + 1}</span>
+              <article key={title} className="lifecycle-card">
+                <div className="lifecycle-icon" aria-hidden="true"><Icon /></div>
+                <span className="lifecycle-number" aria-hidden="true">0{i + 1}</span>
+                <div className="lifecycle-copy">
+                  <h3>{title}</h3>
+                  <p>{text}</p>
                 </div>
-                <h3>{title}</h3>
-                <p>{text}</p>
               </article>
             ))}
           </div>
         </div>
       </section>
-      <section className="support-process section">
+      <section className="service-journey section" aria-labelledby="service-journey-heading">
         <div className="wrap">
-          <p className="eyebrow">A SIMPLE WAY TO GET HELP</p>
-          <h2>
-            Tell us what’s happening.
-            <br />
-            We’ll take it from there.
-          </h2>
-          <div className="process-grid">
-            {steps.map(([title, text], i) => (
-              <article key={title}>
-                <span>0{i + 1}</span>
-                <h3>{title}</h3>
-                <p>{text}</p>
-              </article>
-            ))}
+          <div className="service-journey-heading">
+            <p className="eyebrow">A SIMPLE WAY TO GET HELP</p>
+            <h2 id="service-journey-heading">
+              Tell us what’s happening.
+              <br />
+              <span>We’ll take it from there.</span>
+            </h2>
           </div>
-          <div className="support-contact">
-            <div>
-              <HiOutlinePhone size={28} />
+          <ol className="service-steps">
+            {steps.map(([title, text], i) => (
+              <li key={title}>
+                <span className="service-step-number" aria-hidden="true">0{i + 1}</span>
+                <div>
+                  <h3>{title}</h3>
+                  <p>{text}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+          <div className="service-email-panel">
+            <div className="service-email-copy">
+              <span className="service-email-icon" aria-hidden="true"><HiOutlineEnvelope /></span>
               <div>
-                <strong>Need equipment support?</strong>
+                <h3>Need equipment support?</h3>
                 <p>
                   Mon–Sat, 9:00 AM–6:00 PM IST. Service timing depends on
                   location and the issue.
                 </p>
               </div>
             </div>
-            <a href="tel:+919316666888" className="button">
-              Call +91 93166 66888 <HiArrowUpRight />
+            <a href="mailto:info@medelec.com" className="button service-email-button">
+              info@medelec.com <HiArrowUpRight />
             </a>
           </div>
         </div>
@@ -132,7 +141,7 @@ export default function ServiceSupport() {
             <h2>
               A little clarity
               <br />
-              before you call.
+              before you get in touch.
             </h2>
             <Link to="/contact?type=service" className="text-link">
               Send a service inquiry <HiArrowUpRight />

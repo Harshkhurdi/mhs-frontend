@@ -2542,6 +2542,373 @@
     padding: 28px;
   }
 }
+/* People and equipment care share a calm, practical service identity. */
+.engineers-section {
+  background: #f6f4ef;
+}
+.engineers-heading,
+.lifecycle-heading {
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+  align-items: end;
+  gap: 48px;
+  margin-bottom: 40px;
+}
+.engineers-heading h2,
+.lifecycle-heading h2 {
+  margin-top: 16px;
+  font-size: clamp(32px, 3.7vw, 50px);
+  line-height: 1.16;
+}
+.engineers-heading h2 span,
+.lifecycle-heading h2 span {
+  color: var(--cobalt);
+}
+.engineers-heading > p,
+.lifecycle-intro > p {
+  max-width: 45ch;
+  color: #626b7e;
+  font-size: 14px;
+  line-height: 1.85;
+}
+.engineer-roster {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 18px;
+}
+.engineer-profile {
+  grid-column: span 2;
+  padding: 28px;
+  border: 1px solid #e1e4eb;
+  border-radius: 14px;
+  background: white;
+  min-width: 0;
+}
+.engineer-profile-wide {
+  grid-column: span 3;
+}
+.engineer-profile-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+}
+.engineer-monogram {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 16px 16px 16px 4px;
+  background: #eaf0ff;
+  color: #355be7;
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+.engineer-number {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #7c8493;
+}
+.engineer-role {
+  color: #355be7;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.engineer-profile h3 {
+  margin-top: 8px;
+  font-size: 22px;
+  letter-spacing: -0.035em;
+}
+.engineer-focus {
+  padding-top: 18px;
+  margin-top: 20px;
+  border-top: 1px solid #e9ebf1;
+  color: #626b7e;
+  font-size: 13px;
+  line-height: 1.8;
+}
+.engineers-followthrough {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  padding-top: 28px;
+  font-size: 13px;
+}
+.engineers-followthrough p {
+  color: #626b7e;
+}
+.lifecycle-intro .text-link {
+  margin-top: 18px;
+}
+.lifecycle-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+.lifecycle-card {
+  position: relative;
+  display: grid;
+  grid-template-columns: 56px minmax(0, 1fr);
+  gap: 24px;
+  padding: 32px;
+  border: 1px solid #e1e4eb;
+  border-radius: 14px;
+  background: #fafbfdf0;
+}
+.lifecycle-icon,
+.service-email-icon {
+  display: grid;
+  place-items: center;
+  width: 56px;
+  height: 56px;
+  border-radius: 14px;
+  color: #355be7;
+  background: #eaf0ff;
+  flex-shrink: 0;
+}
+.lifecycle-icon svg,
+.service-email-icon svg {
+  width: 27px;
+  height: 27px;
+}
+.lifecycle-number {
+  position: absolute;
+  right: 24px;
+  top: 20px;
+  color: #7c8493;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+}
+.lifecycle-copy {
+  padding-top: 12px;
+}
+.lifecycle-copy h3 {
+  font-size: 20px;
+  letter-spacing: -0.03em;
+}
+.lifecycle-copy p {
+  color: #626b7e;
+  font-size: 13px;
+  line-height: 1.85;
+  margin-top: 12px;
+  max-width: 43ch;
+}
+.service-journey {
+  background: var(--ink);
+  color: white;
+}
+.service-journey .eyebrow {
+  color: #a9bbff;
+}
+.service-journey-heading h2 {
+  margin-top: 18px;
+  font-size: clamp(30px, 3.6vw, 48px);
+  line-height: 1.2;
+}
+.service-journey-heading h2 span {
+  color: #b7c5f5;
+}
+.service-steps {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 36px;
+  list-style: none;
+  padding: 0;
+  margin: 48px 0;
+}
+.service-steps li {
+  position: relative;
+  min-width: 0;
+}
+.service-steps li:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: 24px;
+  left: 66px;
+  right: -18px;
+  height: 1px;
+  background: #ffffff26;
+}
+.service-step-number {
+  display: grid;
+  place-items: center;
+  width: 48px;
+  height: 48px;
+  border: 1px solid #ffffff38;
+  border-radius: 50%;
+  color: #c7d3ff;
+  font-size: 12px;
+  margin-bottom: 26px;
+}
+.service-steps h3 {
+  font-size: 20px;
+  letter-spacing: -0.025em;
+}
+.service-steps p {
+  color: #bec5d5;
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.85;
+  max-width: 36ch;
+}
+.service-email-panel {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  padding: 30px;
+  border-radius: 14px;
+  background: #f6f4ef;
+  color: var(--ink);
+}
+.service-email-copy {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  min-width: 0;
+}
+.service-email-copy h3 {
+  font-size: 20px;
+  letter-spacing: -0.03em;
+}
+.service-email-copy p {
+  color: #626b7e;
+  font-size: 12px;
+  line-height: 1.8;
+  margin-top: 7px;
+  max-width: 50ch;
+}
+.service-email-button {
+  flex-shrink: 0;
+  font-size: 15px;
+  padding-inline: 24px;
+}
+@media (max-width: 1000px) {
+  .engineers-heading,
+  .lifecycle-heading {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+  .engineers-heading > p,
+  .lifecycle-intro > p {
+    max-width: 65ch;
+  }
+  .engineer-profile {
+    padding: 24px;
+  }
+  .engineer-roster {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .engineer-profile,
+  .engineer-profile-wide {
+    grid-column: auto;
+  }
+  .engineer-profile:last-child {
+    grid-column: span 2;
+  }
+  .engineer-profile h3 {
+    font-size: 20px;
+  }
+  .lifecycle-card {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+    padding: 28px;
+  }
+  .lifecycle-copy {
+    padding-top: 0;
+  }
+  .service-steps {
+    gap: 24px;
+  }
+  .service-email-panel {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 24px;
+  }
+}
+@media (max-width: 700px) {
+  .engineers-heading,
+  .lifecycle-heading {
+    margin-bottom: 28px;
+  }
+  .engineers-heading h2,
+  .lifecycle-heading h2 {
+    font-size: clamp(28px, 7.7vw, 40px);
+  }
+  .engineer-roster {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .engineer-profile,
+  .engineer-profile-wide,
+  .engineer-profile:last-child {
+    grid-column: auto;
+  }
+  .engineer-profile-top {
+    margin-bottom: 22px;
+  }
+  .engineers-followthrough {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+  .lifecycle-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 14px;
+  }
+  .lifecycle-card {
+    padding: 24px;
+  }
+  .service-steps {
+    grid-template-columns: minmax(0, 1fr);
+    margin: 32px 0;
+    gap: 0;
+  }
+  .service-steps li {
+    display: grid;
+    grid-template-columns: 42px minmax(0, 1fr);
+    gap: 20px;
+    padding-bottom: 30px;
+  }
+  .service-steps li:last-child {
+    padding-bottom: 0;
+  }
+  .service-step-number {
+    width: 42px;
+    height: 42px;
+    margin: 0;
+  }
+  .service-steps li:not(:last-child)::after {
+    left: 20px;
+    top: 52px;
+    bottom: 10px;
+    right: auto;
+    width: 1px;
+    height: auto;
+  }
+  .service-steps h3 {
+    font-size: 18px;
+    padding-top: 7px;
+  }
+  .service-email-panel {
+    padding: 24px;
+  }
+  .service-email-copy {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 18px;
+  }
+  .service-email-button {
+    width: 100%;
+    font-size: 14px;
+    padding-inline: 14px;
+    gap: 12px;
+  }
+}
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
