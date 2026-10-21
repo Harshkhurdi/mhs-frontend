@@ -13,6 +13,7 @@ import ErrorBoundary from './components/ErrorBoundary.jsx'
 import './index.css'
 
 const MedicalSolutions = lazy(() => import('./pages/MedicalSolutions.jsx'))
+const Events = lazy(() => import('./pages/Events.jsx'))
 const Contact = lazy(() => import('./pages/Contact.jsx'))
 const AdminLogin = lazy(() => import('./pages/AdminLogin.jsx'))
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard.jsx'))
@@ -38,6 +39,7 @@ createRoot(document.getElementById('root')).render(
                   <Route path="about" element={<About />} />
                   <Route path="solutions" element={<MedicalSolutions />} />
                   <Route path="service" element={<ServiceSupport />} />
+                  <Route path="events" element={<Events />} />
                   <Route path="contact" element={<Contact />} />
 
                   {/* Admin auth pages - public */}

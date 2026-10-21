@@ -3,7 +3,7 @@ export default function Brand() {
     <span className="brand">
       <img
         className="official-logo"
-        src="/images/brand/mhs-logo.png"
+        src="/images/brand/mhs-logo.jpeg"
         width="50"
         height="50"
         alt="MHS"

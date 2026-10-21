@@ -1,3 +1,6 @@
+import { useEffect, useState } from 'react'
+import { loadTeamPhotos } from '../services/gallery'
+import { galleryImage } from '../lib/events'
 import { HiArrowUpRight, HiOutlineUser } from 'react-icons/hi2'
 import { Link } from 'react-router-dom'
 import { director, teamMembers } from '../data/team'
@@ -5,6 +8,12 @@ import PageIntro from '../components/PageIntro'
 import CallToAction from '../components/CallToAction'
 
 export default function About() {
+  const [portraits, setPortraits] = useState({})
+  useEffect(() => {
+    let active = true
+    loadTeamPhotos().then((photos) => { if (active) setPortraits(photos) }).catch(() => {})
+    return () => { active = false }
+  }, [])
   return (
     <>
       <PageIntro
@@ -50,8 +59,8 @@ export default function About() {
             </p>
             <p>
               We work with established manufacturers including Hamilton Medical,
-              Samsung Healthcare, LINET, Spacelabs Healthcare, KARL STORZ and
-              Kiran Medical. From equipment selection to installation and
+              KARL STORZ, Spacelabs Healthcare, Kiran Medical, Samsung Healthcare,
+              LINET, Helmier and Nihon Kohden (defibrillation). From equipment selection to installation and
               ongoing service, our team helps you
               move forward with confidence.
             </p>
@@ -124,8 +133,8 @@ export default function About() {
             <figure className="engineers-photo">
               <div className="engineers-photo-frame">
                 <img
-                  src="/images/equipment-support.jpg"
-                  alt="Representative stock photograph of a technician adjusting medical imaging equipment"
+                  src="/images/karl-storz-or1-room.webp"
+                  alt="KARL STORZ integrated operating room equipment"
                   width="1000"
                   height="667"
                   loading="lazy"
@@ -137,14 +146,14 @@ export default function About() {
                 <p className="eyebrow">EXPERTISE THAT STAYS WITH YOU</p>
                 <h3>Care in every detail.</h3>
                 <p>From a careful installation to the next service visit, our team helps keep your equipment ready for care.</p>
-                <span className="engineers-photo-credit">Representative photograph · Tima Miroshnichenko / Pexels</span>
+                <span className="engineers-photo-credit">Integrated operating room · KARL STORZ</span>
               </figcaption>
             </figure>
             <div className="engineer-roster">
               {teamMembers.map((m) => (
                 <article className="engineer-profile" key={m.id}>
                   <div className="engineer-identity">
-                    <span className="engineer-avatar" aria-hidden="true"><HiOutlineUser /></span>
+                    <span className="engineer-avatar">{galleryImage(portraits[m.id] || m.image) ? <img src={galleryImage(portraits[m.id] || m.image)} alt={m.name} loading="lazy" /> : <HiOutlineUser aria-hidden="true" />}</span>
                     <div>
                       <h3>{m.name}</h3>
                       <p className="engineer-role">{m.role}</p>

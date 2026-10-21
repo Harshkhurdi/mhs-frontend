@@ -1,0 +1,58 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function staff() { return request.auth != null; }
+    function shortText(value, size) { return value is string && value.size() > 0 && value.size() <= size; }
+    function image(value, size) {
+      return value is string && value.size() <= size &&
+        (value.matches('data:image/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+') || value.matches('/images/events/[a-zA-Z0-9_-]+[.]webp'));
+    }
+    // Preserve the existing equipment and inquiry access policy.
+    match /products/{productId} {
+      allow read: if resource.data.is_published == true || staff();
+      allow create, update, delete: if staff();
+    }
+    match /inquiries/{inquiryId} {
+      allow create: if true;
+      allow read: if staff();
+    }
+    match /events/{eventId} {
+      allow read: if resource.data.is_published == true || staff();
+      allow create, update: if staff() && request.resource.data.keys().hasOnly([
+        'title', 'category', 'event_date', 'location', 'summary', 'is_published', 'is_demo',
+        'cover_image', 'cover_alt', 'photo_count', 'created_at', 'updated_at'
+      ]) && shortText(request.resource.data.title, 140)
+        && shortText(request.resource.data.location, 140)
+        && shortText(request.resource.data.summary, 2000)
+        && request.resource.data.category in ['Conference', 'Workshop', 'Training', 'Community']
+        && request.resource.data.event_date is string
+        && request.resource.data.event_date.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        && request.resource.data.is_published is bool && request.resource.data.is_demo is bool
+        && image(request.resource.data.cover_image, 65000)
+        && shortText(request.resource.data.cover_alt, 240)
+        && request.resource.data.photo_count is int && request.resource.data.photo_count >= 1 && request.resource.data.photo_count <= 10
+        && request.resource.data.created_at is number && request.resource.data.updated_at is number;
+      match /photos/{photoId} {
+        allow read: if staff() || (resource.data.is_published == true && get(/databases/$(database)/documents/events/$(eventId)).data.is_published == true);
+        allow create, update: if staff() && request.resource.data.keys().hasOnly(['src', 'thumbnail', 'alt', 'position', 'is_published', 'updated_at'])
+          && image(request.resource.data.src, 650000) && image(request.resource.data.thumbnail, 65000)
+          && shortText(request.resource.data.alt, 240)
+          && request.resource.data.position is int && request.resource.data.position >= 0 && request.resource.data.position < 10
+          && request.resource.data.is_published is bool && request.resource.data.updated_at is number;
+      }
+    }
+    match /siteSettings/gallery {
+      allow read: if true;
+      allow create, update: if staff() && request.resource.data.keys().hasOnly(['show_demos', 'hidden_demo_ids'])
+        && (!('show_demos' in request.resource.data) || request.resource.data.show_demos is bool)
+        && (!('hidden_demo_ids' in request.resource.data) || (request.resource.data.hidden_demo_ids is list && request.resource.data.hidden_demo_ids.size() <= 6));
+    }
+    match /teamProfiles/{engineerId} {
+      allow read: if true;
+      allow create, update: if staff() && engineerId in ['bahudar', 'prikshit', 'ashish', 'surender', 'virender']
+        && request.resource.data.keys().hasOnly(['photo', 'updated_at'])
+        && (request.resource.data.photo == '' || image(request.resource.data.photo, 250000))
+        && request.resource.data.updated_at is number;
+    }
+  }
+}

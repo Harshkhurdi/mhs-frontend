@@ -24,6 +24,7 @@ export default function Footer() {
           <Link to="/about">About Medelec</Link>
           <Link to="/solutions">Medical solutions</Link>
           <Link to="/service">Service & support</Link>
+          <Link to="/events">Photos & events</Link>
           <Link to="/contact">Contact us</Link>
         </div>
         <div>

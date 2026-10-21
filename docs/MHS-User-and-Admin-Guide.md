@@ -4,11 +4,11 @@ Medelec Healthcare Solutions
 
 Website: [medelec.vercel.app](https://medelec.vercel.app/)
 
-Version 1.1 | 21 October 2026 | For the business owner, service engineers, staff and website maintainer
+Version 1.2 | 21 October 2026 | For the business owner, service engineers, staff and website maintainer
 
 This manual explains how visitors request equipment or service, how staff find and follow up enquiries, and how the owner manages Firebase and Vercel. It describes the current application, including its limits. It does not add features or change database permissions.
 
-Source baseline: frontend commit `283bd023312ba4e863c2143650a710df0cb6f691`, the backend repository rules, and the domain configuration verified in this session. Firebase project: `mhs-project-7235e`. Deployed Firestore rules and Google account permissions must be checked in the Firebase console; the repository rules are the documented baseline, not proof of the deployed configuration.
+Source baseline: the current frontend, including `firebase/firestore.rules` for the deployed gallery and portrait permissions. Firebase project: `mhs-project-7235e`. Gallery rules were published and checked on 21 October 2026. Website staff access still uses the existing Firebase Authentication accounts.
 
 ## 1 Quick start for checking enquiries
 
@@ -40,7 +40,7 @@ If the inbox does not show it, use section 8 to check the same Firebase project 
 | Firebase console | [Open the MHS Firebase project](https://console.firebase.google.com/project/mhs-project-7235e/overview) |
 | Vercel project | [MHS deployment dashboard](https://vercel.com/harsh-1c69/mhs) |
 | Frontend source | [Harshkhurdi/mhs-frontend](https://github.com/Harshkhurdi/mhs-frontend) |
-| Database rules source | [Harshkhurdi/mhs-backend](https://github.com/Harshkhurdi/mhs-backend) |
+| Database rules source | [Frontend Firestore rules](https://github.com/Harshkhurdi/mhs-frontend/blob/main/firebase/firestore.rules) |
 
 The old `mhs-frontend.vercel.app` address redirects to `medelec.vercel.app`. The Vercel project is named `mhs`; the GitHub repository still has `mhs-frontend` in its name. These names do not have to match.
 
@@ -56,7 +56,7 @@ No passwords, private keys or service account credentials belong in this manual 
 
 Visitors do not need an account to browse equipment, build a quote list or submit the contact form.
 
-1. Start at the homepage. The six manufacturer buttons change the featured equipment image. A manufacturer name below the hero opens its filtered catalogue. The top **Speak to our team** link opens an email to **info@medelec.com**.
+1. Start at the homepage. The eight manufacturer buttons change the featured equipment image. A manufacturer name below the hero opens its filtered catalogue. The top **Speak to our team** link opens an email to **info@medelec.com**.
 2. Select **Find your equipment** or **Medical solutions** to open the catalogue.
 3. Enter a model, brand or application in **Search equipment**. Search is case-insensitive; multiple words narrow the results together.
 4. Choose a manufacturer and a clinical category. On a phone, use **Filters** to show the category controls. Filters combine with the search term.
@@ -67,7 +67,7 @@ Visitors do not need an account to browse equipment, build a quote list or submi
 
 The address bar contains the catalogue filters. Staff can copy the full filtered URL and send it to a customer. For example, [Samsung equipment](https://medelec.vercel.app/solutions?brand=samsung) opens that manufacturer range.
 
-The reference library currently contains 298 equipment models, accessories and product families: Hamilton Medical 15, Samsung Healthcare 30, LINET 50, Spacelabs Healthcare 13, KARL STORZ 139 and Kiran Medical 51. A family may cover several variants. This is a manufacturer reference range, not a real-time stock list. Confirm availability, configurations, accessories and service scope before quoting. All reference entries have official product links; 192 entries also have PDF literature links, representing 164 distinct documents shared across some models.
+The reference library currently contains 313 equipment models, accessories and product families: Hamilton Medical 16, KARL STORZ 140, Spacelabs Healthcare 13, Kiran Medical 51, Samsung Healthcare 30, LINET 50, Helmier 9, Nihon Kohden 4. Nihon Kohden is limited to defibrillators and AEDs. Helmier entries describe its published supply range; some devices retain their original Graseby/CADD/HOTLINE product brands. A family may cover several variants. This is a manufacturer reference range, not a real-time stock list. All entries link to official product information; 198 entries also have PDF literature, representing 170 distinct documents. Confirm regional availability and configurations before quoting.
 
 ## 4 Building and managing a quote list
 
@@ -117,7 +117,7 @@ The form draft is saved in session storage as fields change. It can survive a re
 | Staff review a record | Shows contact details, message, type, date and items | Call/email, confirm requirements and issue a quotation manually |
 | Customer uses email fallback | Opens an email draft only | Customer sends it; staff check their actual email inbox |
 
-There is no scheduled inbox polling or realtime listener in the supplied frontend. The backend repository contains Firestore rules; it is not an email service or a NestJS server. No email trigger, delivery receipt, SMS notification or WhatsApp integration is defined in the inspected repositories. Any independently configured external automation would need to be checked separately in its own service.
+There is no scheduled inbox polling or realtime listener in the supplied frontend. The frontend repository contains the current Firestore rules; it is not an email service or a NestJS server. No email trigger, delivery receipt, SMS notification or WhatsApp integration is defined in the inspected repositories. Any independently configured external automation would need to be checked separately in its own service.
 
 A suggested business routine is to assign one person to check the dashboard at agreed times during office hours and keep an enquiry register with the customer, received time, assigned engineer, next action and follow-up date. This is an operating recommendation, not an existing app feature.
 
@@ -218,7 +218,7 @@ Deleting an enquiry is not the normal follow-up action. It removes the record an
 
 ## 11 Adding and editing equipment through Admin
 
-The **Equipment catalogue** tab manages documents in the `products` collection. It does not edit the separate 298-entry manufacturer reference file.
+The **Equipment catalogue** tab manages documents in the `products` collection. It does not edit the separate 313-entry manufacturer reference file.
 
 1. Sign in and open **Equipment catalogue**.
 2. Select **Add product**, or **Edit** beside an existing row.
@@ -334,7 +334,7 @@ For normal operations, restrict privileged accounts, sign out on shared computer
 
 The Firebase web configuration is used by the browser and is not an admin credential. Actual protection depends on the configured services, rules and account permissions. Do not put Firebase service-account private keys, staff passwords or mail credentials in frontend code or any `VITE_` variable, because Vite exposes these variables in the client build.
 
-Check the **Rules** tab against the intended backend rules before assuming access behavior. A frontend deployment or Vercel rollback does not publish or restore Firestore rules.
+Check the **Rules** tab against the current `firebase/firestore.rules` policy before assuming access behavior. A frontend deployment or Vercel rollback does not publish or restore Firestore rules.
 
 ## 17 Backups and recovering from mistakes
 
@@ -352,7 +352,7 @@ Never save a Firestore customer-data export inside this public GitHub repository
 
 ## 18 Running the website locally
 
-This section is for the maintainer. The current app uses React, Vite and Firebase. There is no separate application server to start for these website flows. The `mhs-backend` repository supplies database rules; it is not an executable backend server.
+This section is for the maintainer. The current app uses React, Vite and Firebase. There is no separate application server to start for these website flows. The current database policy is `firebase/firestore.rules` in this frontend repository; the older `mhs-backend` repository is not an executable application server.
 
 Use Node 24, as specified by `package.json` and `.nvmrc`. From the frontend repository:
 
@@ -450,9 +450,9 @@ Use this checklist after a significant app, configuration or permission change. 
 8. With an authorised test staff account, create, edit, archive and republish a custom database product; check the public result and the reference-source distinction.
 9. Sign out and confirm `/admin` requires login. Recheck access after any rule or Authentication changes.
 
-**Verification boundary:** this manual is based on inspected source and the previously verified live website/domain. Earlier app checks included an isolated adapter for enquiry and staff write workflows. Preparing this manual did not log into a real staff account, read private customer enquiries, alter deployed rules or write test records to the live database.
+**Verification boundary:** this manual is based on inspected source and the previously verified live website/domain. Earlier app checks included an isolated adapter for enquiry and staff write workflows. Gallery and portrait rules were published through the existing project owner session. Public gallery reads and authenticated/anonymous portrait rules were checked. Upload workflows were tested with isolated local data; a successful real website staff sign-in and authenticated production upload remain unverified because no staff credentials were supplied. No test album or portrait was written to production.
 
-Application sources: `src/pages/Contact.jsx`, `src/pages/AdminDashboard.jsx`, `src/pages/AdminLogin.jsx`, `src/context/AuthContext.jsx`, `src/components/RFQContext.jsx`, `src/components/QuoteDrawer.jsx`, `src/pages/MedicalSolutions.jsx`, `src/lib/catalogue.js`, `src/lib/quote.js`, `src/config/firebaseClient.js`, `src/config/firebaseDatabase.js`, `src/data/manufacturerCatalogue.json`, `.env.example`, `package.json` and `vercel.json` in the frontend repository; `firestore.rules` in the backend repository. These establish the application-specific behavior in this guide.
+Application sources: `src/pages/Contact.jsx`, `src/pages/AdminDashboard.jsx`, `src/pages/AdminLogin.jsx`, `src/context/AuthContext.jsx`, `src/components/RFQContext.jsx`, `src/components/QuoteDrawer.jsx`, `src/pages/MedicalSolutions.jsx`, `src/lib/catalogue.js`, `src/lib/quote.js`, `src/config/firebaseClient.js`, `src/config/firebaseDatabase.js`, `src/data/manufacturerCatalogue.json`, `.env.example`, `package.json` and `vercel.json` in the frontend repository; `firebase/firestore.rules` in the frontend repository. These establish the application-specific behavior in this guide.
 
 Official platform references, consulted on 20 October 2026:
 
@@ -466,3 +466,45 @@ Official platform references, consulted on 20 October 2026:
 - [Vercel environment variables](https://vercel.com/docs/environment-variables): environment values and deployments.
 
 Keep this guide with the repository and update it when the enquiry workflow, access rules, catalogue sources or production address changes.
+
+
+## 23 Photos, conferences and events
+
+Visitors select **Photos & events** in the navigation, filter by Conference, Workshop, Training or Community, and open an album. The viewer supports next/previous buttons, thumbnails, arrow keys and Escape to close. Photographs are loaded when an album opens.
+
+To add an event:
+
+1. Sign in at `/admin/login`, then select **Photos & events**.
+2. Click **Add album**. Enter the title, category, date, location and a description.
+3. Select **Upload photographs**. Choose up to ten JPG, PNG or WebP files, each below 20 MB. Export iPhone HEIC pictures as JPG first.
+4. Review each photo caption. Use a clear description of what is shown. Captions also help visitors who use screen readers.
+5. Use the up arrow on a photograph to make it the cover. Remove any unwanted photos before saving.
+6. Keep **Publish on the website** checked when the album is ready; uncheck it to save a draft. Mark representative/sample imagery as a demo. Click **Save album**.
+7. Visit `/events` in another tab and open the album to review the result. Reload an already-open public page after saving.
+
+To replace a sample event, use **Edit album** on that demo, replace the title/date/location/description and photos, clear the demo checkbox only when the content records a real Medelec event, and save. The six built-in demo albums are examples with representative stock photographs; their sample dates and locations are not claims of actual Medelec events. **Hide all sample albums** hides built-in samples together without hiding saved albums. **Archive** hides a saved album while keeping its photos. **Publish** restores it. A replaced or archived demo does not return from the built-in fallback.
+
+If a save fails or times out, the editor retains its fields and photographs. Refresh the album list to check whether it arrived, then retry the same editor if necessary. The album ID stays the same on retry. Do not repeatedly start fresh albums.
+
+### Where gallery data is stored
+
+| Path | Contents | Public visibility |
+| --- | --- | --- |
+| `events/{albumId}` | Album metadata and a small cover image | Published albums only |
+| `events/{albumId}/photos/{photoId}` | Optimized image, thumbnail, caption and position | Published photos in published albums only |
+| `siteSettings/gallery` | Sample visibility and IDs of replaced samples | Public display settings |
+| `teamProfiles/{engineerId}` | Public engineer portrait and update time | Public portraits |
+
+Staff can read drafts and save albums/portraits. Visitors cannot write these collections. Albums and photos are archived, not permanently deleted through the app. The existing products and inquiries policy is unchanged. The authoritative policy is `firebase/firestore.rules`; `firebase.json` points to it. A Vercel/GitHub deployment does not publish database rules automatically. The project owner must publish changed rules separately in Firebase or with an authenticated Firebase CLI.
+
+The gallery uses the existing no-cost Firestore plan with bounded, optimized image documents, avoiding a separate Storage upgrade. A photograph is reduced to at most 1600 × 1200 pixels and about 350 KB; cover thumbnails to 480 × 320 and 40 KB. Base64 encoding increases stored size. The design is intended for a small curated event gallery, not an unlimited full-resolution photo archive. Keep original photographs in your normal business backup. Firestore quotas still apply.
+
+## 24 Service engineer photographs
+
+1. Sign in and select **Team photographs**.
+2. Find the named engineer and select **Choose portrait**.
+3. Check the preview, then click **Save portrait**.
+4. Reload **About us** and inspect the small portrait beside the engineer’s name. Use a clear head-and-shoulders photo with room around the face; the site displays it in a vertical frame.
+5. To revert, select **Use placeholder**. The engineer’s name, role and service description stay in place.
+
+Portraits are optimized to fit within 640 × 800 pixels and about 160 KB. Only the five existing engineer IDs are accepted by the portrait rules. If a save fails, the selected preview is retained so it can be retried. The engineers’ actual portraits still need to be uploaded; placeholders do not represent real employees. The supplied MHS logo is used in the header, footer and browser icon.

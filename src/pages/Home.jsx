@@ -17,16 +17,21 @@ import { manufacturerBrands } from '../data/products'
 const range = catalogue.products
 const showcaseIds = [
   'hamilton-c6',
+  'karl-storz-th121',
+  'spacelabs-qube',
+  'kiran-flat-panel-based-digital-carm',
   'samsung-r20',
   'linet-multicare-x',
-  'spacelabs-qube',
-  'karl-storz-th121',
-  'kiran-flat-panel-based-digital-carm',
+  'helmier-graseby-2000-2100',
+  'nihon-kohden-tec-5600',
 ]
 const showcases = showcaseIds
   .map((id) => range.find((p) => p.id === id))
   .filter(Boolean)
 const categories = [
+  { id: 'infusion-therapy', name: 'Infusion & pain management', note: 'Syringe pumps. Infusion. PCA.', imageId: 'helmier-graseby-2000-2100' },
+  { id: 'temperature-management', name: 'Patient & fluid warming', note: 'Patient warming. Blood & fluid warmers.', imageId: 'helmier-aerotherm-iq' },
+  { id: 'defibrillation', name: 'Defibrillators & AEDs', note: 'Hospital. Emergency. Public access.', imageId: 'nihon-kohden-tec-5600' },
   {
     id: 'endoscopy-surgery',
     name: 'Endoscopy & surgery',
@@ -102,7 +107,7 @@ export default function Home() {
     <>
       <PageMeta
         title="Medelec Healthcare Solutions | Equipment. Expertise. Care."
-        description="Explore medical equipment from Hamilton Medical, Samsung Healthcare, LINET, Spacelabs, KARL STORZ and Kiran Medical, with official product literature and local service engineering support."
+        description="Explore medical equipment from Hamilton Medical, KARL STORZ, Spacelabs, Kiran, Samsung, LINET, Helmier and Nihon Kohden defibrillation, with official product literature and local service engineering support."
       />
       <section className="home-hero">
         <div className="wrap home-hero-grid">
@@ -343,8 +348,8 @@ export default function Home() {
         <div className="wrap engineering-grid">
           <div className="engineering-photo">
             <img
-              src="/images/hospital-room.jpg"
-              alt="Medical equipment in a clinical environment"
+              src="/images/karl-storz-or1-room.webp"
+              alt="KARL STORZ OR1 integrated operating room"
               loading="lazy"
               width="1600"
               height="1067"

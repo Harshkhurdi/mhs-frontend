@@ -11,7 +11,7 @@ To check an incoming enquiry: open https://medelec.vercel.app/admin/login, sign 
 ## Website
 
 - Responsive home, company, service and contact pages.
-- Manufacturer reference library with 298 distinct equipment models, accessories and product families across six manufacturers, official photography and direct manufacturer links. Published Firestore listings enrich matching entries and append custom equipment. Search, clinical and manufacturer filters, sorting and pagination are reflected in the URL.
+- Manufacturer reference library with 313 distinct equipment models, accessories and product families across eight supported brand ranges, official photography and direct manufacturer links. Published Firestore listings enrich matching entries and append supported custom equipment. Search, clinical and manufacturer filters, sorting and pagination are reflected in the URL.
 - Quote list with quantities, removal and local browser persistence. Legacy session quote lists are migrated.
 - Contact and service inquiries saved to the existing `inquiries` collection. Failed submissions retain the form and selection; email fallback explicitly opens a draft and never claims delivery.
 - Staff sign-in at `/admin/login`; catalogue creation, editing, reversible archive/publish and inquiry inbox at `/admin`.
@@ -68,3 +68,7 @@ Seven automated checks cover catalogue identities, local image files, official r
 The redesign was checked against the live public catalogue. Submission and staff mutations were verified through an isolated local Firebase adapter so no test records were written to production. A real staff sign-in and production write still depend on the existing account and deployed Firebase rules.
 
 Photos and source attribution are listed in [public/images/README.md](public/images/README.md) and the complete [manufacturer source ledger](docs/manufacturer-sources.md). Clinical photos are illustrative and are not presented as Medelec projects or premises.
+
+## Event gallery and engineer portraits
+
+Staff can upload event albums under **Admin → Photos & events** and portraits under **Admin → Team photographs**. Six clearly labelled demo albums provide sample layouts. See sections 23–24 of `docs/MHS-User-and-Admin-Guide.md` for upload limits, publishing, archiving, database paths and backups. Gallery permissions are maintained in `firebase/firestore.rules`; deploy rules separately from Vercel.

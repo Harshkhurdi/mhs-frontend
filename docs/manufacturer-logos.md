@@ -12,3 +12,10 @@ Retrieved from official manufacturer websites on 21 October 2026. Marks remain t
 | linet | `public/images/manufacturers/linet.svg` | https://www.linet.com/en |
 
 LINET publishes its logo as an inline SVG in the official website header; that SVG was extracted without changing its paths. The KARL STORZ and Spacelabs assets are the official white logo variants and appear on navy tiles.
+
+| helmier | `public/images/manufacturers/helmier.png` | https://www.helmier.com/wp-content/uploads/2022/04/Helmier-Logo-New.png |
+| nihon-kohden | `public/images/manufacturers/nihon-kohden.svg` | https://in.nihonkohden.com/themes/custom/nkc_theme/logo.svg |
+
+Display order: Hamilton, KARL STORZ, Spacelabs, Kiran, Samsung, LINET, Helmier, Nihon Kohden.
+
+MHS’s own logo, `public/images/brand/mhs-logo.jpeg`, was supplied by the owner on 21 October 2026. It replaces the earlier website-sourced logo in the header, footer and browser icon.

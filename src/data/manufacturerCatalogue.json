@@ -1,6 +1,6 @@
 {
   "verifiedAt": "2026-10-21",
-  "scope": "Publicly listed equipment, accessories and product families from six manufacturer directories. Reference coverage is not an exhaustive worldwide SKU inventory. Regional availability and configurations require confirmation.",
+  "scope": "Publicly listed equipment, accessories and product families from eight supported brand ranges (Nihon Kohden defibrillation only). Reference coverage is not an exhaustive worldwide SKU inventory. Regional availability and configurations require confirmation.",
   "products": [
     {
       "id": "hamilton-aerogen-nebulizer",
@@ -5148,6 +5148,268 @@
       "description": "KARL STORZ surgical accessories. Type of usage: For single use. Function channel: Suction. Number of suction tubes: 1. Review the manufacturer information for compatible systems, specifications and available configurations.",
       "image": "/images/products/karl-storz-031457-10.webp",
       "verifiedAt": "2026-10-21"
+    },
+    {
+      "id": "helmier-graseby-2000-2100",
+      "name": "Graseby 2000 / 2100 syringe pumps",
+      "brand": "helmier",
+      "specialty": "infusion-therapy",
+      "categoryLabel": "Syringe infusion pumps",
+      "applications": [
+        "Syringe infusion pumps",
+        "Helmier supply range"
+      ],
+      "sourceUrl": "https://www.helmier.com/products-2/infusion-pumps/syringe-pumps/graseby-2000-2100/",
+      "imageUrl": "https://www.helmier.com/wp-content/uploads/2022/12/Graseby2000Syringepumppng.png",
+      "description": "Syringe pump family in Helmier’s published infusion range, with continuous infusion and model-dependent programming options.",
+      "literatureTitle": "Official Helmier product information",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/helmier-graseby-2000-2100.webp"
+    },
+    {
+      "id": "helmier-graseby-c9",
+      "name": "Graseby C9 syringe pump",
+      "brand": "helmier",
+      "specialty": "infusion-therapy",
+      "categoryLabel": "Syringe infusion pumps",
+      "applications": [
+        "Syringe infusion pumps",
+        "Helmier supply range"
+      ],
+      "sourceUrl": "https://www.helmier.com/products-2/infusion-pumps/syringe-pumps/graseby-c9/",
+      "imageUrl": "https://www.helmier.com/wp-content/uploads/2023/01/Graseby_C9.jpg",
+      "description": "Compact, stackable syringe pump with multiple infusion programming modes, listed in Helmier’s infusion range.",
+      "literatureTitle": "Official Helmier product information",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/helmier-graseby-c9.webp"
+    },
+    {
+      "id": "helmier-cadd-solis",
+      "name": "CADD Solis ambulatory infusion system",
+      "brand": "helmier",
+      "specialty": "infusion-therapy",
+      "categoryLabel": "Ambulatory infusion & PCA pumps",
+      "applications": [
+        "Ambulatory infusion & PCA pumps",
+        "Helmier supply range"
+      ],
+      "sourceUrl": "https://www.helmier.com/products-2/infusion-pumps/ambulator-pumps/lvp-pumps/",
+      "imageUrl": "https://www.helmier.com/wp-content/uploads/2023/01/LVP-Pumps.jpg",
+      "description": "Ambulatory infusion system for pain management, including patient-controlled analgesia and programmed delivery options.",
+      "literatureTitle": "ICU Medical CADD-Solis infusion system brochure",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/helmier-cadd-solis.webp",
+      "pdfUrl": "https://www.icumed.com/media/3kib3ro1/p22-5599-cadd-solis-brochure-v4_web_ada.pdf"
+    },
+    {
+      "id": "helmier-cadd-legacy-pca",
+      "name": "CADD Legacy PCA pump",
+      "brand": "helmier",
+      "specialty": "infusion-therapy",
+      "categoryLabel": "PCA pumps",
+      "applications": [
+        "PCA pumps",
+        "Helmier supply range"
+      ],
+      "sourceUrl": "https://www.helmier.com/products-2/infusion-pumps/ambulator-pumps/cadd-pumps/",
+      "imageUrl": "https://www.helmier.com/wp-content/uploads/2023/01/cadd-pump.jpg",
+      "description": "Portable CADD Legacy PCA infusion system from Helmier’s published pain management range.",
+      "literatureTitle": "Official Helmier product information",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/helmier-cadd-legacy-pca.webp"
+    },
+    {
+      "id": "helmier-aerotherm-iq",
+      "name": "Aerotherm IQ patient warming system",
+      "brand": "helmier",
+      "specialty": "temperature-management",
+      "categoryLabel": "Patient warming systems",
+      "applications": [
+        "Patient warming systems",
+        "Helmier supply range"
+      ],
+      "sourceUrl": "https://www.helmier.com/products-2/convective-warmers-and-blankets/aerotherm/",
+      "imageUrl": "https://www.helmier.com/wp-content/uploads/2023/09/Aerotherm_Machine_Final_Edited_Jul_23.png",
+      "description": "Convective patient warming system used with compatible warming blankets, with official product information from Helmier.",
+      "literatureTitle": "Official Helmier product information",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/helmier-aerotherm-iq.webp"
+    },
+    {
+      "id": "helmier-hydrotherm",
+      "name": "Hydrotherm fluid warmer",
+      "brand": "helmier",
+      "specialty": "temperature-management",
+      "categoryLabel": "Blood & fluid warmers",
+      "applications": [
+        "Blood & fluid warmers",
+        "Helmier supply range"
+      ],
+      "sourceUrl": "https://www.helmier.com/products-2/fluid-warmer/hydrotherm/",
+      "imageUrl": "https://www.helmier.com/wp-content/uploads/2023/08/hydrotherm_front.png",
+      "description": "Fluid warming system in Helmier’s temperature management portfolio. Refer to the official product page for compatible applications and accessories.",
+      "literatureTitle": "Official Helmier product information",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/helmier-hydrotherm.webp"
+    },
+    {
+      "id": "helmier-hotline",
+      "name": "HOTLINE blood and fluid warmer",
+      "brand": "helmier",
+      "specialty": "temperature-management",
+      "categoryLabel": "Blood & fluid warmers",
+      "applications": [
+        "Blood & fluid warmers",
+        "Helmier supply range"
+      ],
+      "sourceUrl": "https://www.helmier.com/products-2/fluid-warmer/hotline/",
+      "imageUrl": "https://www.helmier.com/wp-content/uploads/2022/11/Hotlinefluidwarmerpng.png",
+      "description": "Blood and fluid warming system supplied through Helmier’s published warming range.",
+      "literatureTitle": "Official Helmier product information",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/helmier-hotline.webp"
+    },
+    {
+      "id": "helmier-hotline-l70",
+      "name": "HOTLINE L-70 administration sets",
+      "brand": "helmier",
+      "specialty": "temperature-management",
+      "categoryLabel": "Fluid warming accessories",
+      "applications": [
+        "Fluid warming accessories",
+        "Helmier supply range"
+      ],
+      "sourceUrl": "https://www.helmier.com/products-2/fluid-warmer/l-70/",
+      "imageUrl": "https://www.helmier.com/wp-content/uploads/2022/11/SM071013-1512L70png.png",
+      "description": "Disposable administration set family for compatible HOTLINE fluid warming systems.",
+      "literatureTitle": "Official Helmier product information",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/helmier-hotline-l70.webp"
+    },
+    {
+      "id": "helmier-level1-h1200",
+      "name": "Level 1 H-1200 fast flow fluid warmer",
+      "brand": "helmier",
+      "specialty": "temperature-management",
+      "categoryLabel": "Blood & fluid warmers",
+      "applications": [
+        "Blood & fluid warmers",
+        "Helmier supply range"
+      ],
+      "sourceUrl": "https://www.helmier.com/products-2/fluid-warmer/h-1200/",
+      "imageUrl": "https://www.helmier.com/wp-content/uploads/2022/11/H1200silopng2.png",
+      "description": "Fast flow blood and fluid warming system listed in Helmier’s official warming portfolio.",
+      "literatureTitle": "Official Helmier product information",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/helmier-level1-h1200.webp"
+    },
+    {
+      "id": "nihon-kohden-ems-1052",
+      "name": "cardiolife EMS EMS-1052 defibrillator",
+      "brand": "nihon-kohden",
+      "specialty": "defibrillation",
+      "categoryLabel": "Defibrillators",
+      "applications": [
+        "Resuscitation",
+        "Defibrillation"
+      ],
+      "sourceUrl": "https://in.nihonkohden.com/en/products/resuscitation/defibrillators/cardiolife-ems-ems-1052",
+      "imageUrl": "https://in.nihonkohden.com/sites/in/files/2023-08/main_cardiolife-ems_01.webp",
+      "pdfUrl": "https://in.nihonkohden.com/sites/in/files/2025-02/Cardiolife%20EMS-1052%20En_In.pdf",
+      "literatureTitle": "Cardiolife EMS-1052 En_In",
+      "description": "Portable cardiolife defibrillator family for professional resuscitation. Available configurations and functions should be confirmed with the manufacturer.",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/nihon-kohden-ems-1052.webp"
+    },
+    {
+      "id": "nihon-kohden-tec-5600",
+      "name": "cardiolife TEC-5600 series defibrillators",
+      "brand": "nihon-kohden",
+      "specialty": "defibrillation",
+      "categoryLabel": "Defibrillators",
+      "applications": [
+        "Resuscitation",
+        "Defibrillation"
+      ],
+      "sourceUrl": "https://in.nihonkohden.com/en/products/resuscitation/defibrillators/cardiolife-tec-5600-series",
+      "imageUrl": "https://in.nihonkohden.com/sites/in/files/2023-08/main_cardiolife-tec-5600_01.webp",
+      "pdfUrl": "https://in.nihonkohden.com/sites/in/files/2026-04/cardiolife%20TEC-5600_En_In.pdf",
+      "literatureTitle": "cardiolife TEC-5600_En_In",
+      "description": "Portable cardiolife defibrillator family for professional resuscitation. Available configurations and functions should be confirmed with the manufacturer.",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/nihon-kohden-tec-5600.webp"
+    },
+    {
+      "id": "nihon-kohden-aed-3100",
+      "name": "cardiolife AED-3100",
+      "brand": "nihon-kohden",
+      "specialty": "defibrillation",
+      "categoryLabel": "Automated external defibrillators",
+      "applications": [
+        "Resuscitation",
+        "Defibrillation"
+      ],
+      "sourceUrl": "https://in.nihonkohden.com/en/products/resuscitation/automated-external-defibrillators/cardiolife-aed-3100",
+      "imageUrl": "https://in.nihonkohden.com/sites/in/files/2023-08/main_cardiolife-aed-3100_01.webp",
+      "pdfUrl": "https://in.nihonkohden.com/sites/in/files/2025-02/Cardiolife%20AED-3100%20En_In.pdf",
+      "literatureTitle": "Cardiolife AED-3100 En_In",
+      "description": "Automated external defibrillator with guided operation and an adult/child mode switch. Official manufacturer brochure and product information are linked.",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/nihon-kohden-aed-3100.webp"
+    },
+    {
+      "id": "karl-storz-or1-integration",
+      "name": "OR1 integrated operating room platform",
+      "brand": "karl-storz",
+      "specialty": "endoscopy-surgery",
+      "categoryLabel": "Integrated operating rooms",
+      "applications": [
+        "OR integration",
+        "Surgical imaging",
+        "Operating theatre"
+      ],
+      "sourceUrl": "https://www.karlstorz.com/in/en/or-integration-platform.htm",
+      "imageUrl": "https://www.karlstorz.com/static_2x/static/file_img/HM_OR1/5225871_rdax_544x306_60.webp",
+      "image": "/images/products/karl-storz-or1-integration.webp",
+      "description": "KARL STORZ OR1 operating room integration platform, connecting surgical visualisation, documentation and room workflows. Explore the official OR1 NEO and OR1 AIR information.",
+      "literatureTitle": "Official OR1 integration information",
+      "verifiedAt": "2026-10-21"
+    },
+    {
+      "id": "hamilton-intellicuff",
+      "name": "IntelliCuff pressure controller",
+      "brand": "hamilton",
+      "specialty": "critical-care",
+      "categoryLabel": "Cuff pressure management",
+      "applications": [
+        "Ventilation",
+        "Airway management"
+      ],
+      "sourceUrl": "https://www.hamilton-medical.com/Products/Technologies/IntelliCuff.html",
+      "imageUrl": "https://media.ffycdn.net/eu/hamilton-medical-ag/eyJwYXRoIjoiaGFtaWx0b24tbWVkaWNhbC1hZ1wvYWNjb3VudHNcLzVjXC80MDAxMDMzXC9wcm9qZWN0c1wvMjlcL2Fzc2V0c1wvNGFcLzQ5NTNcLzIyZjE3ZTg1NjIxNzdjOGQ4ZmI1OWQ3NGQ5OTVmNjI4LTE2NTc4NzI1ODMuanBnIn0:hamilton-medical-ag:WqlT8OWIT7ZyF2BL7iIMpDR_AsuGyGp8OrahoxinDtk?crop=fp&fp=0.5117953,0.4542145&height=427&width=640&quality=50",
+      "pdfUrl": "https://www.hamilton-medical.com/dam/jcr:f257d08a-fc9b-4bf4-be12-d0c1c31aa0c9/IntelliCuff-pressure-controller_brochure_en_689533.04.2026-05-05-08-50-04.pdf",
+      "description": "Standalone automated cuff pressure controller for compatible cuffed airway devices during mechanical ventilation.",
+      "literatureTitle": "IntelliCuff manufacturer brochure",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/hamilton-intellicuff.webp"
+    },
+    {
+      "id": "nihon-kohden-tec-8300",
+      "name": "cardiolife TEC-8300 series defibrillators",
+      "brand": "nihon-kohden",
+      "specialty": "defibrillation",
+      "categoryLabel": "Defibrillators",
+      "applications": [
+        "Resuscitation",
+        "Defibrillation"
+      ],
+      "sourceUrl": "https://ae.nihonkohden.com/en/products/resuscitation/defibrillators/cardiolife-tec-8300-series",
+      "imageUrl": "https://ae.nihonkohden.com/sites/ae/files/2023-08/main_cardiofax-tec-8300k_01.webp",
+      "pdfUrl": "https://ae.nihonkohden.com/sites/ae/files/2023-08/cardiolife_TEC-8300_En.pdf",
+      "description": "Professional cardiolife defibrillator family with an 8.4-inch display and configuration-dependent monitoring options. Regional availability should be confirmed with the manufacturer.",
+      "literatureTitle": "cardiolife TEC-8300 manufacturer brochure",
+      "verifiedAt": "2026-10-21",
+      "image": "/images/products/nihon-kohden-tec-8300.webp"
     }
   ]
 }

@@ -1,17 +1,19 @@
 # Manufacturer catalogue sources
 
-Expanded and checked on 21 October 2026. This reference library contains 298 equipment models, accessories and product families across six manufacturers. It is not an exhaustive worldwide SKU inventory or a statement of local stock, regulatory clearance, territorial authorisation or availability. Confirm configurations and availability before quoting.
+Expanded and checked on 21 October 2026. This reference library contains 313 equipment models, accessories and product families across eight supported brand ranges. It is not an exhaustive worldwide SKU inventory or a statement of local stock, regulatory clearance, territorial authorisation or availability. Confirm configurations and availability before quoting.
 
 | Manufacturer | Entries | With PDF literature |
 | --- | ---: | ---: |
-| Hamilton Medical | 15 | 13 |
+| Hamilton Medical | 16 | 14 |
+| KARL STORZ | 140 | 86 |
+| Spacelabs Healthcare | 13 | 9 |
+| Kiran Medical | 51 | 47 |
 | Samsung Healthcare | 30 | 0 |
 | LINET | 50 | 37 |
-| Spacelabs Healthcare | 13 | 9 |
-| KARL STORZ | 139 | 86 |
-| Kiran Medical | 51 | 47 |
+| Helmier | 9 | 1 |
+| Nihon Kohden | 4 | 4 |
 
-Every entry has an official product page and a real manufacturer photograph served locally as compressed WebP. 192 entries have verified PDF literature links, representing 164 distinct documents. Shared literature is identified by its title in product details; some documents cover a manufacturer range rather than one configuration. Other entries link to their official product information. Samsung document downloads may require a manufacturer account.
+Every entry has an official product page and a real manufacturer photograph served locally as compressed WebP. 198 entries have verified PDF literature links, representing 170 distinct documents. Shared literature is identified by its title in product details; some documents cover a manufacturer range rather than one configuration. Other entries link to their official product information. Samsung document downloads may require a manufacturer account.
 
 The Kiran directory supplied 51 equipment, protective apparel and accessory entries with usable official photographs and product pages. Contrast medicines and two listings without usable product pages/photos were excluded. The KARL STORZ India directory supplied 139 photographed equipment and accessory entries covering imaging, endoscopy, airway management, energy, insufflation, irrigation, motor systems and carts. Item numbers distinguish configurations. Products without a usable official photograph were not fabricated. Full manufacturer directories are linked from the equipment page for additional instruments and variants.
 
@@ -323,3 +325,26 @@ The reference catalogue stays available if Firestore is unavailable. Published M
 | Floor Mounted Radiography Solutions | Kiran Medical | [Product](https://www.kiranxray.com/products/medical-imaging/radiography-solutions/floor-mounted-radiography-solutions) | [Kiran manufacturer brochure](https://kiran-cms.webcontentor.com/uploads/16729863522_Ultisys_Latest_40_DR_15969dcbfc.pdf) | [Photo](https://kiran-cms.webcontentor.com/uploads/floor_m_5c5662a3cb.jpg) |
 | Storage System | Kiran Medical | [Product](https://www.kiranxray.com/products/radiation-protection-portfolio/radiation-protection-accessories/mobile-storage-system-with-hangers) | [Kiran radiation protection range catalogue](https://kiran-cms.webcontentor.com/uploads/16927025556_Kiran_Consolidated_Imaging_2_170db9084f.pdf) | [Photo](https://kiran-cms.webcontentor.com/uploads/mobile_storage_573e8bfba8.png) |
 | Tubing Set, Suction URO, S-PILOT (031457-10) | KARL STORZ | [Product](https://www.karlstorz.com/in/en/product-detail-page.htm?productID=1000130591) | Official product page | [Photo](https://www.karlstorz.com/catalog-api/mediafiles/stream/in_en/228668) |
+
+
+## Added pump, warming, resuscitation and integration ranges
+
+Helmier entries follow its official published supply portfolio. The Graseby 2000/2100 family shares one official family photograph. Where no PDF is published, the full official product page supplies literature. Nihon Kohden is limited to defibrillators and AEDs; the TEC-8300 entry links to the accessible official Middle East page and brochure, with regional availability to be confirmed. No standalone Nihon Kohden monitoring or ventilation products were added.
+
+| Product | Official information | Literature | Original image |
+| --- | --- | --- | --- |
+| Graseby 2000 / 2100 syringe pumps | [Product](https://www.helmier.com/products-2/infusion-pumps/syringe-pumps/graseby-2000-2100/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2022/12/Graseby2000Syringepumppng.png) |
+| Graseby C9 syringe pump | [Product](https://www.helmier.com/products-2/infusion-pumps/syringe-pumps/graseby-c9/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2023/01/Graseby_C9.jpg) |
+| CADD Solis ambulatory infusion system | [Product](https://www.helmier.com/products-2/infusion-pumps/ambulator-pumps/lvp-pumps/) | [Document](https://www.icumed.com/media/3kib3ro1/p22-5599-cadd-solis-brochure-v4_web_ada.pdf) | [Photo](https://www.helmier.com/wp-content/uploads/2023/01/LVP-Pumps.jpg) |
+| CADD Legacy PCA pump | [Product](https://www.helmier.com/products-2/infusion-pumps/ambulator-pumps/cadd-pumps/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2023/01/cadd-pump.jpg) |
+| Aerotherm IQ patient warming system | [Product](https://www.helmier.com/products-2/convective-warmers-and-blankets/aerotherm/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2023/09/Aerotherm_Machine_Final_Edited_Jul_23.png) |
+| Hydrotherm fluid warmer | [Product](https://www.helmier.com/products-2/fluid-warmer/hydrotherm/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2023/08/hydrotherm_front.png) |
+| HOTLINE blood and fluid warmer | [Product](https://www.helmier.com/products-2/fluid-warmer/hotline/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2022/11/Hotlinefluidwarmerpng.png) |
+| HOTLINE L-70 administration sets | [Product](https://www.helmier.com/products-2/fluid-warmer/l-70/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2022/11/SM071013-1512L70png.png) |
+| Level 1 H-1200 fast flow fluid warmer | [Product](https://www.helmier.com/products-2/fluid-warmer/h-1200/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2022/11/H1200silopng2.png) |
+| cardiolife EMS EMS-1052 defibrillator | [Product](https://in.nihonkohden.com/en/products/resuscitation/defibrillators/cardiolife-ems-ems-1052) | [Document](https://in.nihonkohden.com/sites/in/files/2025-02/Cardiolife%20EMS-1052%20En_In.pdf) | [Photo](https://in.nihonkohden.com/sites/in/files/2023-08/main_cardiolife-ems_01.webp) |
+| cardiolife TEC-5600 series defibrillators | [Product](https://in.nihonkohden.com/en/products/resuscitation/defibrillators/cardiolife-tec-5600-series) | [Document](https://in.nihonkohden.com/sites/in/files/2026-04/cardiolife%20TEC-5600_En_In.pdf) | [Photo](https://in.nihonkohden.com/sites/in/files/2023-08/main_cardiolife-tec-5600_01.webp) |
+| cardiolife AED-3100 | [Product](https://in.nihonkohden.com/en/products/resuscitation/automated-external-defibrillators/cardiolife-aed-3100) | [Document](https://in.nihonkohden.com/sites/in/files/2025-02/Cardiolife%20AED-3100%20En_In.pdf) | [Photo](https://in.nihonkohden.com/sites/in/files/2023-08/main_cardiolife-aed-3100_01.webp) |
+| OR1 integrated operating room platform | [Product](https://www.karlstorz.com/in/en/or-integration-platform.htm) | Official product page | [Photo](https://www.karlstorz.com/static_2x/static/file_img/HM_OR1/5225871_rdax_544x306_60.webp) |
+| IntelliCuff pressure controller | [Product](https://www.hamilton-medical.com/Products/Technologies/IntelliCuff.html) | [Document](https://www.hamilton-medical.com/dam/jcr:f257d08a-fc9b-4bf4-be12-d0c1c31aa0c9/IntelliCuff-pressure-controller_brochure_en_689533.04.2026-05-05-08-50-04.pdf) | [Photo](https://media.ffycdn.net/eu/hamilton-medical-ag/eyJwYXRoIjoiaGFtaWx0b24tbWVkaWNhbC1hZ1wvYWNjb3VudHNcLzVjXC80MDAxMDMzXC9wcm9qZWN0c1wvMjlcL2Fzc2V0c1wvNGFcLzQ5NTNcLzIyZjE3ZTg1NjIxNzdjOGQ4ZmI1OWQ3NGQ5OTVmNjI4LTE2NTc4NzI1ODMuanBnIn0:hamilton-medical-ag:WqlT8OWIT7ZyF2BL7iIMpDR_AsuGyGp8OrahoxinDtk?crop=fp&fp=0.5117953,0.4542145&height=427&width=640&quality=50) |
+| cardiolife TEC-8300 series defibrillators | [Product](https://ae.nihonkohden.com/en/products/resuscitation/defibrillators/cardiolife-tec-8300-series) | [Document](https://ae.nihonkohden.com/sites/ae/files/2023-08/cardiolife_TEC-8300_En.pdf) | [Photo](https://ae.nihonkohden.com/sites/ae/files/2023-08/main_cardiofax-tec-8300k_01.webp) |

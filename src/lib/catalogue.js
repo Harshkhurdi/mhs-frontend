@@ -1,3 +1,6 @@
+const brandOrder = ['hamilton', 'karl-storz', 'spacelabs', 'kiran', 'samsung', 'linet', 'helmier', 'nihon-kohden']
+const supported = (p) => brandOrder.includes(p.brand) && (p.brand !== 'nihon-kohden' || p.specialty === 'defibrillation')
+
 // Normalise model names so an existing MHS listing enriches its manufacturer entry.
 export function productKey(product) {
   const model = String(product.name || '')
@@ -12,14 +15,14 @@ export function productKey(product) {
 }
 
 export function mergeCatalogue(reference, live) {
-  const products = reference.map((p) => ({ ...p, manufacturerRecordId: p.id }))
+  const products = reference.filter(supported).map((p) => ({ ...p, manufacturerRecordId: p.id }))
   const modelIndices = new Map()
   products.forEach((p, i) => {
     const key = productKey(p)
     modelIndices.set(key, [...(modelIndices.get(key) || []), i])
   })
   for (const p of live) {
-    if (typeof p.name !== 'string' || !p.name.trim()) continue
+    if (!supported(p) || typeof p.name !== 'string' || !p.name.trim()) continue
     const candidates = modelIndices.get(productKey(p)) || []
     // Do not guess when different reference entries share the same model name.
     const index =
@@ -70,11 +73,13 @@ export function filterCatalogue(
 
 const featured = [
   'hamilton-c6',
+  'karl-storz-th121',
+  'spacelabs-qube',
+  'kiran-flat-panel-based-digital-carm',
   'samsung-r20',
   'linet-multicare-x',
-  'spacelabs-qube',
-  'karl-storz-th121',
-  'kiran-flat-panel-based-digital-carm',
+  'helmier-graseby-2000-2100',
+  'nihon-kohden-tec-5600',
   'hamilton-hf90',
   'samsung-gm85-elite',
   'linet-eleganza-5',
@@ -89,7 +94,7 @@ export function sortCatalogue(products, sort = 'featured') {
         return (aRank < 0 ? 999 : aRank) - (bRank < 0 ? 999 : bRank)
     }
     if (sort === 'brand')
-      return a.brand.localeCompare(b.brand) || a.name.localeCompare(b.name)
+      return brandOrder.indexOf(a.brand) - brandOrder.indexOf(b.brand) || a.name.localeCompare(b.name)
     return a.name.localeCompare(b.name, 'en', { numeric: true })
   })
 }

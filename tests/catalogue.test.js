@@ -20,6 +20,8 @@ const hosts = {
   spacelabs: 'spacelabshealthcare.com',
   'karl-storz': 'www.karlstorz.com',
   kiran: 'www.kiranxray.com',
+  helmier: 'www.helmier.com',
+  'nihon-kohden': 'in.nihonkohden.com',
 }
 const specialties = clinicalSpecialties.map((s) => s.id)
 
@@ -30,7 +32,7 @@ test('every manufacturer entry has unique identity, a real local photograph and 
     assert.ok(products.some((p) => p.brand === brand.id), brand.name)
   }
   for (const p of products) {
-    assert.equal(new URL(p.sourceUrl).hostname, hosts[p.brand], p.id)
+    assert.ok([hosts[p.brand], ...(p.brand === 'nihon-kohden' ? ['ae.nihonkohden.com'] : [])].includes(new URL(p.sourceUrl).hostname), p.id)
     assert.equal(new URL(p.sourceUrl).protocol, 'https:')
     assert.ok(specialties.includes(p.specialty), p.id)
     assert.ok(existsSync(new URL('../public' + p.image, import.meta.url)), p.id)
@@ -73,7 +75,7 @@ test('published listings enrich matching equipment without losing distinct famil
     mergeCatalogue(products, [
       { id: 'custom', name: 'Custom equipment', brand: 'other' },
     ]).length,
-    products.length + 1,
+    products.length,
   )
 })
 

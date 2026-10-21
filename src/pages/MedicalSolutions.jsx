@@ -116,7 +116,7 @@ export default function MedicalSolutions() {
     <>
       <PageMeta
         title="Medical Equipment Catalogue | Medelec Healthcare Solutions"
-        description="Explore equipment from Hamilton Medical, Samsung Healthcare, LINET, Spacelabs, KARL STORZ and Kiran Medical, with real photographs and official product literature."
+        description="Explore equipment from Hamilton Medical, KARL STORZ, Spacelabs, Kiran, Samsung, LINET, Helmier and Nihon Kohden defibrillation, with real photographs and official product literature."
       />
       <section className="catalogue-intro">
         <div className="wrap">

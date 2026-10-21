@@ -1,4 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
+import AdminEvents from '../components/AdminEvents'
+import AdminTeamPhotos from '../components/AdminTeamPhotos'
 import PageMeta from '../components/PageMeta'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore/lite'
 import { HiArrowUpRight, HiOutlinePlus } from 'react-icons/hi2'
@@ -44,6 +46,7 @@ export default function AdminDashboard() {
   const [busy, setBusy] = useState(false)
   const pendingId = useRef(null)
   useEffect(() => {
+    if (!['products', 'inquiries'].includes(tab)) return
     let cancelled = false
     async function load() {
       setLoading(true)
@@ -198,6 +201,8 @@ export default function AdminDashboard() {
           {[
             ['products', 'Equipment catalogue'],
             ['inquiries', 'Customer inquiries'],
+            ['events', 'Photos & events'],
+            ['team', 'Team photographs'],
           ].map(([key, label]) => (
             <button
               key={key}
@@ -216,6 +221,7 @@ export default function AdminDashboard() {
             </button>
           ))}
         </nav>
+        {tab === 'events' ? <AdminEvents /> : tab === 'team' ? <AdminTeamPhotos /> : <>
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <p className="text-sm text-text-muted">
             {tab === 'products'
@@ -492,6 +498,7 @@ export default function AdminDashboard() {
             ))}
           </div>
         )}
+        </>}
       </div>
     </section>
   )
