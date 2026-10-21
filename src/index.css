@@ -2571,63 +2571,128 @@
   font-size: 14px;
   line-height: 1.85;
 }
-.engineer-roster {
-  overflow: hidden;
-  border: 1px solid #dfe3ec;
-  border-radius: 20px;
-  background: #fff;
-  box-shadow: 0 12px 40px #14213d05;
-}
-.engineer-profile {
+.engineers-feature {
   display: grid;
-  grid-template-columns: minmax(0, 0.95fr) minmax(0, 1.25fr);
+  grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.15fr);
   align-items: center;
-  gap: clamp(24px, 4vw, 56px);
-  padding: 24px 32px;
-  min-height: 112px;
+  gap: clamp(32px, 4.5vw, 64px);
+  padding: clamp(28px, 3.5vw, 48px);
+  border: 1px solid #ffffff14;
+  border-radius: 20px;
+  background: #1b2540;
+  color: white;
+}
+.engineers-photo {
+  min-width: 0;
+  margin: 0;
+}
+.engineers-photo-frame {
+  position: relative;
+  overflow: hidden;
+  border-radius: 100px 8px 8px 8px;
+  border: 1px solid #ffffff26;
+}
+.engineers-photo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  object-position: 50% 25%;
+}
+.engineers-photo-label {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 38px 20px 18px;
+  background: linear-gradient(transparent, #111b34d9);
+  color: #fff;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+}
+.engineers-photo figcaption {
+  margin-top: 26px;
+  padding-left: 20px;
+  border-left: 2px solid #dfbd8c;
+}
+.engineers-photo .eyebrow {
+  color: #dfbd8c;
+  font-size: 8px;
+  letter-spacing: 0.12em;
+}
+.engineers-photo h3 {
+  margin-top: 12px;
+  font-size: clamp(23px, 2.4vw, 30px);
+  letter-spacing: -0.035em;
+}
+.engineers-photo figcaption > p:not(.eyebrow) {
+  margin-top: 12px;
+  font-size: 13px;
+  line-height: 1.85;
+  color: #c4cce0;
+}
+.engineers-photo-credit {
+  display: block;
+  margin-top: 18px;
+  font-size: 9px;
+  line-height: 1.7;
+  color: #a5afc7;
+}
+.engineer-roster {
   min-width: 0;
 }
+.engineer-profile {
+  padding: 22px 0;
+  min-width: 0;
+}
+.engineer-profile:first-child {
+  padding-top: 0;
+}
+.engineer-profile:last-child {
+  padding-bottom: 0;
+}
 .engineer-profile + .engineer-profile {
-  border-top: 1px solid #e6e9f0;
+  border-top: 1px solid #ffffff26;
 }
 .engineer-identity {
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 18px;
   min-width: 0;
 }
-.engineer-monogram {
+.engineer-avatar {
   display: grid;
   place-items: center;
-  width: 58px;
-  height: 58px;
+  width: 54px;
+  height: 60px;
   flex-shrink: 0;
-  border-radius: 50%;
-  background: #eef1fa;
-  color: var(--ink);
-  border: 1px solid #dfe5f5;
-  font-size: 17px;
-  font-weight: 600;
-  letter-spacing: -0.04em;
+  overflow: hidden;
+  border-radius: 20px 5px 5px 5px;
+  background: #ffffff0c;
+  border: 1px solid #ffffff1f;
+  color: #b8c5ff;
+}
+.engineer-avatar svg {
+  width: 28px;
+  height: 28px;
 }
 .engineer-role {
-  color: #355be7;
-  font-size: 12px;
+  color: #dfbd8c;
+  font-size: 11px;
   font-weight: 500;
   margin-top: 6px;
 }
 .engineer-profile h3 {
-  font-size: clamp(19px, 1.7vw, 23px);
+  font-size: 21px;
   letter-spacing: -0.035em;
   line-height: 1.35;
 }
 .engineer-focus {
-  padding-left: 30px;
-  border-left: 1px solid #e6e9f0;
-  color: #626b7e;
-  font-size: 13px;
+  margin-top: 10px;
+  margin-left: 72px;
+  color: #c4cce0;
+  font-size: 12px;
   line-height: 1.8;
-  max-width: 60ch;
 }
 .engineers-followthrough {
   display: flex;
@@ -2787,6 +2852,13 @@
   padding-inline: 24px;
 }
 @media (max-width: 1000px) {
+  .engineers-feature {
+    gap: 30px;
+    padding: 30px;
+  }
+  .engineer-profile h3 {
+    font-size: 19px;
+  }
   .engineers-heading,
   .lifecycle-heading {
     grid-template-columns: minmax(0, 1fr);
@@ -2813,6 +2885,20 @@
     gap: 24px;
   }
 }
+@media (max-width: 900px) {
+  .engineers-feature {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .engineers-photo {
+    display: grid;
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: 28px;
+  }
+  .engineers-photo figcaption {
+    margin-top: 0;
+  }
+}
 @media (max-width: 700px) {
   .engineers-heading,
   .lifecycle-heading {
@@ -2822,26 +2908,37 @@
   .lifecycle-heading h2 {
     font-size: clamp(28px, 7.7vw, 40px);
   }
-  .engineer-roster {
+  .engineers-feature {
+    grid-template-columns: minmax(0, 1fr);
+    padding: 24px;
+    gap: 36px;
     border-radius: 16px;
   }
-  .engineer-profile {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 18px;
-    padding: 24px;
-    min-height: 0;
+  .engineers-photo-frame {
+    border-top-left-radius: 70px;
+  }
+  .engineers-photo {
+    display: block;
+  }
+  .engineers-photo figcaption {
+    margin-top: 26px;
+  }
+  .engineers-photo img {
+    aspect-ratio: 4 / 3;
+  }
+  .engineers-photo-label {
+    font-size: 7px;
+    padding-inline: 14px;
   }
   .engineer-identity {
     gap: 16px;
   }
-  .engineer-monogram {
+  .engineer-avatar {
     width: 48px;
-    height: 48px;
-    font-size: 14px;
+    height: 54px;
   }
   .engineer-focus {
-    border-left: 0;
-    padding-left: 0;
+    margin-left: 0;
   }
   .engineers-followthrough {
     flex-direction: column;

@@ -1,4 +1,4 @@
-import { HiArrowUpRight } from 'react-icons/hi2'
+import { HiArrowUpRight, HiOutlineUser } from 'react-icons/hi2'
 import { Link } from 'react-router-dom'
 import { director, teamMembers } from '../data/team'
 import PageIntro from '../components/PageIntro'
@@ -120,19 +120,40 @@ export default function About() {
               equipment we supply, supporting your facility throughout its life.
             </p>
           </div>
-          <div className="engineer-roster">
-            {teamMembers.map((m) => (
-              <article className="engineer-profile" key={m.id}>
-                <div className="engineer-identity">
-                  <span className="engineer-monogram" aria-hidden="true">{m.initials}</span>
-                  <div>
-                    <h3>{m.name}</h3>
-                    <p className="engineer-role">{m.role}</p>
+          <div className="engineers-feature">
+            <figure className="engineers-photo">
+              <div className="engineers-photo-frame">
+                <img
+                  src="/images/equipment-support.jpg"
+                  alt="Representative stock photograph of a technician adjusting medical imaging equipment"
+                  width="1000"
+                  height="667"
+                  loading="lazy"
+                  decoding="async"
+                />
+                <span className="engineers-photo-label">EQUIPMENT CARE. HUMAN COMMITMENT.</span>
+              </div>
+              <figcaption>
+                <p className="eyebrow">EXPERTISE THAT STAYS WITH YOU</p>
+                <h3>Care in every detail.</h3>
+                <p>From a careful installation to the next service visit, our team helps keep your equipment ready for care.</p>
+                <span className="engineers-photo-credit">Representative photograph · Tima Miroshnichenko / Pexels</span>
+              </figcaption>
+            </figure>
+            <div className="engineer-roster">
+              {teamMembers.map((m) => (
+                <article className="engineer-profile" key={m.id}>
+                  <div className="engineer-identity">
+                    <span className="engineer-avatar" aria-hidden="true"><HiOutlineUser /></span>
+                    <div>
+                      <h3>{m.name}</h3>
+                      <p className="engineer-role">{m.role}</p>
+                    </div>
                   </div>
-                </div>
-                <p className="engineer-focus">{m.focus}</p>
-              </article>
-            ))}
+                  <p className="engineer-focus">{m.focus}</p>
+                </article>
+              ))}
+            </div>
           </div>
           <div className="engineers-followthrough">
             <p>From installation to ongoing care, a team you can come back to.</p>
