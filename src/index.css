@@ -2797,41 +2797,61 @@ em {
 }
 .brand-navigation {
   border-bottom: 1px solid var(--line);
+  background: #fff;
 }
 .brand-navigation > .wrap {
-  padding-block: 26px 29px;
+  padding-block: 34px 38px;
 }
 .brand-navigation .eyebrow {
+  display: block;
+  text-align: center;
   color: #626b7e;
   font-size: 9px;
-  margin-bottom: 18px;
+  letter-spacing: 0.12em;
+  margin-bottom: 24px;
 }
-.brand-navigation .wrap > div {
+.manufacturer-logo-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  row-gap: 22px;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  gap: 12px;
 }
-.brand-navigation a {
+.manufacturer-logo-tile {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  border-right: 1px solid var(--line);
-  padding-inline: 25px;
+  justify-content: center;
+  min-width: 0;
+  min-height: 116px;
+  padding: 23px;
+  border: 1px solid #e3e6ee;
+  border-radius: 12px;
+  background: #fff;
+  transition: border-color 0.18s ease, box-shadow 0.18s ease;
 }
-.brand-navigation a:nth-child(3n + 1) {
-  padding-left: 0;
+.manufacturer-logo-tile img {
+  display: block;
+  width: 100%;
+  max-width: 166px;
+  height: 54px;
+  object-fit: contain;
 }
-.brand-navigation a:nth-child(3n) {
-  padding-right: 0;
-  border-right: 0;
+.manufacturer-logo-tile.logo-on-dark {
+  background: var(--ink);
+  border-color: var(--ink);
 }
-.brand-navigation a svg {
-  color: var(--cobalt);
-  flex-shrink: 0;
+.manufacturer-logo-tile.logo-kiran img {
+  max-width: 110px;
+  height: 60px;
+}
+.manufacturer-logo-tile.logo-linet img {
+  max-width: 128px;
+}
+.manufacturer-logo-tile:hover {
+  border-color: #8196ed;
+  box-shadow: 0 5px 16px #1b25400d;
+}
+.manufacturer-logo-tile:focus-visible {
+  outline: 3px solid var(--cobalt);
+  outline-offset: 4px;
 }
 .manufacturer-resources {
   margin-top: 28px;
@@ -2861,9 +2881,6 @@ em {
   gap: 7px;
   font-size: 12px;
   font-weight: 700;
-  color: var(--cobalt);
-}
-.brand-navigation a:hover {
   color: var(--cobalt);
 }
 .team-heading {
@@ -3657,6 +3674,9 @@ em {
   line-height: 1.8;
 }
 @media (max-width: 1190px) {
+  .manufacturer-logo-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
   .home-hero-grid {
     gap: 35px;
   }
@@ -3743,10 +3763,6 @@ em {
   }
   .showcase-description h2 {
     font-size: 22px;
-  }
-  .brand-navigation a {
-    font-size: 12px;
-    padding-inline: 18px;
   }
   .clinical-grid,
   .featured-equipment-grid {
@@ -3917,26 +3933,21 @@ em {
     font-size: 10px;
   }
   .brand-navigation > .wrap {
-    padding-block: 23px;
+    padding-block: 28px;
   }
   .brand-navigation .eyebrow {
     font-size: 8px;
   }
-  .brand-navigation .wrap > div {
+  .manufacturer-logo-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 20px 0;
+    gap: 12px;
   }
-  .brand-navigation .wrap a {
-    font-size: 11px;
-    padding: 0 15px;
-    border-right: 1px solid var(--line);
+  .manufacturer-logo-tile {
+    min-height: 110px;
+    padding: 18px;
   }
-  .brand-navigation a:nth-child(odd) {
-    padding-left: 0;
-  }
-  .brand-navigation a:nth-child(even) {
-    padding-right: 0;
-    border: none;
+  .manufacturer-logo-tile img {
+    height: 44px;
   }
   .clinical-ranges .section-heading {
     gap: 22px;

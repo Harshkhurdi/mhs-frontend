@@ -208,11 +208,22 @@ export default function Home() {
       <section className="brand-navigation">
         <div className="wrap">
           <span className="eyebrow">THE NAMES BEHIND THE TECHNOLOGY</span>
-          <div>
+          <div className="manufacturer-logo-grid">
             {manufacturerBrands.map((b) => (
-              <Link key={b.id} to={`/solutions?brand=${b.id}`}>
-                <span>{b.name}</span>
-                <HiArrowUpRight />
+              <Link
+                key={b.id}
+                to={`/solutions?brand=${b.id}`}
+                className={`manufacturer-logo-tile logo-${b.id}${b.logo.theme === 'dark' ? ' logo-on-dark' : ''}`}
+                aria-label={`Explore ${b.name} equipment`}
+              >
+                <img
+                  src={b.logo.src}
+                  alt={`${b.name} logo`}
+                  width={b.logo.width}
+                  height={b.logo.height}
+                  loading="lazy"
+                  decoding="async"
+                />
               </Link>
             ))}
           </div>
