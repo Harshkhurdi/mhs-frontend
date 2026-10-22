@@ -17,7 +17,7 @@ import { manufacturerBrands } from '../data/products'
 const range = catalogue.products
 const showcaseIds = [
   'hamilton-c6',
-  'karl-storz-th121',
+  'karl-storz-8404zx',
   'spacelabs-qube',
   'kiran-flat-panel-based-digital-carm',
   'samsung-r20',
