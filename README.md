@@ -67,8 +67,8 @@ Seven automated checks cover catalogue identities, local image files, official r
 
 The redesign was checked against the live public catalogue. Submission and staff mutations were verified through an isolated local Firebase adapter so no test records were written to production. A real staff sign-in and production write still depend on the existing account and deployed Firebase rules.
 
-Photos and source attribution are listed in [public/images/README.md](public/images/README.md) and the complete [manufacturer source ledger](docs/manufacturer-sources.md). Clinical photos are illustrative and are not presented as Medelec projects or premises.
+Photos and source attribution are listed in [public/images/README.md](public/images/README.md) and the complete [manufacturer source ledger](docs/manufacturer-sources.md). Manufacturer photography is illustrative; the Photos & events page also includes four owner-supplied photographs of Medelec installations, a CM visit and clinical training.
 
 ## Event gallery and engineer portraits
 
-Staff can upload event albums under **Admin → Photos & events** and portraits under **Admin → Team photographs**. Six clearly labelled demo albums provide sample layouts. See sections 23–24 of `docs/MHS-User-and-Admin-Guide.md` for upload limits, publishing, archiving, database paths and backups. Gallery permissions are maintained in `firebase/firestore.rules`; deploy rules separately from Vercel.
+Staff can upload event albums under **Admin → Photos & events** and portraits under **Admin → Team photographs**. Three curated photo stories replace the old demo albums and can be edited or archived by staff. Customer inquiries have a reversible Delete inquiry / Trash / Restore workflow. See sections 23–24 of `docs/MHS-User-and-Admin-Guide.md` for upload limits, publishing, archiving, database paths and backups. Gallery permissions are maintained in `firebase/firestore.rules`; deploy rules separately from Vercel.

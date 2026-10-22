@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from 'react'
 import AdminEvents from '../components/AdminEvents'
+import { setInquiryDeleted } from '../services/inquiries'
 import AdminTeamPhotos from '../components/AdminTeamPhotos'
 import PageMeta from '../components/PageMeta'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore/lite'
-import { HiArrowUpRight, HiOutlinePlus } from 'react-icons/hi2'
+import { HiArrowUpRight, HiOutlinePlus, HiOutlineTrash, HiOutlineArrowUturnLeft } from 'react-icons/hi2'
 import { useAuth } from '../context/AuthContext'
 import { db } from '../config/firebaseDatabase'
 import { clinicalSpecialties, manufacturerBrands } from '../data/products'
@@ -44,6 +45,8 @@ export default function AdminDashboard() {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState({ ...emptyProduct })
   const [busy, setBusy] = useState(false)
+  const [showTrash, setShowTrash] = useState(false)
+  const inquiryRows = rows.filter((row) => (row.is_deleted === true) === showTrash)
   const pendingId = useRef(null)
   useEffect(() => {
     if (!['products', 'inquiries'].includes(tab)) return
@@ -178,6 +181,21 @@ export default function AdminDashboard() {
       setError('Unable to sign out. Check your connection and try again.')
     }
   }
+  async function moveInquiry(inquiry, deleted) {
+    if (busy) return
+    setBusy(true)
+    setError('')
+    setNotice('')
+    try {
+      await setInquiryDeleted(inquiry.id, deleted)
+      setRows((current) => current.map((row) => row.id === inquiry.id ? { ...row, is_deleted: deleted } : row))
+      setNotice(deleted ? 'Inquiry moved to Trash. Open Trash to restore it at any time.' : 'Inquiry restored to your inbox.')
+    } catch {
+      setError('Unable to confirm this change. Refresh the inbox to check its current status, then try again.')
+    } finally {
+      setBusy(false)
+    }
+  }
   return (
     <section className="admin-page">
       <PageMeta
@@ -229,6 +247,7 @@ export default function AdminDashboard() {
               : 'Review submitted inquiries. Dates are shown in Indian Standard Time.'}
           </p>
           <div className="flex gap-4">
+            {tab === 'inquiries' && <label className="inquiry-trash-toggle"><input type="checkbox" checked={showTrash} disabled={busy || loading} onChange={(e) => { setShowTrash(e.target.checked); setNotice('') }} />Trash ({rows.filter((row) => row.is_deleted === true).length})</label>}
             <button
               className="text-link"
               onClick={() => setRefresh((n) => n + 1)}
@@ -457,7 +476,8 @@ export default function AdminDashboard() {
           </div>
         ) : (
           <div className="inquiry-cards">
-            {rows.map((i) => (
+            {!inquiryRows.length && !loading && <p className="empty-state">{showTrash ? 'Trash is empty.' : 'No inquiries in your inbox.'}</p>}
+            {inquiryRows.map((i) => (
               <article className="admin-inquiry" key={i.id}>
                 <header>
                   <div>
@@ -494,6 +514,9 @@ export default function AdminDashboard() {
                     ))}
                   </ul>
                 )}
+                <div className="inquiry-actions">
+                  {showTrash ? <><span className="inquiry-trash-label">In Trash</span><button className="text-link" disabled={busy} onClick={() => moveInquiry(i, false)}><HiOutlineArrowUturnLeft />Restore inquiry</button></> : <button className="inquiry-delete" disabled={busy} onClick={() => moveInquiry(i, true)}><HiOutlineTrash />Delete inquiry</button>}
+                </div>
               </article>
             ))}
           </div>

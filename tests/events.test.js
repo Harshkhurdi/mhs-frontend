@@ -1,30 +1,31 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { existsSync } from 'node:fs'
-import { demoEvents } from '../src/data/events.js'
+import { defaultEvents } from '../src/data/events.js'
 import { galleryImage, mergeEvents, validateAlbum } from '../src/lib/events.js'
 import { manufacturerBrands } from '../src/data/products.js'
 import { mergeCatalogue, sortCatalogue } from '../src/lib/catalogue.js'
 
-test('demo albums use existing photographs and are explicitly identified as samples', () => {
-  assert.equal(demoEvents.length, 6)
-  for (const event of demoEvents) {
-    assert.equal(event.is_demo, true)
+test('curated photo stories use real local photographs in the requested order', () => {
+  assert.deepEqual(defaultEvents.map((event) => event.category), ['Visit', 'Installation', 'Training'])
+  assert.equal(defaultEvents.reduce((total, event) => total + event.photos.length, 0), 4)
+  for (const event of defaultEvents) {
+    assert.equal(event.is_demo, false)
+    assert.equal(event.event_date, '')
     assert.equal(validateAlbum(event, event.photos), '')
-    assert.ok(existsSync(new URL('../public' + event.cover_image, import.meta.url)))
+    for (const photo of event.photos) assert.ok(existsSync(new URL('../public' + photo.src, import.meta.url)))
   }
 })
-test('archived or replaced demos never reappear and drafts stay private', () => {
-  const demo = demoEvents[0]
-  const saved = { ...demo, title: 'Actual staff album', is_demo: false }
-  assert.equal(mergeEvents([saved]).filter(e => e.id === demo.id).length, 1)
-  assert.equal(mergeEvents([{ ...saved, is_published: false }]).some(e => e.id === demo.id), false)
-  assert.equal(mergeEvents([], { hidden_demo_ids: [demo.id] }).some(e => e.id === demo.id), false)
-  assert.equal(mergeEvents([], { show_demos: false }).length, 0)
-  assert.equal(mergeEvents([{ ...saved, is_published: false }], { show_demos: false }, true).length, 1)
+test('archived stories stay hidden, replacements retain their order and old demos never return', () => {
+  const original = defaultEvents[0]
+  const saved = { ...original, title: 'Updated staff album' }
+  assert.equal(mergeEvents([saved])[0].title, saved.title)
+  assert.equal(mergeEvents([{ ...saved, is_published: false }]).some(e => e.id === original.id), false)
+  assert.equal(mergeEvents([{ ...saved, is_published: false }], true).find(e => e.id === original.id).is_published, false)
+  assert.equal(mergeEvents([{ ...saved, id: 'demo-old', is_demo: true }]).length, 3)
 })
 test('album validation rejects invalid dates, oversized images, unsafe URLs and missing captions', () => {
-  const event = demoEvents[0], photos = event.photos
+  const event = defaultEvents[0], photos = event.photos
   assert.notEqual(validateAlbum({ ...event, event_date: '2026-02-31' }, photos), '')
   assert.notEqual(validateAlbum(event, []), '')
   assert.notEqual(validateAlbum(event, [{ ...photos[0], alt: ' ' }]), '')

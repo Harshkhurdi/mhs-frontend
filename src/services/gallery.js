@@ -1,17 +1,14 @@
-import { collection, doc, getDoc, getDocs, query, where, writeBatch, setDoc, arrayUnion } from 'firebase/firestore/lite'
+import { collection, doc, getDocs, query, where, writeBatch, setDoc } from 'firebase/firestore/lite'
 import { db } from '../config/firebaseDatabase'
 import { withTimeout } from '../lib/quote'
 import { mergeEvents, validateAlbum } from '../lib/events'
 
-const gallerySettings = () => doc(db, 'siteSettings', 'gallery')
-
 export async function loadGallery(admin = false) {
   if (!db) throw new Error('The database connection is not configured.')
   const source = admin ? collection(db, 'events') : query(collection(db, 'events'), where('is_published', '==', true))
-  const [snapshot, settingsSnapshot] = await withTimeout(Promise.all([getDocs(source), getDoc(gallerySettings())]))
-  const settings = settingsSnapshot.exists() ? settingsSnapshot.data() : {}
+  const snapshot = await withTimeout(getDocs(source))
   const events = snapshot.docs.map((row) => ({ ...row.data(), id: row.id }))
-  return { events: mergeEvents(events, settings, admin), settings }
+  return { events: mergeEvents(events, admin) }
 }
 
 export async function loadAlbumPhotos(event, admin = false) {
@@ -38,7 +35,6 @@ export async function saveAlbum(form, photos, previousIds = []) {
     src: photo.src, thumbnail: photo.thumbnail, alt: photo.alt.trim(), position, is_published: true, updated_at: timestamp,
   }))
   for (const oldId of previousIds) if (!photos.some((p) => p.id === oldId)) batch.set(doc(db, 'events', id, 'photos', oldId), { is_published: false, updated_at: timestamp }, { merge: true })
-  if (id.startsWith('demo-')) batch.set(gallerySettings(), { hidden_demo_ids: arrayUnion(id) }, { merge: true })
   await withTimeout(batch.commit(), 25000)
   return id
 }
@@ -46,10 +42,6 @@ export async function saveAlbum(form, photos, previousIds = []) {
 export async function setAlbumPublished(event, published) {
   if (!event.remote) return saveAlbum({ ...event, is_published: published }, event.photos)
   await withTimeout(setDoc(doc(db, 'events', event.id), { is_published: published, updated_at: Date.now() }, { merge: true }))
-}
-
-export async function setDemoVisibility(show) {
-  await withTimeout(setDoc(gallerySettings(), { show_demos: show }, { merge: true }))
 }
 
 export async function loadTeamPhotos() {

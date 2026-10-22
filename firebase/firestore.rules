@@ -15,6 +15,12 @@ service cloud.firestore {
     match /inquiries/{inquiryId} {
       allow create: if true;
       allow read: if staff();
+      // Staff can remove an inquiry from the inbox and restore it from Trash.
+      allow update: if staff()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['is_deleted', 'deleted_at'])
+        && request.resource.data.is_deleted is bool
+        && ((request.resource.data.is_deleted == true && request.resource.data.deleted_at is number)
+          || (request.resource.data.is_deleted == false && request.resource.data.deleted_at == null));
     }
     match /events/{eventId} {
       allow read: if resource.data.is_published == true || staff();
@@ -24,9 +30,9 @@ service cloud.firestore {
       ]) && shortText(request.resource.data.title, 140)
         && shortText(request.resource.data.location, 140)
         && shortText(request.resource.data.summary, 2000)
-        && request.resource.data.category in ['Conference', 'Workshop', 'Training', 'Community']
+        && request.resource.data.category in ['Visit', 'Installation', 'Conference', 'Workshop', 'Training', 'Community']
         && request.resource.data.event_date is string
-        && request.resource.data.event_date.matches('[0-9]{4}-[0-9]{2}-[0-9]{2}')
+        && request.resource.data.event_date.matches('([0-9]{4}-[0-9]{2}-[0-9]{2})?')
         && request.resource.data.is_published is bool && request.resource.data.is_demo is bool
         && image(request.resource.data.cover_image, 65000)
         && shortText(request.resource.data.cover_alt, 240)

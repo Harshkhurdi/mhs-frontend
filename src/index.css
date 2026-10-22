@@ -4850,3 +4850,41 @@ em {
 .engineer-profile h3 { font-size: 20px; }
 .engineers-photo img { aspect-ratio: 4/3; object-position: center; }
 @media (max-width: 600px) { .engineer-profile { grid-template-columns: 64px minmax(0,1fr); gap: 8px 14px; } .engineer-avatar { width: 64px; height: 80px; } .engineer-focus { grid-column: 1/-1; margin-top: 8px; } }
+
+/* Real installations and people, presented as a small photo journal. */
+.events-mosaic { transform: none; grid-template-columns: 1.35fr 1fr; gap: 14px; }
+.events-mosaic img:first-child { object-position: 58% center; }
+.event-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 40px 28px; }
+.event-card { border: 1px solid #e1e4eb; border-radius: 14px; overflow: hidden; padding: 0; height: 100%; background: #fff; }
+.event-card-image { border-radius: 0; }
+.event-card-image > img { aspect-ratio: 16 / 9; }
+.event-card-content { display: flex; flex-direction: column; padding: 26px 28px 28px; }
+.event-card-meta { margin-top: 0; font-size: 11px; }
+.event-card-summary { display: block; font-size: 13px; line-height: 1.8; color: #646d7d; margin-bottom: 26px; }
+.event-card-action { padding-top: 18px; border-top: 1px solid #e1e4eb; margin-top: auto; }
+.event-feature { grid-column: 1 / -1; }
+.event-feature .event-card { display: grid; grid-template-columns: 1.25fr 1fr; background: #1c2540; border-color: #1c2540; }
+.event-feature .event-card-image { height: 100%; }
+.event-feature .event-card-image > img { aspect-ratio: 4 / 3; height: 100%; object-position: 58% center; }
+.event-feature .event-card-content { justify-content: center; padding: 42px; }
+.event-feature .event-card-title { color: #fff; font-size: clamp(28px, 3vw, 40px); line-height: 1.15; margin: 20px 0; }
+.event-feature .event-card-meta, .event-feature .event-card-summary { color: #c5cbd9; }
+.event-feature .event-card-action { color: #dedcfc; border-color: #ffffff26; margin-top: 0; }
+.inquiry-trash-toggle { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+.inquiry-trash-toggle input { width: 16px; height: 16px; }
+.inquiry-actions { margin-top: 22px; padding-top: 18px; border-top: 1px solid #e1e4eb; display: flex; gap: 18px; flex-wrap: wrap; align-items: center; }
+.inquiry-delete { display: inline-flex; gap: 8px; align-items: center; color: #a5353d; font-size: 12px; }
+.inquiry-delete svg { width: 17px; height: 17px; }
+.inquiry-trash-label { color: #747d8e; font-size: 12px; }
+@media (max-width: 900px) {
+ .event-feature .event-card-content { padding: 28px; }
+ .event-feature .event-card { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 600px) {
+ .event-grid { grid-template-columns: 1fr; gap: 26px; }
+ .event-feature .event-card { display: block; height: auto; }
+ .event-feature .event-card-image { height: auto; }
+ .event-feature .event-card-image > img { height: auto; }
+ .event-card-content, .event-feature .event-card-content { padding: 24px; }
+ .event-feature .event-card-title { font-size: 30px; }
+}

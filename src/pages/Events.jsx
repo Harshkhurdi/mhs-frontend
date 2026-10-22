@@ -33,7 +33,7 @@ function AlbumDialog({ event, onClose }) {
         <div>
           <p className="eyebrow">{event.category}{event.is_demo ? ' · DEMO ALBUM' : ''}</p>
           <h2 id="album-title">{event.title}</h2>
-          <p>{eventDate(event.event_date)} · {event.location}</p>
+          <p>{event.event_date && <>{eventDate(event.event_date)} · </>}{event.location}</p>
         </div>
         <button className="album-close" aria-label="Close album" onClick={onClose}><HiOutlineXMark /></button>
       </header>
@@ -62,12 +62,11 @@ export default function Events() {
   useEffect(() => {
     let cancelled = false
     loadGallery().then((data) => { if (!cancelled) setEvents(data.events) }).catch(() => {
-      if (!cancelled) setError('Recent albums are temporarily unavailable. The sample gallery is shown below.')
+      if (!cancelled) setError('Recent updates are temporarily unavailable. Our selected photo stories are available below.')
     }).finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
   }, [])
   const visible = events.filter((event) => category === 'All' || event.category === category)
-  const hasDemos = events.some((event) => event.is_demo)
   return <>
     <PageMeta title="Conferences & Events | Medelec Healthcare Solutions" description="Photographs, conversations and shared learning from Medelec conferences, workshops and healthcare events." />
     <section className="events-hero">
@@ -75,9 +74,9 @@ export default function Events() {
         <div className="breadcrumb"><Link to="/">Home</Link><span>/</span><span>Photos & events</span></div>
         <div className="events-intro">
           <div>
-            <p className="eyebrow">CONFERENCES · WORKSHOPS · CONNECTIONS</p>
-            <h1>Shared knowledge.<br /><em>Stronger care.</em></h1>
-            <p className="events-lede">A closer look at the conversations, people and experiences that connect our healthcare community.</p>
+            <p className="eyebrow">INSTALLATIONS · PEOPLE · PRACTICAL LEARNING</p>
+            <h1>Technology in place.<br /><em>People in focus.</em></h1>
+            <p className="events-lede">From a new installation to a hands-on training session, see the people and moments behind our work.</p>
             <a className="text-link" href="#event-albums">Explore the albums <HiArrowUpRight /></a>
           </div>
           <div className="events-mosaic" aria-hidden="true">{events.slice(0, 3).map((event) => <img key={event.id} src={galleryImage(event.cover_image)} alt="" width="640" height="480" />)}</div>
@@ -86,17 +85,17 @@ export default function Events() {
     </section>
     <section className="section events-section" id="event-albums">
       <div className="wrap">
-        <div className="events-heading"><div><p className="eyebrow">MOMENTS WORTH SHARING</p><h2>In good company.</h2></div><p>Explore our photo albums.<br />Open an album to see the full story.</p></div>
-        <div className="event-filters" aria-label="Filter event albums">{['All', ...eventCategories].map((name) => <button key={name} aria-pressed={category === name} className={category === name ? 'active' : ''} onClick={() => setCategory(name)}>{name === 'All' ? 'All albums' : name}<span>{events.filter((event) => name === 'All' || event.category === name).length}</span></button>)}</div>
-        {hasDemos && <p className="demo-gallery-note">Albums marked <strong>Demo</strong> are sample layouts with representative images. They can be replaced from the staff dashboard.</p>}
+        <div className="events-heading"><div><p className="eyebrow">MOMENTS WORTH SHARING</p><h2>Care, brought to life.</h2></div><p>On site. Alongside your team.<br />Explore the stories behind the equipment.</p></div>
+        <div className="event-filters" aria-label="Filter event albums">{['All', ...eventCategories.filter((name) => events.some((event) => event.category === name))].map((name) => <button key={name} aria-pressed={category === name} className={category === name ? 'active' : ''} onClick={() => setCategory(name)}>{name === 'All' ? 'All albums' : name}<span>{events.filter((event) => name === 'All' || event.category === name).length}</span></button>)}</div>
         {error && <p className="gallery-load-note" role="status">{error}</p>}
         {loading && <p className="fine-print" role="status">Checking for recent albums…</p>}
-        <div className="event-grid">{visible.map((event) => <article key={event.id}>
+        <div className="event-grid">{visible.map((event) => <article key={event.id} className={event.id === 'punjab-cm-equipment-visit' ? 'event-feature' : ''}>
           <button className="event-card" onClick={() => setSelected(event)} aria-label={`Open ${event.title} photo album`}>
             <span className="event-card-image"><img src={galleryImage(event.cover_image)} alt="" width="720" height="540" loading="lazy" /><span className="event-category">{event.category}</span>{event.is_demo && <span className="event-demo">Demo</span>}<span className="event-photo-count"><HiOutlinePhoto />{event.photo_count || 1}</span></span>
-            <span className="event-card-meta">{eventDate(event.event_date)}<span><HiOutlineMapPin />{event.location}</span></span>
+            <span className="event-card-content"><span className="event-card-meta">{event.event_date && <time>{eventDate(event.event_date)}</time>}<span><HiOutlineMapPin />{event.location}</span></span>
             <span className="event-card-title">{event.title}</span>
-            <span className="event-card-action">View photographs <HiArrowUpRight /></span>
+            <span className="event-card-summary">{event.summary}</span>
+            <span className="event-card-action">View the story <HiArrowUpRight /></span></span>
           </button>
         </article>)}</div>
         {!visible.length && !loading && <div className="empty-state"><h2>No albums in this category yet.</h2><p>Visit again for new photographs from our team.</p><button className="text-link" onClick={() => setCategory('All')}>Show all albums <HiArrowUpRight /></button></div>}

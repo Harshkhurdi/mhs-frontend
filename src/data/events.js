@@ -1,26 +1,36 @@
-export const eventCategories = ['Conference', 'Workshop', 'Training', 'Community']
+export const eventCategories = ['Visit', 'Installation', 'Training', 'Conference', 'Workshop', 'Community']
 
-const samples = [
-  ['technology-showcase', 'Medical technology showcase', 'Conference', '2026-09-18', 'Chandigarh', 'An example album for conversations about medical technology and the people behind it.', 'conference'],
-  ['equipment-workshop', 'A closer look at clinical equipment', 'Workshop', '2026-08-22', 'Mohali', 'A sample album for hands-on equipment sessions, demonstrations and shared learning.', 'workshop'],
-  ['critical-care-exchange', 'Critical care, shared knowledge', 'Training', '2026-07-16', 'Chandigarh', 'An example of how training sessions and clinical discussions can be shared with your visitors.', 'audience'],
-  ['imaging-forum', 'Imaging and surgical technology forum', 'Conference', '2026-06-12', 'New Delhi', 'A sample conference album for product discussions, new ideas and professional connections.', 'forum'],
-  ['service-learning', 'Learning that supports better service', 'Workshop', '2026-05-23', 'Mohali', 'An example album for technical workshops and service engineering knowledge exchange.', 'learning'],
-  ['healthcare-connections', 'Partners in better healthcare', 'Community', '2026-04-10', 'Chandigarh', 'A sample album for the partnerships and conversations that bring healthcare teams together.', 'connections'],
-]
+// Event dates were not supplied. Leave them blank rather than inventing a date.
+const photo = (id, alt) => ({ id, src: `/images/events/${id}.webp`, thumbnail: `/images/events/${id}.webp`, alt })
 
-export const demoEvents = samples.map(([id, title, category, event_date, location, summary, image]) => ({
-  id: `demo-${id}`,
-  title,
-  category,
-  event_date,
-  location,
-  summary,
-  cover_image: `/images/events/demo-${image}.webp`,
-  cover_alt: `Representative stock photograph for the ${title.toLowerCase()} demo album`,
-  photo_count: 1,
-  is_demo: true,
-  is_published: true,
-  updated_at: 0,
-  photos: [{ id: 'sample-photo', src: `/images/events/demo-${image}.webp`, thumbnail: `/images/events/demo-${image}.webp`, alt: 'Representative conference or workshop photograph', position: 0 }],
+export const defaultEvents = [
+  {
+    id: 'punjab-cm-equipment-visit',
+    title: 'A closer look at better-equipped care.',
+    category: 'Visit', location: 'Punjab', event_date: '',
+    summary: 'Punjab Chief Minister Bhagwant Mann takes a personal look at newly installed medical equipment supplied by Medelec. An on-site demonstration brings the technology into focus — and the installation, expertise and service behind it.',
+    photos: [
+      photo('punjab-cm-equipment-visit', 'Punjab Chief Minister Bhagwant Mann views newly installed medical equipment during an on-site demonstration.'),
+      photo('punjab-cm-equipment-demonstration', 'The equipment demonstration continues with the visiting delegation and hospital team.'),
+    ],
+  },
+  {
+    id: 'hamilton-c6-pgi-installation',
+    title: 'Installed with purpose. Ready for the next step.',
+    category: 'Installation', location: 'PGI Chandigarh', event_date: '',
+    summary: 'HAMILTON-C6 ventilators supplied for installation at PGI Chandigarh. From delivery and equipment setup to coordination with the clinical team, our service engineers help bring respiratory technology into the hospital workflow.',
+    photos: [photo('hamilton-c6-pgi-installation', 'HAMILTON-C6 ventilators supplied for installation at PGI Chandigarh.')],
+  },
+  {
+    id: 'hamilton-c6-clinical-training',
+    title: 'Training the next generation of care.',
+    category: 'Training', location: 'HAMILTON-C6 · Clinical training', event_date: '',
+    summary: 'Bringing the HAMILTON-C6 into focus through practical learning. A hands-on session introduces the next generation of healthcare professionals to the ventilator, with equipment guidance and discussion alongside the clinical team.',
+    photos: [photo('hamilton-c6-clinical-training', 'Healthcare professionals gather around a HAMILTON-C6 for a practical equipment training session.')],
+  },
+].map((event, display_order) => ({
+  ...event, display_order, is_published: true, is_demo: false, updated_at: 0,
+  cover_image: event.photos[0].thumbnail, cover_alt: event.photos[0].alt,
+  photo_count: event.photos.length,
+  photos: event.photos.map((image, position) => ({ ...image, position })),
 }))

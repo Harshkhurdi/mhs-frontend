@@ -8,7 +8,7 @@ Version 1.2 | 21 October 2026 | For the business owner, service engineers, staff
 
 This manual explains how visitors request equipment or service, how staff find and follow up enquiries, and how the owner manages Firebase and Vercel. It describes the current application, including its limits. It does not add features or change database permissions.
 
-Source baseline: the current frontend, including `firebase/firestore.rules` for the deployed gallery and portrait permissions. Firebase project: `mhs-project-7235e`. Gallery rules were published and checked on 21 October 2026. Website staff access still uses the existing Firebase Authentication accounts.
+Source baseline: the current frontend, including `firebase/firestore.rules` for the deployed gallery and portrait permissions. Firebase project: `mhs-project-7235e`. Gallery and inquiry Trash rules were published on 22 October 2026. Website staff access still uses the existing Firebase Authentication accounts.
 
 ## 1 Quick start for checking enquiries
 
@@ -132,6 +132,8 @@ After signing in, select **Customer inquiries**, then **Refresh**. Each card con
 - The message, when one was entered.
 - Selected equipment names and quantities, when the enquiry included a quote list.
 - The submitted date and time, displayed in IST. Missing or invalid dates can appear as **Date unavailable**.
+
+**Delete inquiry** moves an irrelevant enquiry out of the inbox into **Trash**. Tick **Trash** beside Refresh to view removed enquiries, then select **Restore inquiry** to return one to the inbox. This retains the original message and contact details; it does not permanently erase the document. Failed updates show an error and keep the card visible. The database records `is_deleted` and `deleted_at` for this purpose.
 
 The dashboard reads all enquiry documents allowed by the current database rules and sorts them in the browser by `created_at`. There is no enquiry search, date filter, export button, assigned engineer control, editable status, attachment viewer or in-app email composer in this version.
 
@@ -470,19 +472,19 @@ Keep this guide with the repository and update it when the enquiry workflow, acc
 
 ## 23 Photos, conferences and events
 
-Visitors select **Photos & events** in the navigation, filter by Conference, Workshop, Training or Community, and open an album. The viewer supports next/previous buttons, thumbnails, arrow keys and Escape to close. Photographs are loaded when an album opens.
+Visitors select **Photos & events** in the navigation, filter by the categories currently represented in the gallery, and open an album. The viewer supports next/previous buttons, thumbnails, arrow keys and Escape to close. Photographs are loaded when an album opens.
 
 To add an event:
 
 1. Sign in at `/admin/login`, then select **Photos & events**.
-2. Click **Add album**. Enter the title, category, date, location and a description.
+2. Click **Add album**. Enter the title, category, location and a description. The event date is optional; enter it only when confirmed.
 3. Select **Upload photographs**. Choose up to ten JPG, PNG or WebP files, each below 20 MB. Export iPhone HEIC pictures as JPG first.
 4. Review each photo caption. Use a clear description of what is shown. Captions also help visitors who use screen readers.
 5. Use the up arrow on a photograph to make it the cover. Remove any unwanted photos before saving.
-6. Keep **Publish on the website** checked when the album is ready; uncheck it to save a draft. Mark representative/sample imagery as a demo. Click **Save album**.
+6. Keep **Publish on the website** checked when the album is ready; uncheck it to save a draft. Click **Save album**.
 7. Visit `/events` in another tab and open the album to review the result. Reload an already-open public page after saving.
 
-To replace a sample event, use **Edit album** on that demo, replace the title/date/location/description and photos, clear the demo checkbox only when the content records a real Medelec event, and save. The six built-in demo albums are examples with representative stock photographs; their sample dates and locations are not claims of actual Medelec events. **Hide all sample albums** hides built-in samples together without hiding saved albums. **Archive** hides a saved album while keeping its photos. **Publish** restores it. A replaced or archived demo does not return from the built-in fallback.
+The three selected stories show the Punjab CM’s equipment visit, the HAMILTON-C6 installation at PGI Chandigarh, and a HAMILTON-C6 clinical training session. Four selected owner-supplied photographs replace the old sample gallery. Dates were not supplied and are left blank. The selected stories have built-in starting content in `src/data/events.js`; staff can use **Edit album** to change titles, captions or photos, then save to Firestore. Saved versions override the starting content. **Archive** hides an album, **Publish** restores it, and archived starting stories do not return. Old demo records are omitted from the gallery. The CM visit remains first, installation second and training third; additional albums follow by date.
 
 If a save fails or times out, the editor retains its fields and photographs. Refresh the album list to check whether it arrived, then retry the same editor if necessary. The album ID stays the same on retry. Do not repeatedly start fresh albums.
 
@@ -492,12 +494,11 @@ If a save fails or times out, the editor retains its fields and photographs. Ref
 | --- | --- | --- |
 | `events/{albumId}` | Album metadata and a small cover image | Published albums only |
 | `events/{albumId}/photos/{photoId}` | Optimized image, thumbnail, caption and position | Published photos in published albums only |
-| `siteSettings/gallery` | Sample visibility and IDs of replaced samples | Public display settings |
 | `teamProfiles/{engineerId}` | Public engineer portrait and update time | Public portraits |
 
-Staff can read drafts and save albums/portraits. Visitors cannot write these collections. Albums and photos are archived, not permanently deleted through the app. The existing products and inquiries policy is unchanged. The authoritative policy is `firebase/firestore.rules`; `firebase.json` points to it. A Vercel/GitHub deployment does not publish database rules automatically. The project owner must publish changed rules separately in Firebase or with an authenticated Firebase CLI.
+Staff can read drafts and save albums/portraits. Visitors cannot write these collections. Albums and photos are archived, not permanently deleted through the app. Inquiry updates are limited to the two Trash fields for authenticated staff; other inquiry fields and permanent deletion are not enabled through the app. The authoritative policy is `firebase/firestore.rules`; `firebase.json` points to it. A Vercel/GitHub deployment does not publish database rules automatically. The project owner must publish changed rules separately in Firebase or with an authenticated Firebase CLI.
 
-The gallery uses the existing no-cost Firestore plan with bounded, optimized image documents, avoiding a separate Storage upgrade. A photograph is reduced to at most 1600 × 1200 pixels and about 350 KB; cover thumbnails to 480 × 320 and 40 KB. Base64 encoding increases stored size. The design is intended for a small curated event gallery, not an unlimited full-resolution photo archive. Keep original photographs in your normal business backup. Firestore quotas still apply.
+The four selected launch photographs are optimized WebP files served with the website. Staff changes and uploaded photographs use the existing no-cost Firestore plan with bounded, optimized image documents, avoiding a separate Storage upgrade. A photograph is reduced to at most 1600 × 1200 pixels and about 350 KB; cover thumbnails to 480 × 320 and 40 KB. Base64 encoding increases stored size. The design is intended for a small curated event gallery, not an unlimited full-resolution photo archive. Keep original photographs in your normal business backup. Firestore quotas still apply.
 
 ## 24 Service engineer photographs
 

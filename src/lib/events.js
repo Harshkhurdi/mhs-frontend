@@ -1,4 +1,4 @@
-import { demoEvents, eventCategories } from '../data/events.js'
+import { defaultEvents, eventCategories } from '../data/events.js'
 import { safeImageUrl } from './quote.js'
 
 export const MAX_ALBUM_PHOTOS = 10
@@ -11,23 +11,21 @@ export function galleryImage(value) {
   return safeImageUrl(value)
 }
 
-export function mergeEvents(remote = [], settings = {}, includeDrafts = false) {
-  const hidden = new Set(settings.hidden_demo_ids || [])
-  const result = new Map()
-  if (settings.show_demos !== false) {
-    for (const event of demoEvents) if (!hidden.has(event.id)) result.set(event.id, event)
-  }
+export function mergeEvents(remote = [], includeDrafts = false) {
+  const result = new Map(defaultEvents.map((event) => [event.id, event]))
   for (const event of remote) {
-    if (!event?.id || typeof event.title !== 'string') continue
+    // Retire all sample albums, including older copies saved in Firestore.
+    if (!event?.id || typeof event.title !== 'string' || event.is_demo || event.id.startsWith('demo-')) continue
+    const original = result.get(event.id)
     result.delete(event.id)
-    if (includeDrafts || event.is_published === true) result.set(event.id, { ...event, remote: true })
+    if (includeDrafts || event.is_published === true) result.set(event.id, { ...original, ...event, display_order: original?.display_order ?? 3, remote: true })
   }
-  return [...result.values()].sort((a, b) => String(b.event_date).localeCompare(String(a.event_date)) || a.title.localeCompare(b.title))
+  return [...result.values()].sort((a, b) => (a.display_order ?? 3) - (b.display_order ?? 3) || String(b.event_date).localeCompare(String(a.event_date)) || a.title.localeCompare(b.title))
 }
 
 export function validateAlbum(form, photos) {
   if (!form.title?.trim() || !form.location?.trim() || !form.summary?.trim()) return 'Add a title, location and description for this album.'
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(form.event_date || '') || Number.isNaN(Date.parse(form.event_date)) || new Date(form.event_date).toISOString().slice(0, 10) !== form.event_date) return 'Choose the event date.'
+  if (form.event_date && (!/^\d{4}-\d{2}-\d{2}$/.test(form.event_date) || Number.isNaN(Date.parse(form.event_date)) || new Date(form.event_date).toISOString().slice(0, 10) !== form.event_date)) return 'Choose a valid event date or leave it blank.'
   if (!eventCategories.includes(form.category)) return 'Choose an event category.'
   if (form.title.length > 140 || form.location.length > 140 || form.summary.length > 2000) return 'Shorten the title, location or description to fit the displayed limits.'
   if (!Array.isArray(photos) || !photos.length || photos.length > MAX_ALBUM_PHOTOS) return `Choose between 1 and ${MAX_ALBUM_PHOTOS} photographs.`
