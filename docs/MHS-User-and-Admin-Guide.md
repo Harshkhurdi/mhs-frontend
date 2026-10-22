@@ -316,7 +316,7 @@ For a forgotten password, an authorised administrator can use the Firebase Authe
 
 **Permission model to understand:** the repository Firestore rules check `request.auth != null` for privileged catalogue access and enquiry reads. They do not check a staff role, engineer assignment or an approved UID allowlist. Hiding a signup page does not itself enforce a backend staff allowlist. Treat this Authentication project as privileged, and have the maintainer review access rules before adding customer accounts or non-staff login flows. The deployed rules may differ and must be inspected in the console.
 
-Bahudar, Prikshit and Ashish are labelled **Senior Service Engineer**; Surender and Virender are labelled **Service Engineer**. Those website profile labels do not create accounts or grant database privileges.
+Bahudar is labelled **Manager – Service**; Prikshit, Ashish and Surender are labelled **Senior Engineer**; Virender is labelled **Service Engineer**. Those website profile labels do not create accounts or grant database privileges.
 
 ## 16 Data permissions and routine safeguards
 
@@ -474,7 +474,7 @@ Keep this guide with the repository and update it when the enquiry workflow, acc
 
 ## 23 Photos, conferences and events
 
-Visitors select **Photos & events** in the navigation, filter by the categories currently represented in the gallery, and open an album. The viewer supports next/previous buttons, thumbnails, arrow keys and Escape to close. Photographs are loaded when an album opens.
+Visitors select **Events** in the navigation, filter by the categories currently represented in the gallery, and open an album. The viewer supports swiping, next/previous buttons, thumbnails, arrow keys and Escape to close. Photographs are loaded when an album opens.
 
 To add an event:
 
@@ -512,3 +512,23 @@ The four selected launch photographs are optimized WebP files served with the we
 5. To revert, select **Use placeholder**. The engineer’s name, role and service description stay in place.
 
 Portraits are optimized to fit within 640 × 800 pixels and about 160 KB. Only the five existing engineer IDs are accepted by the portrait rules. If a save fails, the selected preview is retained so it can be retried. The engineers’ actual portraits still need to be uploaded; placeholders do not represent real employees. The supplied MHS logo is used in the header, footer and browser icon.
+
+
+## 25 Community and company photographs
+
+The public **Community** page is `/community`. It has an **All companies** view and company filters in this order: Hamilton Medical, KARL STORZ, Spacelabs Healthcare, Kiran Medical, Samsung Healthcare, Linet, Helmier and Nihon Kohden. A company filter can be shared using `/community?company=hamilton` (replace `hamilton` with the company ID). Existing real photo stories also appear in Community; the two HAMILTON-C6 stories appear under Hamilton. The CM visit appears in All companies without assuming a manufacturer.
+
+### Upload just one photograph
+
+1. Sign in at `/admin/login` and select **Community photographs**.
+2. Click **Add photographs** and choose the company.
+3. Upload one JPG, PNG or WebP photograph. One photograph is enough; up to ten can be included in the same album. The image is optimized automatically.
+4. Review the caption. A title and description are optional; the app supplies these when left blank. Location starts with the company name and can be replaced with the actual hospital/event location. The date is optional.
+5. Leave **Publish on the website** checked and click **Save photographs**.
+6. Open `/community`, or reload it if already open. The newest saved photograph appears first in All companies and the chosen company's tab, without editing website code or redeploying.
+
+The first photo is the cover. Open a card to see the photographs at a larger size. Swipe left/right, press the arrow keys or use the arrow buttons to browse. In Community the viewer continues into the next/previous story in the selected company. Close with Escape or the close button. Galleries with more than nine stories have Previous/Next page controls and horizontal swipe navigation. Changing the company resets to the first page. Companies without published photos show an empty state until staff upload one.
+
+To update or hide a community post, use **Community photographs → Edit album** or **Archive**. To restore it, click **Publish**. Uncheck the publication box before saving to keep a draft. The company is fixed after the first save; to move photos to a different company, create a new album under that company and archive the original. Existing event albums are managed in **Photos & events**; Community albums are managed separately in **Community photographs**. Published albums are available in the public gallery views.
+
+Community uses the existing `events/{albumId}` and photo subcollections, the same optimization limits, and the deployed gallery access rules. Community document IDs have the format `community--{companyId}--{uniqueId}`; `category` is `Community`. The company ID is part of the stable document ID, so this feature does not need a new collection, rule change, storage service or subscription. Do not rename document IDs manually. Keep the existing Firebase security follow-up in the audit report separate from this feature release.

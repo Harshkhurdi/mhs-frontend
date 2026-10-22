@@ -15,7 +15,8 @@ const links = [
   ['/about', 'About us'],
   ['/solutions', 'Medical solutions'],
   ['/service', 'Service & support'],
-  ['/events', 'Photos & events'],
+  ['/events', 'Events'],
+  ['/community', 'Community'],
 ]
 
 export default function Navbar() {

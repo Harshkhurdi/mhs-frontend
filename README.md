@@ -72,3 +72,8 @@ Photos and source attribution are listed in [public/images/README.md](public/ima
 ## Event gallery and engineer portraits
 
 Staff can upload event albums under **Admin → Photos & events** and portraits under **Admin → Team photographs**. Three curated photo stories replace the old demo albums and can be edited or archived by staff. Customer inquiries have a reversible Delete inquiry / Trash / Restore workflow. See sections 23–24 of `docs/MHS-User-and-Admin-Guide.md` for upload limits, publishing, archiving, database paths and backups. Gallery permissions are maintained in `firebase/firestore.rules`; deploy rules separately from Vercel.
+
+
+## Community photographs
+
+`/community` provides all-company and eight company views, swipeable photo stories and nine-story pagination. Staff use **Admin → Community photographs → Add photographs**, choose a company, upload one or more images and save with publication enabled. Titles/descriptions are optional. Community uses the existing gallery collection/rules; company IDs are encoded in stable `community--{companyId}--{uniqueId}` document IDs. See section 25 of the user/admin guide. Team titles: Bahudar — Manager – Service; Prikshit, Ashish and Surender — Senior Engineer; Virender — Service Engineer.

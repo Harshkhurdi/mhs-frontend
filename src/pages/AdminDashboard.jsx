@@ -217,6 +217,7 @@ export default function AdminDashboard() {
             ['products', 'Equipment catalogue'],
             ['inquiries', 'Customer inquiries'],
             ['events', 'Photos & events'],
+            ['community', 'Community photographs'],
             ['team', 'Team photographs'],
           ].map(([key, label]) => (
             <button
@@ -236,7 +237,7 @@ export default function AdminDashboard() {
             </button>
           ))}
         </nav>
-        {tab === 'events' ? <AdminEvents /> : tab === 'team' ? <AdminTeamPhotos /> : <>
+        {tab === 'events' || tab === 'community' ? <AdminEvents key={tab} community={tab === 'community'} /> : tab === 'team' ? <AdminTeamPhotos /> : <>
         <div className="flex flex-wrap items-center justify-between gap-4 mb-6">
           <p className="text-sm text-text-muted">
             {tab === 'products'

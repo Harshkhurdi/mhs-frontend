@@ -1,57 +1,12 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
-import { HiArrowUpRight, HiOutlinePhoto, HiOutlineMapPin, HiOutlineXMark, HiChevronLeft, HiChevronRight } from 'react-icons/hi2'
+import { HiArrowUpRight, HiOutlinePhoto, HiOutlineMapPin } from 'react-icons/hi2'
+import AlbumDialog from '../components/AlbumDialog'
 import PageMeta from '../components/PageMeta'
 import { eventCategories } from '../data/events'
 import { eventDate, galleryImage } from '../lib/events'
-import { loadGallery, loadAlbumPhotos } from '../services/gallery'
+import { loadGallery } from '../services/gallery'
 
-function AlbumDialog({ event, onClose }) {
-  const dialog = useRef(null)
-  const [photos, setPhotos] = useState([])
-  const [index, setIndex] = useState(0)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
-  useEffect(() => {
-    dialog.current.showModal()
-    const previous = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    let cancelled = false
-    loadAlbumPhotos(event).then((data) => {
-      if (!cancelled) setPhotos(data)
-    }).catch(() => {
-      if (!cancelled) setError('We couldn’t load this album. Close it and try again.')
-    }).finally(() => { if (!cancelled) setLoading(false) })
-    return () => { cancelled = true; document.body.style.overflow = previous }
-  }, [event])
-  const move = (direction) => setIndex((current) => (current + direction + photos.length) % photos.length)
-  return (
-    <dialog ref={dialog} className="album-dialog" aria-labelledby="album-title" onCancel={onClose} onClick={(e) => { if (e.target === dialog.current) onClose() }} onKeyDown={(e) => {
-      if (photos.length > 1 && ['ArrowLeft', 'ArrowRight'].includes(e.key)) { e.preventDefault(); move(e.key === 'ArrowLeft' ? -1 : 1) }
-    }}>
-      <header className="album-dialog-header">
-        <div>
-          <p className="eyebrow">{event.category}{event.is_demo ? ' · DEMO ALBUM' : ''}</p>
-          <h2 id="album-title">{event.title}</h2>
-          <p>{event.event_date && <>{eventDate(event.event_date)} · </>}{event.location}</p>
-        </div>
-        <button className="album-close" aria-label="Close album" onClick={onClose}><HiOutlineXMark /></button>
-      </header>
-      {loading ? <p className="album-status" role="status">Opening photographs…</p> : error ? <p className="form-error" role="alert">{error}</p> : photos.length ? <>
-        <div className="album-viewer">
-          <img src={galleryImage(photos[index].src)} alt={photos[index].alt || event.title} />
-          {photos.length > 1 && <>
-            <button className="album-previous" aria-label="Previous photograph" onClick={() => move(-1)}><HiChevronLeft /></button>
-            <button className="album-next" aria-label="Next photograph" onClick={() => move(1)}><HiChevronRight /></button>
-          </>}
-        </div>
-        <div className="album-caption"><p>{photos[index].alt}</p><span aria-live="polite">{index + 1} / {photos.length}</span></div>
-        {photos.length > 1 && <div className="album-thumbnails" aria-label="Album photographs">{photos.map((photo, i) => <button key={photo.id} aria-label={`Show photograph ${i + 1}`} aria-pressed={i === index} onClick={() => setIndex(i)}><img src={galleryImage(photo.thumbnail || photo.src)} alt="" /></button>)}</div>}
-      </> : <p className="album-status">The photographs for this album are being updated.</p>}
-      <div className="album-description"><p>{event.summary}</p>{event.is_demo && <p className="fine-print">Sample album with representative photography. These images do not document a Medelec event.</p>}</div>
-    </dialog>
-  )
-}
 
 export default function Events() {
   const [events, setEvents] = useState([])
