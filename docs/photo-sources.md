@@ -9,7 +9,7 @@ Resolution update: the OR1 photograph now uses the manufacturer’s native 2540 
 
 ## Owner-supplied event photographs — 22 October 2026
 
-Four selected WhatsApp photographs supplied by the site owner are used without retouching. Originals were inspected and converted to WebP at their native dimensions. Dates of the events were not supplied and are not inferred from file names. Captions and venue details use the owner's descriptions.
+Seven selected WhatsApp photographs supplied by the site owner are used without retouching. Originals were inspected and converted to WebP at their native dimensions. Dates of the events were not supplied and are not inferred from file names. Captions and venue details use the owner's descriptions.
 
 | Website asset | Owner-supplied source | Story |
 | --- | --- | --- |
@@ -17,3 +17,12 @@ Four selected WhatsApp photographs supplied by the site owner are used without r
 | `punjab-cm-equipment-demonstration.webp` | WhatsApp Image 2026-10-22 at 16.11.32 (2).jpeg | Additional visit photograph |
 | `hamilton-c6-pgi-installation.webp` | WhatsApp Image 2026-10-22 at 16.13.35 (1).jpeg | HAMILTON-C6 installation, PGI Chandigarh |
 | `hamilton-c6-clinical-training.webp` | WhatsApp Image 2026-10-22 at 16.14.32 (2).jpeg | HAMILTON-C6 practical training |
+| `hamilton-c6-installation-detail.webp` | WhatsApp Image 2026-10-22 at 16.13.36.jpeg | Additional view of the supplied HAMILTON-C6 systems |
+| `hamilton-c6-training-discussion.webp` | WhatsApp Image 2026-10-22 at 16.14.31 (1).jpeg | Clinical equipment discussion |
+| `hamilton-c6-training-team.webp` | WhatsApp Image 2026-10-22 at 16.14.32 (1).jpeg | Team participation in clinical training |
+
+The seven selected photographs are grouped into the existing three stories on Events and Community. Similar views, rotated copies and the photograph of a phone screen are omitted. Both galleries offer photo previews; opening an album reveals its complete selected sequence. Existing albums edited by an administrator retain their saved photographs rather than being overwritten by changed defaults.
+
+## Head of Administration portrait
+
+`public/images/rajni-koul-administration.jpeg` is the original owner-supplied `WhatsApp Image 2026-10-22 at 22.15.20.jpeg`, received on 22 October 2026 for Rajni Koul’s Head of Administration profile on About us. The file is served without AI alteration or retouching. CSS frames the original photo; the background is not presented as a Medelec office. The section uses role-specific company copy, without inventing a quotation, credentials or work history.

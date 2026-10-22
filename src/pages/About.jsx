@@ -3,7 +3,7 @@ import { loadTeamPhotos } from '../services/gallery'
 import { galleryImage } from '../lib/events'
 import { HiArrowUpRight, HiOutlineUser } from 'react-icons/hi2'
 import { Link } from 'react-router-dom'
-import { director, teamMembers } from '../data/team'
+import { director, headOfAdministration, teamMembers } from '../data/team'
 import PageIntro from '../components/PageIntro'
 import CallToAction from '../components/CallToAction'
 
@@ -111,6 +111,23 @@ export default function About() {
               Meet the engineers who carry it forward <HiArrowUpRight />
             </a>
           </div>
+        </div>
+      </section>
+      <section className="section administration-section" aria-labelledby="administration-heading">
+        <div className="wrap administration-grid">
+          <div className="administration-copy">
+            <p className="eyebrow">THE PEOPLE BEHIND EVERY DETAIL</p>
+            <h2 id="administration-heading">Thoughtful coordination.<br /><em>Dependable follow-through.</em></h2>
+            <p className="administration-intro">Good service starts with a team that works well together.</p>
+            <p>As Head of Administration, {headOfAdministration.name} supports the day-to-day coordination behind Medelec’s work with healthcare institutions and our service team.</p>
+            <p>Her role brings the people, communication and practical details together, helping our team stay organised and responsive from the first conversation to ongoing support.</p>
+            <div className="administration-values" aria-label="Administration focus"><span>Clear communication</span><span>Team coordination</span><span>Consistent follow-through</span></div>
+            <Link to="/contact" className="text-link">Connect with our team <HiArrowUpRight /></Link>
+          </div>
+          <figure className="administration-portrait">
+            <div className="administration-photo-frame"><img src={headOfAdministration.image} alt={`${headOfAdministration.name}, ${headOfAdministration.title} at Medelec Healthcare Solutions`} width="709" height="1280" loading="lazy" decoding="async" /></div>
+            <figcaption><span>THE CARE BEHIND THE COORDINATION</span><h3>{headOfAdministration.name}</h3><p>{headOfAdministration.title}</p></figcaption>
+          </figure>
         </div>
       </section>
       <section className="section engineers-section" id="service-engineers" aria-labelledby="engineers-heading">

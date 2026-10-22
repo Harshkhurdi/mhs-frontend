@@ -47,7 +47,7 @@ export default function Events() {
         <div className="event-grid">{visible.map((event) => <article key={event.id} className={event.id === 'punjab-cm-equipment-visit' ? 'event-feature' : ''}>
           <button className="event-card" onClick={() => setSelected(event)} aria-label={`Open ${event.title} photo album`}>
             <span className="event-card-image"><img src={galleryImage(event.cover_image)} alt="" width="720" height="540" loading="lazy" /><span className="event-category">{event.category}</span>{event.is_demo && <span className="event-demo">Demo</span>}<span className="event-photo-count"><HiOutlinePhoto />{event.photo_count || 1}</span></span>
-            <span className="event-card-content"><span className="event-card-meta">{event.event_date && <time>{eventDate(event.event_date)}</time>}<span><HiOutlineMapPin />{event.location}</span></span>
+            <span className="event-card-content">{!event.remote && event.photos?.length > 1 && <span className="story-photo-preview" aria-hidden="true">{event.photos.slice(0, 3).map((photo) => <img key={photo.id} src={galleryImage(photo.thumbnail || photo.src)} alt="" width="100" height="70" loading="lazy" />)}<span>{event.photo_count} moments<br />One story</span></span>}<span className="event-card-meta">{event.event_date && <time>{eventDate(event.event_date)}</time>}<span><HiOutlineMapPin />{event.location}</span></span>
             <span className="event-card-title">{event.title}</span>
             <span className="event-card-summary">{event.summary}</span>
             <span className="event-card-action">View the story <HiArrowUpRight /></span></span>

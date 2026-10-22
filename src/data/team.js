@@ -36,6 +36,12 @@ export const teamMembers = [
   },
 ]
 
+export const headOfAdministration = {
+  name: 'Rajni Koul',
+  title: 'Head of Administration',
+  image: '/images/rajni-koul-administration.jpeg',
+}
+
 export const director = {
   name: 'Mr. Ramesh Khurdi',
   title: 'Founder & CEO',

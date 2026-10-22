@@ -8,7 +8,7 @@ import { mergeCatalogue, sortCatalogue } from '../src/lib/catalogue.js'
 
 test('curated photo stories use real local photographs in the requested order', () => {
   assert.deepEqual(defaultEvents.map((event) => event.category), ['Visit', 'Installation', 'Training'])
-  assert.equal(defaultEvents.reduce((total, event) => total + event.photos.length, 0), 4)
+  assert.equal(defaultEvents.reduce((total, event) => total + event.photos.length, 0), 7)
   for (const event of defaultEvents) {
     assert.equal(event.is_demo, false)
     assert.equal(event.event_date, '')

@@ -19,14 +19,21 @@ export const defaultEvents = [
     title: 'Installed with purpose. Ready for the next step.',
     category: 'Installation', location: 'PGI Chandigarh', event_date: '',
     summary: 'HAMILTON-C6 ventilators supplied for installation at PGI Chandigarh. From delivery and equipment setup to coordination with the clinical team, our service engineers help bring respiratory technology into the hospital workflow.',
-    photos: [photo('hamilton-c6-pgi-installation', 'HAMILTON-C6 ventilators supplied for installation at PGI Chandigarh.')],
+    photos: [
+      photo('hamilton-c6-pgi-installation', 'HAMILTON-C6 ventilators supplied for installation at PGI Chandigarh.'),
+      photo('hamilton-c6-installation-detail', 'A closer view of the HAMILTON-C6 ventilators prepared for installation at PGI Chandigarh.'),
+    ],
   },
   {
     id: 'hamilton-c6-clinical-training',
     title: 'Training the next generation of care.',
     category: 'Training', location: 'HAMILTON-C6 · Clinical training', event_date: '',
     summary: 'Bringing the HAMILTON-C6 into focus through practical learning. A hands-on session introduces the next generation of healthcare professionals to the ventilator, with equipment guidance and discussion alongside the clinical team.',
-    photos: [photo('hamilton-c6-clinical-training', 'Healthcare professionals gather around a HAMILTON-C6 for a practical equipment training session.')],
+    photos: [
+      photo('hamilton-c6-clinical-training', 'Healthcare professionals gather around a HAMILTON-C6 for a practical equipment training session.'),
+      photo('hamilton-c6-training-discussion', 'The clinical team discusses ventilator use during a hands-on HAMILTON-C6 training session.'),
+      photo('hamilton-c6-training-team', 'Participants share questions and practical guidance alongside the equipment during clinical training.'),
+    ],
   },
 ].map((event, display_order) => ({
   ...event, display_order, is_published: true, is_demo: false, updated_at: 0,

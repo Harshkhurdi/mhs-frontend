@@ -67,7 +67,7 @@ Seven automated checks cover catalogue identities, local image files, official r
 
 The redesign was checked against the live public catalogue. Submission and staff mutations were verified through an isolated local Firebase adapter so no test records were written to production. A real staff sign-in and production write still depend on the existing account and deployed Firebase rules.
 
-Photos and source attribution are listed in [public/images/README.md](public/images/README.md) and the complete [manufacturer source ledger](docs/manufacturer-sources.md). Manufacturer photography is illustrative; the Photos & events page also includes four owner-supplied photographs of Medelec installations, a CM visit and clinical training.
+Photos and source attribution are listed in [public/images/README.md](public/images/README.md) and the complete [manufacturer source ledger](docs/manufacturer-sources.md). Manufacturer photography is illustrative; the Photos & events page also includes seven owner-supplied photographs of Medelec installations, a CM visit and clinical training.
 
 ## Event gallery and engineer portraits
 
@@ -77,3 +77,6 @@ Staff can upload event albums under **Admin → Photos & events** and portraits 
 ## Community photographs
 
 `/community` provides all-company and eight company views, swipeable photo stories and nine-story pagination. Staff use **Admin → Community photographs → Add photographs**, choose a company, upload one or more images and save with publication enabled. Titles/descriptions are optional. Community uses the existing gallery collection/rules; company IDs are encoded in stable `community--{companyId}--{uniqueId}` document IDs. See section 25 of the user/admin guide. Team titles: Bahudar — Manager – Service; Prikshit, Ashish and Surender — Senior Engineer; Virender — Service Engineer.
+
+
+The About page also features Rajni Koul, Head of Administration, in a portrait section alongside the founder and service team. Owner-supplied event photos are arranged into seven selected images across the CM visit, installation and training stories. Sources are recorded in `docs/photo-sources.md`.

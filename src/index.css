@@ -4974,3 +4974,38 @@ em {
 @media (prefers-reduced-motion: reduce) {
  .community-card-photo > img, .community-companies button { transition: none; }
 }
+
+/* Administration complements the founder profile with a lighter portrait treatment. */
+.administration-section { background: #f4f1eb; border-bottom: 1px solid #e2dfd8; }
+.administration-grid { display: grid; grid-template-columns: minmax(0, 1.15fr) minmax(0, .85fr); align-items: center; gap: clamp(40px, 7vw, 104px); }
+.administration-copy { min-width: 0; }
+.administration-copy h2 { font-size: clamp(32px, 3.7vw, 50px); letter-spacing: -.045em; line-height: 1.15; margin: 22px 0 26px; }
+.administration-copy h2 em { color: #3359ba; font-family: Georgia, serif; font-weight: 400; }
+.administration-copy > p:not(.eyebrow) { font-size: 14px; line-height: 1.9; max-width: 58ch; color: #626b7e; margin-bottom: 18px; }
+.administration-copy > p.administration-intro { font-size: 20px; color: #1b2540; line-height: 1.6; }
+.administration-values { display: flex; flex-wrap: wrap; gap: 12px 22px; font-size: 10px; color: #335f58; padding: 22px 0; margin: 24px 0; border-top: 1px solid #dcdedc; border-bottom: 1px solid #dcdedc; }
+.administration-portrait { width: 100%; max-width: 380px; margin: 0 0 0 auto; }
+.administration-photo-frame { overflow: hidden; border-radius: 8px 110px 8px 8px; background: #e2dfd8; border: 1px solid #dcd8d0; }
+.administration-photo-frame img { display: block; width: 100%; height: auto; aspect-ratio: 4/5; object-fit: cover; object-position: 50% 10%; }
+.administration-portrait figcaption { border-left: 2px solid #3359ba; padding-left: 20px; margin-top: 26px; }
+.administration-portrait figcaption > span { color: #626b7e; font-size: 8px; line-height: 1.6; letter-spacing: .12em; }
+.administration-portrait h3 { font-size: 26px; letter-spacing: -.025em; margin: 10px 0 6px; }
+.administration-portrait figcaption p { font-size: 12px; color: #626b7e; }
+.story-photo-preview { display: flex; align-items: center; gap: 7px; margin-bottom: 22px; }
+.story-photo-preview > img { display: block; width: 64px; height: 46px; object-fit: cover; border-radius: 5px; border: 1px solid #ffffff26; }
+.story-photo-preview > span { font-size: 9px; line-height: 1.7; color: #697283; margin-left: 5px; }
+.event-feature .story-photo-preview > span { color: #c5cbd9; }
+.community-card .story-photo-preview { margin-bottom: 18px; }
+.community-card .story-photo-preview img { width: 54px; height: 38px; }
+@media (max-width: 980px) {
+ .administration-grid { gap: 38px; }
+ .administration-copy h2 { font-size: 36px; }
+}
+@media (max-width: 650px) {
+ .administration-grid { grid-template-columns: 1fr; gap: 36px; }
+ .administration-portrait { grid-row: 1; margin-inline: auto; max-width: 340px; }
+ .administration-photo-frame { border-top-right-radius: 80px; }
+ .administration-copy h2 { font-size: 34px; }
+ .administration-copy > p.administration-intro { font-size: 18px; }
+ .story-photo-preview > img { width: 56px; height: 42px; }
+}
