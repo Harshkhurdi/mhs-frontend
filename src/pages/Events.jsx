@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom'
 import { HiArrowUpRight, HiOutlinePhoto, HiOutlineMapPin, HiOutlineXMark, HiChevronLeft, HiChevronRight } from 'react-icons/hi2'
 import PageMeta from '../components/PageMeta'
 import { eventCategories } from '../data/events'
-import { eventDate, galleryImage, mergeEvents } from '../lib/events'
+import { eventDate, galleryImage } from '../lib/events'
 import { loadGallery, loadAlbumPhotos } from '../services/gallery'
 
 function AlbumDialog({ event, onClose }) {
@@ -54,7 +54,7 @@ function AlbumDialog({ event, onClose }) {
 }
 
 export default function Events() {
-  const [events, setEvents] = useState(() => mergeEvents())
+  const [events, setEvents] = useState([])
   const [category, setCategory] = useState('All')
   const [selected, setSelected] = useState(null)
   const [loading, setLoading] = useState(true)
@@ -62,7 +62,7 @@ export default function Events() {
   useEffect(() => {
     let cancelled = false
     loadGallery().then((data) => { if (!cancelled) setEvents(data.events) }).catch(() => {
-      if (!cancelled) setError('Recent updates are temporarily unavailable. Our selected photo stories are available below.')
+      if (!cancelled) setError('The photo albums are temporarily unavailable. Please refresh to try again.')
     }).finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
   }, [])
@@ -98,7 +98,7 @@ export default function Events() {
             <span className="event-card-action">View the story <HiArrowUpRight /></span></span>
           </button>
         </article>)}</div>
-        {!visible.length && !loading && <div className="empty-state"><h2>No albums in this category yet.</h2><p>Visit again for new photographs from our team.</p><button className="text-link" onClick={() => setCategory('All')}>Show all albums <HiArrowUpRight /></button></div>}
+        {!visible.length && !loading && !error && <div className="empty-state"><h2>No albums in this category yet.</h2><p>Visit again for new photographs from our team.</p><button className="text-link" onClick={() => setCategory('All')}>Show all albums <HiArrowUpRight /></button></div>}
       </div>
     </section>
     {selected && <AlbumDialog key={selected.id} event={selected} onClose={() => setSelected(null)} />}

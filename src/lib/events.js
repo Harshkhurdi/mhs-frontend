@@ -11,16 +11,18 @@ export function galleryImage(value) {
   return safeImageUrl(value)
 }
 
-export function mergeEvents(remote = [], includeDrafts = false) {
+export function mergeEvents(remote = [], includeDrafts = false, hiddenAlbumIds = []) {
+  const hidden = new Set(Array.isArray(hiddenAlbumIds) ? hiddenAlbumIds : [])
   const result = new Map(defaultEvents.map((event) => [event.id, event]))
   for (const event of remote) {
     // Retire all sample albums, including older copies saved in Firestore.
     if (!event?.id || typeof event.title !== 'string' || event.is_demo || event.id.startsWith('demo-')) continue
+    if (!includeDrafts && hidden.has(event.id)) continue
     const original = result.get(event.id)
     result.delete(event.id)
     if (includeDrafts || event.is_published === true) result.set(event.id, { ...original, ...event, display_order: original?.display_order ?? 3, remote: true })
   }
-  return [...result.values()].sort((a, b) => (a.display_order ?? 3) - (b.display_order ?? 3) || String(b.event_date).localeCompare(String(a.event_date)) || a.title.localeCompare(b.title))
+  return [...result.values()].filter((event) => includeDrafts || !hidden.has(event.id)).sort((a, b) => (a.display_order ?? 3) - (b.display_order ?? 3) || String(b.event_date).localeCompare(String(a.event_date)) || a.title.localeCompare(b.title))
 }
 
 export function validateAlbum(form, photos) {

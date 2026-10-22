@@ -1,14 +1,28 @@
-import { collection, doc, getDocs, query, where, writeBatch, setDoc } from 'firebase/firestore/lite'
+import { arrayRemove, arrayUnion, collection, doc, getDoc, getDocs, query, where, writeBatch, setDoc } from 'firebase/firestore/lite'
 import { db } from '../config/firebaseDatabase'
 import { withTimeout } from '../lib/quote'
 import { mergeEvents, validateAlbum } from '../lib/events'
+import { defaultEvents } from '../data/events'
+
+// Published-only queries cannot return an archived bundled album. Keep its
+// visibility in public metadata, atomically with the album change.
+// Retain the existing hidden_demo_ids field so deployed gallery rules remain compatible.
+function updateBundledVisibility(batch, id, published) {
+  if (!defaultEvents.some((event) => event.id === id)) return
+  batch.set(doc(db, 'siteSettings', 'gallery'), {
+    hidden_demo_ids: published ? arrayRemove(id) : arrayUnion(id),
+  }, { merge: true })
+}
 
 export async function loadGallery(admin = false) {
   if (!db) throw new Error('The database connection is not configured.')
   const source = admin ? collection(db, 'events') : query(collection(db, 'events'), where('is_published', '==', true))
-  const snapshot = await withTimeout(getDocs(source))
+  const [snapshot, settings] = await withTimeout(Promise.all([
+    getDocs(source),
+    admin ? Promise.resolve(null) : getDoc(doc(db, 'siteSettings', 'gallery')),
+  ]))
   const events = snapshot.docs.map((row) => ({ ...row.data(), id: row.id }))
-  return { events: mergeEvents(events, admin) }
+  return { events: mergeEvents(events, admin, settings?.data()?.hidden_demo_ids) }
 }
 
 export async function loadAlbumPhotos(event, admin = false) {
@@ -35,13 +49,17 @@ export async function saveAlbum(form, photos, previousIds = []) {
     src: photo.src, thumbnail: photo.thumbnail, alt: photo.alt.trim(), position, is_published: true, updated_at: timestamp,
   }))
   for (const oldId of previousIds) if (!photos.some((p) => p.id === oldId)) batch.set(doc(db, 'events', id, 'photos', oldId), { is_published: false, updated_at: timestamp }, { merge: true })
+  updateBundledVisibility(batch, id, form.is_published === true)
   await withTimeout(batch.commit(), 25000)
   return id
 }
 
 export async function setAlbumPublished(event, published) {
   if (!event.remote) return saveAlbum({ ...event, is_published: published }, event.photos)
-  await withTimeout(setDoc(doc(db, 'events', event.id), { is_published: published, updated_at: Date.now() }, { merge: true }))
+  const batch = writeBatch(db)
+  batch.set(doc(db, 'events', event.id), { is_published: published, updated_at: Date.now() }, { merge: true })
+  updateBundledVisibility(batch, event.id, published)
+  await withTimeout(batch.commit())
 }
 
 export async function loadTeamPhotos() {

@@ -13,7 +13,12 @@ import { db } from '../config/firebaseDatabase'
 import { useRFQ } from '../components/RFQContext'
 import { QuoteItems } from '../components/QuoteDrawer'
 import PageIntro from '../components/PageIntro'
-import { inquiryEmail, withTimeout } from '../lib/quote'
+import {
+  createInquirySubmission,
+  inquiryEmail,
+  MAX_QUOTE_ITEMS,
+  withTimeout,
+} from '../lib/quote'
 
 const emptyForm = {
   name: '',
@@ -39,11 +44,12 @@ function restoreDraft() {
 }
 
 export default function Contact() {
-  const { items, clearAll, totalItems } = useRFQ()
+  const { items, clearSubmittedItems, totalItems } = useRFQ()
   const [params] = useSearchParams()
   const [form, setForm] = useState(restoreDraft)
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
+  const [awaitingReceipt, setAwaitingReceipt] = useState(false)
   const [error, setError] = useState('')
   const inquiryRef = useRef(null)
   const sending = useRef(false)
@@ -59,6 +65,10 @@ export default function Contact() {
   async function submit(e) {
     e.preventDefault()
     if (sending.current) return
+    if (!awaitingReceipt && items.length > MAX_QUOTE_ITEMS) {
+      setError(`Please keep each inquiry to ${MAX_QUOTE_ITEMS} different products or fewer. Your full quote list is still here; remove some products or contact our team for help with a larger request.`)
+      return
+    }
     const cleaned = Object.fromEntries(
       Object.entries(form).map(([key, value]) => [key, value.trim()]),
     )
@@ -84,10 +94,9 @@ export default function Contact() {
     sending.current = true
     try {
       if (!db) throw new Error('Inquiry service unavailable')
-      // A fixed document ID makes retries safe when the connection drops after a write.
-      inquiryRef.current ||= doc(collection(db, 'inquiries'))
-      await withTimeout(
-        setDoc(inquiryRef.current, {
+      if (!inquiryRef.current || inquiryRef.current.status === 'failed') {
+        const document = doc(collection(db, 'inquiries'))
+        const payload = {
           ...cleaned,
           items: items.map(({ id, name, quantity }) => ({
             id,
@@ -97,10 +106,17 @@ export default function Contact() {
           type: params.get('type') === 'service' ? 'service' : 'equipment',
           status: 'new',
           created_at: Date.now(),
-        }),
-      )
+        }
+        inquiryRef.current = Object.assign(
+          createInquirySubmission(() => setDoc(document, payload)),
+          { selectedItems: items },
+        )
+      }
+      const submission = inquiryRef.current
+      await withTimeout(submission.promise)
       setSubmitted(true)
-      clearAll()
+      setAwaitingReceipt(false)
+      clearSubmittedItems(submission.selectedItems)
       inquiryRef.current = null
       try {
         sessionStorage.removeItem(draftKey)
@@ -108,8 +124,12 @@ export default function Contact() {
         /* No draft to clear. */
       }
     } catch {
+      const unresolved = Boolean(inquiryRef.current && inquiryRef.current.status !== 'failed')
+      setAwaitingReceipt(unresolved)
       setError(
-        'We couldn’t confirm receipt of your inquiry. Your details and quote list are still here. Try again, send these details by email, or call our team.',
+        unresolved
+          ? 'We’re still checking delivery of your inquiry. Your submitted details are kept unchanged while we wait. Check its status below, or contact our team before sending another copy.'
+          : 'We couldn’t confirm receipt of your inquiry. Your details and quote list are still here. Try again, send these details by email, or call our team.',
       )
     } finally {
       setSubmitting(false)
@@ -246,7 +266,7 @@ export default function Contact() {
                   </div>
                 )}
                 <form onSubmit={submit}>
-                  <fieldset disabled={submitting}>
+                  <fieldset disabled={submitting || awaitingReceipt}>
                     <div className="form-grid">
                       <div>
                         <label htmlFor="contact-name">Full name *</label>
@@ -337,31 +357,33 @@ export default function Contact() {
                         </p>
                       </div>
                     </div>
-                    {error && (
-                      <div className="form-error" role="alert">
-                        <p>{error}</p>
-                        <a
-                          href={inquiryEmail(form, items)}
-                          className="text-link"
-                        >
-                          Open an email with these details <HiArrowUpRight />
-                        </a>
-                        <p className="fine-print">
-                          An email draft still needs to be sent from your email
-                          app.
-                        </p>
-                      </div>
-                    )}
-                    <button type="submit" className="button submit-button">
-                      {submitting ? 'Sending your inquiry…' : 'Send inquiry'}
-                      <HiArrowUpRight />
-                    </button>
-                    <p className="fine-print form-privacy">
-                      We use your contact details to respond to this inquiry.
-                      Your selection is a request for a quotation, not a
-                      purchase.
-                    </p>
                   </fieldset>
+                  {error && (
+                    <div className="form-error" role="alert">
+                      <p>{error}</p>
+                      <a
+                        href={inquiryEmail(form, items)}
+                        className="text-link"
+                      >
+                        Open an email with these details <HiArrowUpRight />
+                      </a>
+                      <p className="fine-print">
+                        An email draft still needs to be sent from your email
+                        app.
+                      </p>
+                    </div>
+                  )}
+                  <button type="submit" className="button submit-button" disabled={submitting}>
+                    {submitting
+                      ? (awaitingReceipt ? 'Checking delivery…' : 'Sending your inquiry…')
+                      : (awaitingReceipt ? 'Check inquiry status' : 'Send inquiry')}
+                    <HiArrowUpRight />
+                  </button>
+                  <p className="fine-print form-privacy">
+                    We use your contact details to respond to this inquiry.
+                    Your selection is a request for a quotation, not a
+                    purchase.
+                  </p>
                 </form>
               </>
             )}

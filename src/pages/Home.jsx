@@ -265,7 +265,7 @@ export default function Home() {
                   key={c.id}
                 >
                   <div className="clinical-image">
-                    <span>0{i + 1}</span>
+                    <span>{String(i + 1).padStart(2, '0')}</span>
                     {p && (
                       <img
                         src={p.image}
@@ -416,7 +416,7 @@ export default function Home() {
             ].map(([Icon, title, text], i) => (
               <article key={title}>
                 <div>
-                  <span>0{i + 1}</span>
+                  <span>{String(i + 1).padStart(2, '0')}</span>
                   <Icon />
                 </div>
                 <h3>{title}</h3>

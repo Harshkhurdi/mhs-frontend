@@ -13,7 +13,20 @@ service cloud.firestore {
       allow create, update, delete: if staff();
     }
     match /inquiries/{inquiryId} {
-      allow create: if true;
+      allow create: if request.resource.data.keys().hasOnly([
+        'name', 'hospital', 'department', 'email', 'phone', 'message',
+        'items', 'type', 'status', 'created_at'
+      ]) && shortText(request.resource.data.name, 120)
+        && shortText(request.resource.data.hospital, 180)
+        && shortText(request.resource.data.department, 200)
+        && shortText(request.resource.data.email, 254)
+        && shortText(request.resource.data.phone, 25)
+        && request.resource.data.message is string && request.resource.data.message.size() <= 5000
+        && request.resource.data.items is list && request.resource.data.items.size() <= 500
+        && request.resource.data.type in ['equipment', 'service']
+        && request.resource.data.status == 'new'
+        && request.resource.data.created_at is number
+        && request.resource.data.created_at > 0 && request.resource.data.created_at <= 8640000000000000;
       allow read: if staff();
       // Staff can remove an inquiry from the inbox and restore it from Trash.
       allow update: if staff()

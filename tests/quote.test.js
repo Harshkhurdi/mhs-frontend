@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import {
+  createInquirySubmission,
   inquiryEmail,
   safeExternalUrl,
   validItems,
@@ -12,6 +13,10 @@ test('corrupted or unexpected saved quote data cannot break the basket', () => {
   assert.deepEqual(
     validItems([
       null,
+      { id: ' ', name: 'Monitor', quantity: 1 },
+      { id: 'empty-name', name: '', quantity: 1 },
+      { id: 'x'.repeat(201), name: 'Monitor', quantity: 1 },
+      { id: 'long-name', name: 'M'.repeat(501), quantity: 1 },
       { id: 'x', name: 'Monitor', quantity: -1 },
       { id: 'x', name: 'Monitor', quantity: 1000 },
       { id: 'x', name: 'Monitor', quantity: 1.5 },
@@ -65,4 +70,26 @@ test('connection timeouts reject instead of leaving the UI waiting indefinitely'
     withTimeout(Promise.reject(new Error('permission denied')), 50),
     /permission denied/,
   )
+})
+
+test('checking inquiry delivery after a timeout reuses the original write and its eventual receipt', async () => {
+  let writes = 0
+  let deliver
+  const submission = createInquirySubmission(() => {
+    writes += 1
+    return new Promise((resolve) => { deliver = resolve })
+  })
+  await assert.rejects(withTimeout(submission.promise, 5), /taking too long/)
+  assert.equal(submission.status, 'pending')
+  deliver('received')
+  assert.equal(await withTimeout(submission.promise, 50), 'received')
+  assert.equal(submission.status, 'succeeded')
+  assert.equal(await withTimeout(submission.promise, 50), 'received')
+  assert.equal(writes, 1)
+})
+
+test('a definitively rejected inquiry is marked failed so the visitor can edit and retry', async () => {
+  const submission = createInquirySubmission(() => Promise.reject(new Error('unavailable')))
+  await assert.rejects(withTimeout(submission.promise, 50), /unavailable/)
+  assert.equal(submission.status, 'failed')
 })

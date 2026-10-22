@@ -102,7 +102,7 @@ The following fields are required:
 
 Select **Send inquiry** once and wait. The confirmation heading is **Your inquiry is with us.** This means the application received a successful database-write response. The quote selection and saved form draft are cleared after success. It does not mean a staff member has reviewed the request or that a quotation has been issued.
 
-If an error appears, the page retains the form details and quote list. Check the connection and try again from the same page. The **Open an email with these details** fallback creates a draft addressed to `info@medelec.in`; the visitor must send it from their email application. That email is separate from Firestore and is not automatically added to the staff inbox.
+If an error appears, the page retains the form details and quote list. When delivery is still unresolved, the fields stay locked and **Check inquiry status** waits for the original submission without sending another copy. Once a failure is confirmed, the fields become editable and the visitor can retry. The **Open an email with these details** fallback creates a draft addressed to `info@medelec.in`; the visitor must send it from their email application. That email is separate from Firestore and is not automatically added to the staff inbox. Contact the team before sending a second copy when delivery is unresolved.
 
 The form draft is saved in session storage as fields change. It can survive a reload in the same browser tab/session, but it is not a server-side saved enquiry. Do not rely on it after the tab/session ends. A timeout can mean the write result is unknown: check the staff inbox before creating another submission from a fresh page.
 
@@ -112,7 +112,7 @@ The form draft is saved in session storage as fields change. It can survive a re
 | --- | --- | --- |
 | Customer completes form | Validates required fields, email format through the browser, and phone format | Review contact details and quantities |
 | Customer submits | Writes one document under `inquiries` in Firestore | Wait for success or an error |
-| Database confirms success | Shows the confirmation panel and clears the current selection/draft | Staff still need to open the inbox |
+| Database confirms success | Shows the confirmation panel and clears the submitted selection/draft; a selection changed while waiting is retained | Staff still need to open the inbox |
 | Staff open Customer inquiries | Loads records and sorts them newest first | Press Refresh for later arrivals |
 | Staff review a record | Shows contact details, message, type, date and items | Call/email, confirm requirements and issue a quotation manually |
 | Customer uses email fallback | Opens an email draft only | Customer sends it; staff check their actual email inbox |
@@ -320,17 +320,19 @@ Bahudar, Prikshit and Ashish are labelled **Senior Service Engineer**; Surender 
 
 ## 16 Data permissions and routine safeguards
 
-The following describes the rules checked into `mhs-backend/firestore.rules`, not a live export of the deployed rules.
+**Audit deployment note, 22 October 2026:** the new bounded enquiry-create validation is prepared in the repository but has not yet been published to Firebase. Until that rules update is published, the previous public-create policy remains active. The inbox normalization, receipt checks and album visibility fixes do not depend on this rules update.
+
+The following describes the current frontend policy in `firebase/firestore.rules`, not a live export of the deployed rules. The older backend repository is not the current policy source.
 
 | Actor or action | Products | Inquiries |
 | --- | --- | --- |
 | Signed-out visitor reading | Published records only | Not permitted |
-| Signed-out visitor creating | Not permitted | Permitted by the repository rule |
+| Signed-out visitor creating | Not permitted | Required typed and bounded contact fields, an equipment/service type, new status and up to 500 quote lines |
 | Authenticated Firebase user reading | All records | All records |
-| Authenticated Firebase user writing | Create, update and delete permitted by the repository rule | Update and delete not permitted |
-| Website dashboard controls | Add, edit, publish, archive | Read and Refresh only |
+| Authenticated Firebase user writing | Create, update and delete permitted by the repository rule | Only `is_deleted` and `deleted_at` can be updated; permanent deletion is not permitted |
+| Website dashboard controls | Add, edit, publish, archive | Read, Refresh, move to Trash and restore |
 
-The backend rules do not distinguish named staff roles. They also do not define enquiry field validation or rate limiting. This manual does not change them. If you need stronger staff restrictions, spam protection, validation or a follow-up workflow, implement and test those changes deliberately rather than opening the database to all readers or writers.
+The rules treat every authenticated Firebase account as staff; they do not distinguish named staff roles or provide rate limiting. The absence of a registration page does not itself prevent account creation through Firebase APIs. Account provisioning restrictions must be checked in the Firebase project; stronger staff authorization requires an explicit allowlist or trusted custom claims. Inquiry creation validates its top-level fields and quote-list length; the inbox also normalizes legacy or malformed records so they cannot interrupt display.
 
 For normal operations, restrict privileged accounts, sign out on shared computers and keep customer enquiries private. The database stores contact details and requested equipment, so customer exports should be shared only with the people handling the request. Avoid collecting patient records through the enquiry form.
 
@@ -417,7 +419,7 @@ The Firebase configuration is compiled into the Vite build. Changing a Vercel en
 | Staff can log in but cannot read or save | Login and database authorization are separate | Owner checks deployed Firestore rules and which Firebase project the build uses |
 | An enquiry still has status new after contact | The app never updates status | Use the private follow-up register; the current UI does not track completion |
 
-If a timed-out first write already created a document, a retry using the same document ID can be rejected as an update under the repository's create-only public enquiry rule. That is another reason to check whether the original arrived rather than widening the rules or submitting repeatedly from fresh pages.
+After a timeout, **Check inquiry status** waits for the original write rather than issuing another database write. The submitted form stays unchanged while delivery is unresolved. Keep that page open; starting a fresh submission on another page can still create a duplicate. A definitively failed write unlocks the form for correction and retry.
 
 The current build shows general connection errors rather than exposing database details to visitors. The maintainer may need to inspect browser developer-console errors to distinguish a permission problem from missing configuration or a network failure. Do not send customer data or private credentials with a support request.
 
@@ -494,6 +496,7 @@ If a save fails or times out, the editor retains its fields and photographs. Ref
 | --- | --- | --- |
 | `events/{albumId}` | Album metadata and a small cover image | Published albums only |
 | `events/{albumId}/photos/{photoId}` | Optimized image, thumbnail, caption and position | Published photos in published albums only |
+| `siteSettings/gallery` | Archived starting-story IDs in `hidden_demo_ids`, updated atomically with archive/publish | Public visibility metadata; staff-only writes |
 | `teamProfiles/{engineerId}` | Public engineer portrait and update time | Public portraits |
 
 Staff can read drafts and save albums/portraits. Visitors cannot write these collections. Albums and photos are archived, not permanently deleted through the app. Inquiry updates are limited to the two Trash fields for authenticated staff; other inquiry fields and permanent deletion are not enabled through the app. The authoritative policy is `firebase/firestore.rules`; `firebase.json` points to it. A Vercel/GitHub deployment does not publish database rules automatically. The project owner must publish changed rules separately in Firebase or with an authenticated Firebase CLI.

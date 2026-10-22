@@ -63,6 +63,11 @@ export function RFQProvider({ children }) {
     setItems([])
     setIsOpen(false)
   }, [])
+  const clearSubmittedItems = useCallback((submittedItems) => {
+    // Keep any selection the visitor changed while delivery was being checked.
+    setItems((current) => current === submittedItems ? [] : current)
+    setIsOpen(false)
+  }, [])
   return (
     <RFQContext.Provider
       value={{
@@ -71,6 +76,7 @@ export function RFQProvider({ children }) {
         removeItem,
         updateQuantity,
         clearAll,
+        clearSubmittedItems,
         isOpen,
         setIsOpen,
         totalItems: items.reduce((n, i) => n + i.quantity, 0),

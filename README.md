@@ -13,7 +13,7 @@ To check an incoming enquiry: open https://medelec.vercel.app/admin/login, sign 
 - Responsive home, company, service and contact pages.
 - Manufacturer reference library with 313 distinct equipment models, accessories and product families across eight supported brand ranges, official photography and direct manufacturer links. Published Firestore listings enrich matching entries and append supported custom equipment. Search, clinical and manufacturer filters, sorting and pagination are reflected in the URL.
 - Quote list with quantities, removal and local browser persistence. Legacy session quote lists are migrated.
-- Contact and service inquiries saved to the existing `inquiries` collection. Failed submissions retain the form and selection; email fallback explicitly opens a draft and never claims delivery.
+- Contact and service inquiries saved to the existing `inquiries` collection. Failed submissions retain the form and selection. After a timeout, **Check inquiry status** awaits the original write without sending another copy; unresolved fields remain locked. Email fallback explicitly opens a draft and never claims delivery.
 - Staff sign-in at `/admin/login`; catalogue creation, editing, reversible archive/publish and inquiry inbox at `/admin`.
 - Product details with official product pages on all reference entries and PDF literature links on 192 entries (164 distinct documents). Images are served locally as WebP; unavailable photographs have a clear text fallback.
 - Official MHS logo, contained laptop equipment showcase, responsive cobalt/navy/warm-neutral design and five service engineer profiles.

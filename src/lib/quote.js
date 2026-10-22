@@ -1,4 +1,5 @@
 export const MAX_QUANTITY = 999
+export const MAX_QUOTE_ITEMS = 500
 
 export function validItems(value) {
   if (!Array.isArray(value)) return []
@@ -8,7 +9,11 @@ export function validItems(value) {
       if (
         !item ||
         typeof item.id !== 'string' ||
+        !item.id.trim() ||
+        item.id.length > 200 ||
         typeof item.name !== 'string' ||
+        !item.name.trim() ||
+        item.name.length > 500 ||
         !Number.isInteger(item.quantity) ||
         item.quantity < 1 ||
         item.quantity > MAX_QUANTITY ||
@@ -59,6 +64,25 @@ export async function withTimeout(promise, milliseconds = 12000) {
   } finally {
     clearTimeout(timer)
   }
+}
+
+// A timeout stops waiting, not the underlying write. Keep its result so checking
+// delivery never turns an already-created public inquiry into a forbidden update.
+export function createInquirySubmission(write) {
+  const submission = { status: 'pending', promise: null }
+  submission.promise = Promise.resolve()
+    .then(write)
+    .then(
+      (result) => {
+        submission.status = 'succeeded'
+        return result
+      },
+      (error) => {
+        submission.status = 'failed'
+        throw error
+      },
+    )
+  return submission
 }
 
 export function inquiryEmail(form, items) {

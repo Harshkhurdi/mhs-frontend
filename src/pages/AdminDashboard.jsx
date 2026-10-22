@@ -9,6 +9,7 @@ import { useAuth } from '../context/AuthContext'
 import { db } from '../config/firebaseDatabase'
 import { clinicalSpecialties, manufacturerBrands } from '../data/products'
 import { safeExternalUrl, withTimeout } from '../lib/quote'
+import { inquiryDateValue as dateValue, normalizeInquiry } from '../lib/inquiries'
 
 const emptyProduct = {
   name: '',
@@ -19,12 +20,6 @@ const emptyProduct = {
   pdf_url: '',
   is_published: true,
 }
-const dateValue = (value) =>
-  typeof value?.toMillis === 'function'
-    ? value.toMillis()
-    : typeof value === 'number'
-      ? value
-      : Date.parse(value) || 0
 const formatDate = (value) =>
   dateValue(value)
     ? new Intl.DateTimeFormat('en-IN', {
@@ -57,7 +52,9 @@ export default function AdminDashboard() {
       try {
         const snapshot = await withTimeout(getDocs(collection(db, tab)))
         const data = snapshot.docs
-          .map((d) => ({ ...d.data(), id: d.id }))
+          .map((d) => tab === 'inquiries'
+            ? normalizeInquiry(d.data(), d.id)
+            : { ...d.data(), id: d.id })
           .sort((a, b) => dateValue(b.created_at) - dateValue(a.created_at))
         if (!cancelled) setRows(data)
       } catch {

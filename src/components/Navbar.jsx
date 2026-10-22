@@ -51,7 +51,7 @@ export default function Navbar() {
         <div className="nav-actions">
           <button
             className="quote-button"
-            aria-label={`Open quote list, ${totalItems} items`}
+            aria-label={`Open quote list, ${totalItems} ${totalItems === 1 ? 'item' : 'items'}`}
             onClick={() => setIsOpen(true)}
           >
             <HiOutlineClipboardDocumentList size={21} />

@@ -24,6 +24,16 @@ test('archived stories stay hidden, replacements retain their order and old demo
   assert.equal(mergeEvents([{ ...saved, is_published: false }], true).find(e => e.id === original.id).is_published, false)
   assert.equal(mergeEvents([{ ...saved, id: 'demo-old', is_demo: true }]).length, 3)
 })
+test('public archive metadata hides bundled albums absent from published-only query results', () => {
+  const original = defaultEvents[0]
+  const hiddenIds = [original.id]
+  assert.equal(mergeEvents([], false, hiddenIds).some((event) => event.id === original.id), false)
+  assert.equal(mergeEvents([original], false, hiddenIds).some((event) => event.id === original.id), false)
+  assert.equal(mergeEvents([], true, hiddenIds).some((event) => event.id === original.id), true)
+  assert.equal(mergeEvents([], false, []).some((event) => event.id === original.id), true)
+  assert.equal(mergeEvents([], false, null).length, defaultEvents.length)
+  assert.equal(mergeEvents([{ ...original, title: 'Published again' }], false, []).find((event) => event.id === original.id).title, 'Published again')
+})
 test('album validation rejects invalid dates, oversized images, unsafe URLs and missing captions', () => {
   const event = defaultEvents[0], photos = event.photos
   assert.notEqual(validateAlbum({ ...event, event_date: '2026-02-31' }, photos), '')
@@ -45,4 +55,10 @@ test('only supported brands appear, with Nihon Kohden limited to defibrillation 
   ])
   assert.equal(merged.length, 8)
   assert.deepEqual(sortCatalogue(merged.reverse(), 'brand').map(p => p.brand), order)
+})
+
+test('archive metadata wins over a stale published query snapshot', () => {
+  const event = defaultEvents[0]
+  assert.equal(mergeEvents([event], false, [event.id]).some((row) => row.id === event.id), false)
+  assert.equal(mergeEvents([event], true, [event.id]).some((row) => row.id === event.id), true)
 })
