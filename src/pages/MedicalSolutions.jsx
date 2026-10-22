@@ -82,6 +82,7 @@ export default function MedicalSolutions() {
   const filtered = sortCatalogue(
     filterCatalogue(products, { specialty, brand, search }),
     sort,
+    brand,
   )
   const pageCount = Math.max(1, Math.ceil(filtered.length / pageSize))
   const currentPage = Math.min(

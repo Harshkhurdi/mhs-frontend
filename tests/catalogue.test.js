@@ -102,3 +102,19 @@ test('search combines model and application terms, respects filters and sorting 
     before,
   )
 })
+
+test('KARL STORZ featured order starts with C-MAC, former pages 3 and 4, then page 1', () => {
+  const storz = filterCatalogue(mergeCatalogue(products, []), { brand: 'karl-storz' })
+  const former = sortCatalogue(storz)
+  assert.equal(former[35].id, 'karl-storz-8404zx')
+  const expected = [former[35], ...former.slice(36, 72), ...former.slice(0, 18), ...former.slice(18, 35), ...former.slice(72)]
+  const reordered = sortCatalogue(storz, 'featured', 'karl-storz')
+  assert.deepEqual(reordered.map((p) => p.id), expected.map((p) => p.id))
+  assert.equal(reordered.length, 140)
+  assert.equal(new Set(reordered.map((p) => p.id)).size, 140)
+  assert.deepEqual(storz, filterCatalogue(mergeCatalogue(products, []), { brand: 'karl-storz' }))
+  assert.deepEqual(sortCatalogue(storz, 'name', 'karl-storz'), sortCatalogue(storz, 'name'))
+  const live = mergeCatalogue(products, [{ id: 'published-cmac', brand: 'karl-storz', name: former[35].name }])
+  assert.equal(sortCatalogue(filterCatalogue(live, { brand: 'karl-storz' }), 'featured', 'karl-storz')[0].inventoryRecordId, 'published-cmac')
+  assert.equal(sortCatalogue(live)[0].id, 'hamilton-c6')
+})

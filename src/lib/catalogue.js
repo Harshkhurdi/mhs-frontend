@@ -85,8 +85,74 @@ const featured = [
   'linet-eleganza-5',
   'spacelabs-ontrak',
 ]
-export function sortCatalogue(products, sort = 'featured') {
+// Requested KARL STORZ order: C-MAC monitor, former pages 3 and 4, then page 1.
+const karlStorzOrder = [
+  'karl-storz-8404zx',
+  'karl-storz-8403xd',
+  'karl-storz-8403xsi',
+  'karl-storz-8403xsp',
+  'karl-storz-051216-10',
+  'karl-storz-051213-10',
+  'karl-storz-051214-10',
+  'karl-storz-051110-10',
+  'karl-storz-051111-10',
+  'karl-storz-8404hx',
+  'karl-storz-8404hxp',
+  'karl-storz-8404exc',
+  'karl-storz-8404kxc',
+  'karl-storz-8404ax',
+  'karl-storz-8404axc',
+  'karl-storz-8404bx',
+  'karl-storz-8404bxc',
+  'karl-storz-8404dxc',
+  'karl-storz-8404gxc',
+  'karl-storz-8404mxc',
+  'karl-storz-10331bx',
+  'karl-storz-091330-06',
+  'karl-storz-11102cm',
+  'karl-storz-tl300',
+  'karl-storz-ui600',
+  'karl-storz-ui400',
+  'karl-storz-ui500',
+  'karl-storz-up210',
+  'karl-storz-up220',
+  'karl-storz-ug230',
+  'karl-storz-ug110',
+  'karl-storz-ug120',
+  'karl-storz-ug210',
+  'karl-storz-ug220',
+  'karl-storz-26120bha',
+  'karl-storz-11272vh',
+  'karl-storz-11272vhu',
+  'karl-storz-th121',
+  'karl-storz-wm100',
+  'karl-storz-tm220',
+  'karl-storz-tm351',
+  'karl-storz-tm343',
+  'karl-storz-tm441',
+  'karl-storz-tm442',
+  'karl-storz-tm451',
+  'karl-storz-wd310',
+  'karl-storz-28272tm',
+  'karl-storz-ur502',
+  'karl-storz-ur200',
+  'karl-storz-uh300e',
+  'karl-storz-uh300',
+  'karl-storz-uh401',
+  'karl-storz-uh400e',
+  'karl-storz-uh400',
+  'karl-storz-10318gl',
+]
+const karlStorzRanks = new Map(karlStorzOrder.map((id, index) => [id, index]))
+
+export function sortCatalogue(products, sort = 'featured', brand = '') {
   return [...products].sort((a, b) => {
+    if (sort === 'featured' && brand === 'karl-storz') {
+      const aRank = karlStorzRanks.get(a.manufacturerRecordId || a.id) ?? Infinity
+      const bRank = karlStorzRanks.get(b.manufacturerRecordId || b.id) ?? Infinity
+      if (aRank !== bRank) return aRank < bRank ? -1 : 1
+      return a.name.localeCompare(b.name, 'en', { numeric: true })
+    }
     if (sort === 'featured') {
       const aRank = featured.indexOf(a.manufacturerRecordId || a.id)
       const bRank = featured.indexOf(b.manufacturerRecordId || b.id)
