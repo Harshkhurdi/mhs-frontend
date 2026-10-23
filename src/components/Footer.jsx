@@ -51,6 +51,13 @@ export default function Footer() {
           <a href="mailto:info@medelec.in">
             info@medelec.in <HiArrowUpRight />
           </a>
+          <a
+            href="https://inventory-management-6cb98.web.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Inventory management
+          </a>
         </div>
       </div>
       <div className="wrap footer-bottom">
