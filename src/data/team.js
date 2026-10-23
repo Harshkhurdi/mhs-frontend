@@ -30,7 +30,7 @@ export const teamMembers = [
   {
     id: 'virender',
     name: 'Mr. Virender',
-    role: 'Service Engineer',
+    role: 'Senior Engineer',
     focus: 'Installation, maintenance and servicing of medical equipment',
     initials: 'VI',
   },
