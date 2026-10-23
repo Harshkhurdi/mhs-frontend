@@ -30,7 +30,7 @@ The seven selected photographs are grouped into the existing three stories on Ev
 
 ## Owner-supplied company archive — 23 October 2026
 
-All 51 new photographs are included, grouped in the exact order described by the owner. Seven previously supplied event images remain, giving 58 photographs across 21 albums. The additional CM photograph joins the existing visit story. The two office group photographs also appear in a separate new About section; the existing founder and administration sections are preserved. The service-engineer section was subsequently simplified to a text roster at the owner’s request, with its side equipment photograph removed.
+All 51 new photographs are included, grouped in the exact order described by the owner. Seven previously supplied event images remain, giving 58 photographs across 21 albums. The additional CM photograph joins the existing visit story. The two office group photographs also appear in a separate new About section; the existing founder and administration sections are preserved. The service-engineer section now pairs the original KARL STORZ equipment photograph with a simplified text roster at the owner’s request.
 
 | Upload batch | Photo positions within batch | Album |
 | --- | --- | --- |
@@ -63,4 +63,4 @@ The recognition backdrop visibly reads **Partner Meeting 2025**, **24–26 Septe
 
 Events and Community share one editorial impact order: Hamilton performance recognition, the Punjab CM visit, Aaj Tak coverage and Hamilton leadership lead, followed by clinical installations, training, founder/equipment and exhibition stories. Office team photographs, dispatch and recreation close the galleries. Company/category filters retain this order, and hero photographs follow the same priorities. Photographs inside each album retain their original sequence. Future admin uploads join their category’s tier; recent uploads do not displace the leading curated stories.
 
-The About service team now uses a full-width text roster beneath the group photographs. It retains all five names, titles and responsibilities, without the previous side photograph or individual photo placeholders.
+The About service team pairs the original KARL STORZ equipment photograph with a simple roster to its right. All five names, titles and responsibilities are retained, with subtle dividers and no numbering or individual photo placeholders. The footer email uses the same typography as the surrounding contact links.

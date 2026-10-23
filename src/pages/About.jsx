@@ -132,17 +132,27 @@ export default function About() {
             </div>
             <p>From installation to ongoing care, meet the engineers who support your equipment.</p>
           </div>
-          <div className="service-team-roster">
-            {teamMembers.map((member, index) => (
-              <article className="service-team-member" key={member.id}>
-                <span className="service-team-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
-                <div className="service-team-identity">
-                  <h3>{member.name}</h3>
-                  <p>{member.role}</p>
-                </div>
-                <p className="service-team-focus">{member.focus}</p>
-              </article>
-            ))}
+          <div className="service-team-grid">
+            <figure className="service-team-photo">
+              <img src="/images/products/karl-storz-or1-integration-hd.webp" alt="KARL STORZ integrated operating room equipment" width="2540" height="1429" loading="lazy" decoding="async" />
+              <figcaption>
+                <span className="eyebrow">EQUIPMENT CARE. HUMAN COMMITMENT.</span>
+                <h3>Care in every detail.</h3>
+                <p>From a careful installation to the next service visit, our team helps keep your equipment ready for care.</p>
+                <span className="service-team-credit">Integrated operating room · KARL STORZ</span>
+              </figcaption>
+            </figure>
+            <div className="service-team-roster">
+              {teamMembers.map((member) => (
+                <article className="service-team-member" key={member.id}>
+                  <div className="service-team-identity">
+                    <h3>{member.name}</h3>
+                    <p>{member.role}</p>
+                  </div>
+                  <p className="service-team-focus">{member.focus}</p>
+                </article>
+              ))}
+            </div>
           </div>
           <div className="service-team-footer">
             <p>Practical expertise. Support that stays.</p>
