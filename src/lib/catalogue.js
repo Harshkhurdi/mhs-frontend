@@ -1,6 +1,32 @@
 const brandOrder = ['hamilton', 'karl-storz', 'spacelabs', 'kiran', 'samsung', 'linet', 'helmier', 'nihon-kohden']
 const supported = (p) => brandOrder.includes(p.brand) && (p.brand !== 'nihon-kohden' || p.specialty === 'defibrillation')
 
+// Firestore records may predate the editor or contain unexpected field types.
+// Only pass bounded display values to React; never spread arbitrary records.
+export function normalizeProduct(value, id = value?.id) {
+  const data = value && typeof value === 'object' ? value : {}
+  const product = {
+    id: typeof id === 'string' ? id : '',
+    name: typeof data.name === 'string' ? data.name.trim().slice(0, 180) : '',
+    is_published: data.is_published === true,
+  }
+  const fields = {
+    brand: 80, specialty: 80, description: 5000, categoryLabel: 200,
+    image: 2048, image_url: 2048, imageUrl: 2048,
+    sourceUrl: 2048, pdfUrl: 2048, pdf_url: 2048, literatureTitle: 240,
+  }
+  for (const [key, limit] of Object.entries(fields)) {
+    if (typeof data[key] === 'string') product[key] = data[key].trim().slice(0, limit)
+  }
+  if (Array.isArray(data.applications)) {
+    product.applications = data.applications
+      .filter((item) => typeof item === 'string' && item.trim())
+      .slice(0, 30).map((item) => item.trim().slice(0, 200))
+  }
+  if (typeof data.created_at === 'number' && Number.isFinite(data.created_at)) product.created_at = data.created_at
+  return product
+}
+
 // Normalise model names so an existing MHS listing enriches its manufacturer entry.
 export function productKey(product) {
   const model = String(product.name || '')
@@ -21,8 +47,9 @@ export function mergeCatalogue(reference, live) {
     const key = productKey(p)
     modelIndices.set(key, [...(modelIndices.get(key) || []), i])
   })
-  for (const p of live) {
-    if (!supported(p) || typeof p.name !== 'string' || !p.name.trim()) continue
+  for (const record of live) {
+    const p = normalizeProduct(record)
+    if (!p.id || p.id.length > 200 || !supported(p) || !p.name) continue
     const candidates = modelIndices.get(productKey(p)) || []
     // Do not guess when different reference entries share the same model name.
     const index =

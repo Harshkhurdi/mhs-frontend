@@ -54,3 +54,19 @@ All seven existing tests, ESLint and the production Vite build passed with Node 
 - Public gallery metadata reads succeeded against the deployed Firebase configuration. Existing customer inquiries and products were not modified.
 
 Successful real website staff sign-in and authenticated production album/portrait writes remain unverified without the existing staff credentials. The isolated adapters validate UI workflows, while Rules Playground validates the stated deployed-rule cases. No production demo album, test portrait or temporary account was created.
+
+
+## Security and reliability audit — 23 October 2026
+
+Astra led the review with a GPT-6.1 Sol security subagent. This section supersedes the older authorization description above.
+
+- Firebase console confirmed exactly two existing email/password accounts. Rules and the frontend now restrict staff access to those immutable UIDs; arbitrary authenticated accounts have no staff privileges.
+- The reviewed rules compiled and were published on 23 October 2026 at 11:59 AM IST. The original deployed rules were retained in the audit workspace for rollback.
+- Firebase Rules Playground: unapproved authenticated inquiry read denied; anonymous inquiry read denied; each of the two existing staff UID reads allowed; valid anonymous legacy inquiry create allowed; malformed anonymous create denied. These are simulations, not live database mutations.
+- All nine tested public, login and not-found routes had one H1, appropriate title/robots metadata, labelled controls, no horizontal overflow at 390px and no broken loaded images. All 426 referenced local image paths exist and all 433 raster assets decode.
+- Public equipment search, product details, quantity changes, quote-to-inquiry handoff, required-field validation and signed-out admin redirect were checked in the live browser. The temporary quote was cleared afterward. No production inquiry was submitted.
+- Catalogue normalization now handles malformed remote descriptions, application lists and publication flags without crashing rendering or search. New regression tests cover these inputs.
+- Mobile navigation now dismisses on Escape and restores focus. Gallery retry clears a stale error. Quote controls explicitly use button types; saved team portraits are no longer falsely advertised as visible in the approved text roster.
+- Thirty-two automated tests, ESLint, production build and whitespace checks pass. The build retains a non-blocking 611.6kB main-chunk warning.
+
+Limits: successful real staff password sign-in and authenticated production mutations were not performed. Fresh `npm audit` advisory retrieval was blocked by registry DNS, so no current zero-vulnerability claim is made. Rules validate payload structure but do not rate-limit valid anonymous submissions; App Check and server-side abuse throttling remain unconfigured. The historical default-credential scan found no nonempty committed staff password in the inspected 28 frontend commits and accessible default-branch sources.

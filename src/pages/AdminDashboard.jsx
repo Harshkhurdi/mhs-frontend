@@ -10,6 +10,7 @@ import { db } from '../config/firebaseDatabase'
 import { clinicalSpecialties, manufacturerBrands } from '../data/products'
 import { safeExternalUrl, withTimeout } from '../lib/quote'
 import { inquiryDateValue as dateValue, normalizeInquiry } from '../lib/inquiries'
+import { normalizeProduct } from '../lib/catalogue'
 
 const emptyProduct = {
   name: '',
@@ -54,7 +55,7 @@ export default function AdminDashboard() {
         const data = snapshot.docs
           .map((d) => tab === 'inquiries'
             ? normalizeInquiry(d.data(), d.id)
-            : { ...d.data(), id: d.id })
+            : normalizeProduct(d.data(), d.id))
           .sort((a, b) => dateValue(b.created_at) - dateValue(a.created_at))
         if (!cancelled) setRows(data)
       } catch {

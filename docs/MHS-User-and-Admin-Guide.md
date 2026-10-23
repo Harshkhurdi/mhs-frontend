@@ -4,11 +4,11 @@ Medelec Healthcare Solutions
 
 Website: [medelec.vercel.app](https://medelec.vercel.app/)
 
-Version 1.2 | 21 October 2026 | For the business owner, service engineers, staff and website maintainer
+Version 1.3 | 23 October 2026 | For the business owner, service engineers, staff and website maintainer
 
 This manual explains how visitors request equipment or service, how staff find and follow up enquiries, and how the owner manages Firebase and Vercel. It describes the current application, including its limits. It does not add features or change database permissions.
 
-Source baseline: the current frontend, including `firebase/firestore.rules` for the deployed gallery and portrait permissions. Firebase project: `mhs-project-7235e`. Gallery and inquiry Trash rules were published on 22 October 2026. Website staff access still uses the existing Firebase Authentication accounts.
+Source baseline: the current frontend, including `firebase/firestore.rules` for the deployed gallery and portrait permissions. Firebase project: `mhs-project-7235e`. Staff authorization and bounded public inquiry validation were published on 23 October 2026. Website staff access is restricted to the two existing project accounts verified in Firebase console; signing in alone does not grant privileges.
 
 ## 1 Quick start for checking enquiries
 
@@ -306,33 +306,35 @@ Website staff use Firebase Authentication with email and password. There is no p
 
 For an authorised project administrator provisioning staff:
 
-1. Open the MHS Firebase project and go to **Authentication**.
-2. Confirm the **Email/Password** sign-in provider is enabled. Do not enable additional providers merely to resolve a failed login.
-3. Open **Users** and use **Add user** for the intended staff email and password, following your company's account policy.
-4. Give the account details to that person through your approved private channel.
-5. Have them sign in at `https://medelec.vercel.app/admin/login` and confirm they can load the intended dashboard sections.
+1. Open the MHS Firebase project and go to **Authentication**. Confirm the Email/Password provider is enabled.
+2. Create the intended account privately and record its immutable Firebase UID. Creating an account alone does not grant website access.
+3. Have the maintainer add that UID to both `src/lib/staffAccess.js` and `staff()` in `firebase/firestore.rules`. Review the specific person and access before making this change.
+4. Deploy the reviewed rules, synchronize `mhs-backend/firestore.rules`, then deploy the frontend. Test the intended account and confirm an unapproved UID is denied.
+5. Share credentials through your approved private channel. Do not put passwords in source code, documentation or chat logs.
 
-For a forgotten password, an authorised administrator can use the Firebase Authentication user action to send a password-reset email. The staff member completes the reset privately. The login screen itself does not send reset emails. For a person leaving the business, the owner should review and disable their Firebase Authentication account and separately review any Google project, Vercel or GitHub access they have.
+For a forgotten password, an authorised administrator can use Firebase Authentication’s password-reset action; the staff member completes the reset privately. The website login screen does not send reset emails. When a person leaves, remove the UID from both authorization lists, deploy both layers, and disable the Authentication account. Separately review Google project, Vercel and GitHub access.
 
-**Permission model to understand:** the repository Firestore rules check `request.auth != null` for privileged catalogue access and enquiry reads. They do not check a staff role, engineer assignment or an approved UID allowlist. Hiding a signup page does not itself enforce a backend staff allowlist. Treat this Authentication project as privileged, and have the maintainer review access rules before adding customer accounts or non-staff login flows. The deployed rules may differ and must be inspected in the console.
+**Permission model:** database rules are the authoritative authorization boundary. Only the explicitly listed UIDs may read inquiries or manage equipment and galleries. The frontend checks the same UIDs and clears unapproved sessions. Email addresses, self-declared roles and the absence of a signup page do not grant or enforce staff permissions. The two existing accounts were preserved during the security migration; the owner should periodically review their continued use.
 
 Bahudar is labelled **Manager – Service**; Prikshit, Ashish and Surender are labelled **Senior Engineer**; Virender is labelled **Service Engineer**. Those website profile labels do not create accounts or grant database privileges.
 
 ## 16 Data permissions and routine safeguards
 
-**Audit deployment note, 22 October 2026:** the new bounded enquiry-create validation is prepared in the repository but has not yet been published to Firebase. Until that rules update is published, the previous public-create policy remains active. The inbox normalization, receipt checks and album visibility fixes do not depend on this rules update.
+**Security release, 23 October 2026:** the UID allowlist and bounded inquiry-create validation were compiled, simulated and published in Firebase. Rules Playground confirmed that both existing staff UIDs retain inquiry access, anonymous and unapproved UIDs cannot read inquiries, valid anonymous inquiries are accepted, and malformed payloads are denied. Simulations do not create production records.
 
-The following describes the current frontend policy in `firebase/firestore.rules`, not a live export of the deployed rules. The older backend repository is not the current policy source.
+`firebase/firestore.rules` is the canonical policy. Keep `mhs-backend/firestore.rules` synchronized so a later backend deployment cannot restore an older policy. Vercel deployment does not deploy Firebase rules.
 
 | Actor or action | Products | Inquiries |
 | --- | --- | --- |
-| Signed-out visitor reading | Published records only | Not permitted |
-| Signed-out visitor creating | Not permitted | Required typed and bounded contact fields, an equipment/service type, new status and up to 500 quote lines |
-| Authenticated Firebase user reading | All records | All records |
-| Authenticated Firebase user writing | Create, update and delete permitted by the repository rule | Only `is_deleted` and `deleted_at` can be updated; permanent deletion is not permitted |
+| Signed-out or unapproved user reading | Published records only | Not permitted |
+| Public inquiry creation | Not applicable | Typed and bounded contact fields, equipment/service type, new status and up to 500 quote lines |
+| Approved staff UID reading | All records | All records |
+| Approved staff UID writing | Create, update and delete permitted | Only Trash/restore fields may be updated; permanent deletion is not permitted |
 | Website dashboard controls | Add, edit, publish, archive | Read, Refresh, move to Trash and restore |
 
-The rules treat every authenticated Firebase account as staff; they do not distinguish named staff roles or provide rate limiting. The absence of a registration page does not itself prevent account creation through Firebase APIs. Account provisioning restrictions must be checked in the Firebase project; stronger staff authorization requires an explicit allowlist or trusted custom claims. Inquiry creation validates its top-level fields and quote-list length; the inbox also normalizes legacy or malformed records so they cannot interrupt display.
+New inquiries use a Firestore server timestamp. Rules temporarily also accept legacy numeric creation times within 15 minutes of server time so cached clients can complete submissions. Existing historical records remain readable. Public payload validation checks top-level fields and quote-list length; the inbox also normalizes legacy or malformed line items so they cannot interrupt display.
+
+These controls restrict access and malformed input. They do not rate-limit otherwise valid anonymous submissions. Firebase App Check and server-side abuse throttling remain additional work; enabling enforcement requires configuring and testing a supported attestation provider first. Do not disable public inquiries or make protected reads public as a workaround.
 
 For normal operations, restrict privileged accounts, sign out on shared computers and keep customer enquiries private. The database stores contact details and requested equipment, so customer exports should be shared only with the people handling the request. Avoid collecting patient records through the enquiry form.
 

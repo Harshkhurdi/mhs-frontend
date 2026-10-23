@@ -45,7 +45,7 @@ Firebase Firestore Lite is used because these flows read and write on request; n
 
 Push `main` to the connected GitHub repository. Keep the existing project environment variables, Vite framework preset, `npm run build` and `dist` output directory. `vercel.json` serves client routes on direct navigation. No database migration or new service is needed for the redesign.
 
-Firebase Email/Password sign-in, staff users and security rules are managed in the existing Firebase project. See [mhs-backend](https://github.com/Harshkhurdi/mhs-backend) for the rules and original setup. Staff accounts must already be provisioned; this website does not expose public registration. Never make catalogue writes or inquiry reads public to fix a permission error.
+Firebase Email/Password sign-in, staff users and security rules are managed in the existing Firebase project. See [mhs-backend](https://github.com/Harshkhurdi/mhs-backend) for the rules and original setup. Staff access requires an explicitly listed Firebase UID in both `src/lib/staffAccess.js` and `staff()` in `firebase/firestore.rules`; authentication or creating an account alone does not grant privileges. Keep the backend rules copy synchronized and deploy Firebase rules separately from Vercel. This website does not expose public registration. Never make catalogue writes or inquiry reads public to fix a permission error.
 
 ## Data contracts
 
@@ -87,3 +87,8 @@ The About page also features Rajni Koul, Head of Administration, in a portrait s
 The owner’s three upload batches add 51 photographs in 19 specified groups (the additional CM photograph joins its existing visit story). The gallery now has 21 albums and 58 photos, nine-story pagination on both public pages, real recognition/installation photography, and a separate team group-photo section on About. Original founder/administration profiles and the existing engineer feature are preserved. Exact source mapping: `docs/company-photo-manifest.json`; caption evidence: `docs/photo-sources.md`.
 
 Bundled story archive state uses rule-compatible `events/gallery-visibility--{albumId}` metadata markers rather than growing the legacy six-item visibility list. Markers never render as albums, and no new Firebase rules are required for this compatibility change. See guide section 26.
+
+
+## Security and reliability audit — 23 October 2026
+
+Astra coordinated the audit with GPT-6.1 Sol code/security review. The release restricts staff privileges to the two existing project accounts verified in Firebase console, validates public inquiry payloads and server creation times, normalizes malformed catalogue records, fixes mobile menu keyboard dismissal and gallery retry handling, and adds restrictive object/base/frame and unused-feature browser headers. Rules were published after six Firebase Playground checks; no test inquiry or product was written to production. The integrated suite has 32 passing tests, plus ESLint and production build checks. See `docs/admin-verification.md` for evidence and limits. Anonymous form rate limiting/App Check and a fresh online dependency-advisory scan are not claimed complete.

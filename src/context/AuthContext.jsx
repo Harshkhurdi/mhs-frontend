@@ -5,6 +5,7 @@ import {
   signOut,
 } from 'firebase/auth'
 import { auth } from '../config/firebaseClient'
+import { isApprovedStaff } from '../lib/staffAccess'
 
 const AuthContext = createContext(null)
 
@@ -17,18 +18,26 @@ export function AuthProvider({ children }) {
     let mounted = true
     if (!auth) return
 
-    // Firebase delivers the current auth state on subscribe (covers page
-    // reloads and token refreshes) and pushes changes on login/logout.
+    // Recheck the approved UID on restored sessions and every login/logout.
     const unsubscribe = onAuthStateChanged(
       auth,
       (firebaseUser) => {
         if (!mounted) return
-        setSession(firebaseUser)
-        setUser(firebaseUser)
+        const staffUser = isApprovedStaff(firebaseUser) ? firebaseUser : null
+        setSession(staffUser)
+        setUser(staffUser)
         setLoading(false)
+        if (firebaseUser && !staffUser) {
+          // The route stays closed even if clearing persistence fails offline.
+          signOut(auth).catch(() => {})
+        }
       },
       () => {
-        if (mounted) setLoading(false)
+        if (mounted) {
+          setSession(null)
+          setUser(null)
+          setLoading(false)
+        }
       },
     )
 
@@ -44,6 +53,18 @@ export function AuthProvider({ children }) {
         'Admin sign-in is not configured. Please contact the site administrator.',
       )
     const credentials = await signInWithEmailAndPassword(auth, email, password)
+    if (!isApprovedStaff(credentials.user)) {
+      setSession(null)
+      setUser(null)
+      try {
+        await signOut(auth)
+      } catch {
+        // Authorization remains denied independently of sign-out delivery.
+      }
+      const error = new Error('This account is not approved for staff access.')
+      error.code = 'auth/staff-access-denied'
+      throw error
+    }
     return credentials
   }
 

@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import {
   HiArrowUpRight,
@@ -21,10 +21,17 @@ const links = [
 
 export default function Navbar() {
   const [open, setOpen] = useState(false)
+  const menuButton = useRef(null)
   const { totalItems, setIsOpen } = useRFQ()
   const { user } = useAuth()
   return (
-    <header className="site-header">
+    <header className="site-header" onKeyDown={(event) => {
+      if (open && event.key === 'Escape') {
+        event.preventDefault()
+        setOpen(false)
+        menuButton.current?.focus()
+      }
+    }}>
       <div className="topbar">
         <div className="wrap">
           <span>Medical technology. Personal commitment.</span>
@@ -62,6 +69,7 @@ export default function Navbar() {
             Let’s talk <HiArrowUpRight />
           </Link>
           <button
+            ref={menuButton}
             className="menu-toggle"
             aria-label={open ? 'Close menu' : 'Open menu'}
             aria-expanded={open}

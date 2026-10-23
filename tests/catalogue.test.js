@@ -5,6 +5,7 @@ import {
   mergeCatalogue,
   filterCatalogue,
   sortCatalogue,
+  normalizeProduct,
 } from '../src/lib/catalogue.js'
 import { safeImageUrl } from '../src/lib/quote.js'
 import { manufacturerBrands, clinicalSpecialties } from '../src/data/products.js'
@@ -101,6 +102,32 @@ test('search combines model and application terms, respects filters and sorting 
     products.map((p) => p.id),
     before,
   )
+})
+
+test('malformed live fields cannot crash catalogue search, detail rendering or the admin editor', () => {
+  const malformed = {
+    id: 'live-c6', name: 'Hamilton C6 ICU Ventilator', brand: 'hamilton',
+    applications: { unexpected: true }, description: { unsafe: 'React child' },
+    categoryLabel: ['unexpected'], pdfUrl: { url: 'https://example.org' },
+    specialty: {}, image_url: {}, created_at: Infinity,
+  }
+  const merged = mergeCatalogue(products, [null, { id: 'invalid', name: {} }, malformed])
+  const found = filterCatalogue(merged, { search: 'hamilton c6' })[0]
+  assert.equal(typeof found.description, 'string')
+  assert.ok(Array.isArray(found.applications))
+  assert.equal(found.id, 'hamilton-c6')
+  assert.equal(merged.length, products.length)
+  const normalized = normalizeProduct(malformed, 'live-c6')
+  for (const key of ['description', 'categoryLabel', 'pdfUrl', 'specialty', 'image_url', 'created_at']) {
+    assert.equal(normalized[key], undefined, key)
+  }
+  const custom = mergeCatalogue([], [{
+    id: 'new-model', name: 'New model', brand: 'hamilton',
+    applications: [' ICU ', null, {}, 42, ''], description: 'Useful equipment',
+  }])
+  assert.deepEqual(custom[0].applications, ['ICU'])
+  assert.equal(filterCatalogue(custom, { search: 'icu' }).length, 1)
+  assert.deepEqual(normalizeProduct(null, 'repairable-record'), { id: 'repairable-record', name: '', is_published: false })
 })
 
 test('KARL STORZ featured order starts with C-MAC, former pages 3 and 4, then page 1', () => {

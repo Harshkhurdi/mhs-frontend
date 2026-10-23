@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import { collection, doc, setDoc } from 'firebase/firestore/lite'
+import { collection, doc, serverTimestamp, setDoc } from 'firebase/firestore/lite'
 import {
   HiArrowUpRight,
   HiOutlineMapPin,
@@ -13,6 +13,7 @@ import { db } from '../config/firebaseDatabase'
 import { useRFQ } from '../components/RFQContext'
 import { QuoteItems } from '../components/QuoteDrawer'
 import PageIntro from '../components/PageIntro'
+import { inquiryContactError } from '../lib/inquirySubmission'
 import {
   createInquirySubmission,
   inquiryEmail,
@@ -72,21 +73,9 @@ export default function Contact() {
     const cleaned = Object.fromEntries(
       Object.entries(form).map(([key, value]) => [key, value.trim()]),
     )
-    if (
-      ['name', 'hospital', 'department', 'email', 'phone'].some(
-        (key) => !cleaned[key],
-      )
-    ) {
-      setError('Please complete each required field.')
-      return
-    }
-    if (
-      !/^\+?[\d\s().-]{7,25}$/.test(cleaned.phone) ||
-      cleaned.phone.replace(/\D/g, '').length < 7
-    ) {
-      setError(
-        'Please enter a valid phone number, including the country code if needed.',
-      )
+    const validationError = inquiryContactError(cleaned)
+    if (validationError) {
+      setError(validationError)
       return
     }
     setError('')
@@ -105,7 +94,7 @@ export default function Contact() {
           })),
           type: params.get('type') === 'service' ? 'service' : 'equipment',
           status: 'new',
-          created_at: Date.now(),
+          created_at: serverTimestamp(),
         }
         inquiryRef.current = Object.assign(
           createInquirySubmission(() => setDoc(document, payload)),

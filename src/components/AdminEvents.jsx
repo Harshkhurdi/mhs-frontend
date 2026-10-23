@@ -22,6 +22,11 @@ export default function AdminEvents({ community = false }) {
   const [refresh, setRefresh] = useState(0)
   const previousIds = useRef([])
   const editor = useRef(null)
+  function refreshAlbums() {
+    setLoading(true)
+    setError('')
+    setRefresh((value) => value + 1)
+  }
   useEffect(() => {
     let cancelled = false
     loadGallery(true).then((data) => {
@@ -60,7 +65,7 @@ export default function AdminEvents({ community = false }) {
     try {
       const form = community ? { ...editing, title: editing.title.trim() || `${manufacturerBrands.find((brand) => brand.id === communityCompany(editing))?.name || 'Medelec'} community`, summary: editing.summary.trim() || editing.title.trim() || photos[0]?.alt || 'A moment from the Medelec community.' } : editing
       await saveAlbum(form, photos, previousIds.current)
-      setEditing(null); setPhotos([]); setNotice(community ? 'Saved. Published photographs now appear on the Community page and company tab.' : 'Album saved. Published albums appear on Photos & events and Community.'); setRefresh((value) => value + 1)
+      setEditing(null); setPhotos([]); setNotice(community ? 'Saved. Published photographs now appear on the Community page and company tab.' : 'Album saved. Published albums appear on Photos & events and Community.'); refreshAlbums()
     } catch (err) { setError(`${err.message || 'We couldn’t confirm the save.'} Your changes are still here; refresh the album list to check before retrying.`) } finally { setBusy(false) }
   }
   async function toggle(event) {
@@ -68,11 +73,11 @@ export default function AdminEvents({ community = false }) {
     try {
       await setAlbumPublished(event, !event.is_published)
       setNotice(event.is_published ? 'Album archived. Its photographs are retained.' : 'Album published.')
-      setRefresh((value) => value + 1)
+      refreshAlbums()
     } catch { setError('Unable to confirm the status change. Refresh the album list before trying again.') } finally { setBusy(false) }
   }
   return <div className="admin-gallery">
-    <div className="admin-gallery-toolbar"><p>{community ? 'Choose a company, upload even a single photograph, then save and publish. It will appear on Community immediately. Add a title or description if you wish.' : 'Create an album, upload photographs and publish when it is ready. Our selected photo stories can be edited or archived here.'}</p><div><button className="text-link" disabled={busy} onClick={() => setRefresh((v) => v + 1)}>Refresh</button><button className="button button-small" disabled={busy} onClick={() => edit(null)}><HiOutlinePlus />{community ? 'Add photographs' : 'Add album'}</button></div></div>
+    <div className="admin-gallery-toolbar"><p>{community ? 'Choose a company, upload even a single photograph, then save and publish. It will appear on Community immediately. Add a title or description if you wish.' : 'Create an album, upload photographs and publish when it is ready. Our selected photo stories can be edited or archived here.'}</p><div><button className="text-link" disabled={busy || loading} onClick={refreshAlbums}>Refresh</button><button className="button button-small" disabled={busy} onClick={() => edit(null)}><HiOutlinePlus />{community ? 'Add photographs' : 'Add album'}</button></div></div>
     {error && <p className="form-error" role="alert">{error}</p>}{notice && <p className="admin-success" role="status">{notice}</p>}
     {editing && <form ref={editor} className="album-editor" onSubmit={save}>
       <fieldset disabled={busy}>

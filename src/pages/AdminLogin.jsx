@@ -21,6 +21,8 @@ export default function AdminLogin() {
     } catch (err) {
       const errors = {
         'auth/invalid-credential': 'The email or password is incorrect.',
+        'auth/staff-access-denied':
+          'This account is not approved for staff access. Please contact the site administrator.',
         'auth/too-many-requests':
           'Too many attempts. Please wait before trying again.',
         'auth/network-request-failed':

@@ -17,6 +17,7 @@ export function QuoteItems() {
           <div>
             <strong>{item.name}</strong>
             <button
+              type="button"
               className="remove-item"
               onClick={() => removeItem(item.id)}
               aria-label={`Remove ${item.name}`}
@@ -26,6 +27,7 @@ export function QuoteItems() {
           </div>
           <div className="quantity-control">
             <button
+              type="button"
               aria-label={`Decrease quantity of ${item.name}`}
               disabled={item.quantity <= 1}
               onClick={() => updateQuantity(item.id, item.quantity - 1)}
@@ -41,6 +43,7 @@ export function QuoteItems() {
               onChange={(e) => updateQuantity(item.id, e.target.value)}
             />
             <button
+              type="button"
               aria-label={`Increase quantity of ${item.name}`}
               disabled={item.quantity >= MAX_QUANTITY}
               onClick={() => updateQuantity(item.id, item.quantity + 1)}
@@ -88,6 +91,7 @@ export default function QuoteDrawer() {
             </h2>
           </div>
           <button
+            type="button"
             className="icon-button"
             aria-label="Close quote list"
             onClick={() => setIsOpen(false)}
@@ -109,7 +113,7 @@ export default function QuoteDrawer() {
               >
                 Continue to inquiry <HiArrowUpRight />
               </Link>
-              <button className="text-link" onClick={clearAll}>
+              <button type="button" className="text-link" onClick={clearAll}>
                 Clear quote list
               </button>
               <p className="fine-print">
