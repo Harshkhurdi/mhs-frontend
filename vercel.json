@@ -12,6 +12,14 @@
     }
   ],
   "rewrites": [
+    { "source": "/about", "destination": "/about/index.html" },
+    { "source": "/solutions", "destination": "/solutions/index.html" },
+    { "source": "/service", "destination": "/service/index.html" },
+    { "source": "/events", "destination": "/events/index.html" },
+    { "source": "/community", "destination": "/community/index.html" },
+    { "source": "/contact", "destination": "/contact/index.html" },
+    { "source": "/admin", "destination": "/admin/index.html" },
+    { "source": "/admin/login", "destination": "/admin/login/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
 }
