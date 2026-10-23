@@ -8,9 +8,7 @@ export default function CallToAction() {
         <div>
           <p className="eyebrow">LET’S BUILD BETTER CARE</p>
           <h2>
-            Your next step starts
-            <br />
-            with a conversation.
+            Your next step starts{' '}<br className="heading-break" />with a conversation.
           </h2>
           <p>
             Tell us what your facility needs. We’ll help you find the right

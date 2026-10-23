@@ -116,14 +116,10 @@ export default function Home() {
               <span className="status-dot" /> MEDELEC HEALTHCARE SOLUTIONS
             </p>
             <h1>
-              Technology,
-              <br />
-              with a <em>human side.</em>
+              Technology,{' '}<br className="heading-break" />with a <em>human side.</em>
             </h1>
             <p className="hero-lede">
-              Global medical equipment.
-              <br />
-              Local engineers who stand behind it.
+              Global medical equipment. Local engineers who stand behind it.
             </p>
             <p className="hero-explainer">
               From selecting the right system to keeping it working, we help
@@ -240,9 +236,7 @@ export default function Home() {
             <div>
               <p className="eyebrow">START WITH THE CLINICAL NEED</p>
               <h2>
-                Different departments.
-                <br />
-                <em>One dependable partner.</em>
+                Different departments.{' '}<br className="heading-break" /><em>One dependable partner.</em>
               </h2>
             </div>
             <div>
@@ -366,9 +360,7 @@ export default function Home() {
           <div className="engineering-copy">
             <p className="eyebrow">SERVICE IS PART OF THE SOLUTION</p>
             <h2>
-              Delivery is a milestone.
-              <br />
-              <em>Support is a relationship.</em>
+              Delivery is a milestone.{' '}<br className="heading-break" /><em>Support is a relationship.</em>
             </h2>
             <p>
               Our service engineers look after the medical equipment we supply —

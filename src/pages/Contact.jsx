@@ -132,7 +132,7 @@ export default function Contact() {
         title={
           <>
             Let’s find the
-            <br />
+            {' '}<br className="heading-break" />
             <span>right solution.</span>
           </>
         }

@@ -130,15 +130,11 @@ export default function MedicalSolutions() {
             <div>
               <p className="eyebrow">THE MEDELEC EQUIPMENT LIBRARY</p>
               <h1>
-                Find your next
-                <br />
-                <em>clinical advantage.</em>
+                Find your next{' '}<br className="heading-break" /><em>clinical advantage.</em>
               </h1>
             </div>
             <p>
-              Real equipment. Official information.
-              <br />
-              Explore the manufacturer ranges and build a quote around your
+              Real equipment. Official information. Explore the manufacturer ranges and build a quote around your
               facility’s needs.
             </p>
           </div>

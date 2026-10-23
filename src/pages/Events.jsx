@@ -40,7 +40,7 @@ export default function Events() {
         <div className="events-intro">
           <div>
             <p className="eyebrow">INSTALLATIONS · PEOPLE · PRACTICAL LEARNING</p>
-            <h1>Technology in place.<br /><em>People in focus.</em></h1>
+            <h1>Technology in place.{' '}<br className="heading-break" /><em>People in focus.</em></h1>
             <p className="events-lede">From a new installation to a hands-on training session, see the people and moments behind our work.</p>
             <a className="text-link" href="#event-albums">Explore the albums <HiArrowUpRight /></a>
           </div>
@@ -50,7 +50,7 @@ export default function Events() {
     </section>
     <section className="section events-section" id="event-albums" ref={gallery}>
       <div className="wrap">
-        <div className="events-heading"><div><p className="eyebrow">MOMENTS WORTH SHARING</p><h2>Care, brought to life.</h2></div><p>On site. Alongside your team.<br />Explore the stories behind the equipment.</p></div>
+        <div className="events-heading"><div><p className="eyebrow">MOMENTS WORTH SHARING</p><h2>Care, brought to life.</h2></div><p>On site. Alongside your team. Explore the stories behind the equipment.</p></div>
         <div className="event-filters" aria-label="Filter event albums">{['All', ...eventCategories.filter((name) => events.some((event) => event.category === name))].map((name) => <button key={name} aria-pressed={category === name} className={category === name ? 'active' : ''} onClick={() => { setCategory(name); setPage(0) }}>{name === 'All' ? 'All albums' : name}<span>{events.filter((event) => name === 'All' || event.category === name).length}</span></button>)}</div>
         {error && <p className="gallery-load-note" role="status">{error}</p>}
         {loading && <p className="fine-print" role="status">Checking for recent albums…</p>}

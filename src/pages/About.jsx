@@ -13,7 +13,7 @@ export default function About() {
         title={
           <>
             Global technology.
-            <br />
+            {' '}<br className="heading-break" />
             <span>Personal commitment.</span>
           </>
         }
@@ -35,9 +35,7 @@ export default function About() {
           <div>
             <p className="eyebrow">BUILT ON RELATIONSHIPS</p>
             <h2>
-              A healthcare partner,
-              <br />
-              from the ground up.
+              A healthcare partner,{' '}<br className="heading-break" />from the ground up.
             </h2>
             <p className="intro-copy">
               Every hospital has its own challenges. Our work starts by
@@ -82,9 +80,7 @@ export default function About() {
           <div className="founder-copy">
             <p className="eyebrow">A NOTE FROM OUR FOUNDER</p>
             <h2 id="founder-heading">
-              Better equipment.
-              <br />
-              <em>Lasting relationships.</em>
+              Better equipment.{' '}<br className="heading-break" /><em>Lasting relationships.</em>
             </h2>
             <blockquote>
               <p>“{director.quote}”</p>
@@ -109,7 +105,7 @@ export default function About() {
         <div className="wrap administration-grid">
           <div className="administration-copy">
             <p className="eyebrow">THE PEOPLE BEHIND EVERY DETAIL</p>
-            <h2 id="administration-heading">Thoughtful coordination.<br /><em>Dependable follow-through.</em></h2>
+            <h2 id="administration-heading">Thoughtful coordination.{' '}<br className="heading-break" /><em>Dependable follow-through.</em></h2>
             <p className="administration-intro">Good service starts with a team that works well together.</p>
             <p>As Head of Administration, {headOfAdministration.name} supports the day-to-day coordination behind Medelec’s work with healthcare institutions and our service team.</p>
             <p>Her role brings the people, communication and practical details together, helping our team stay organised and responsive from the first conversation to ongoing support.</p>

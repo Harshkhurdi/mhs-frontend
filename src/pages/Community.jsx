@@ -56,14 +56,14 @@ export default function Community() {
       <div className="wrap">
         <div className="breadcrumb"><Link to="/">Home</Link><span>/</span><span>Community</span></div>
         <div className="community-intro">
-          <div><p className="eyebrow">THE PEOPLE. THE PARTNERSHIPS. THE PROGRESS.</p><h1>Our community.<br /><em>Shared progress.</em></h1><p>Good technology brings people together. A glimpse of our installations, hands-on learning and moments with the teams we support.</p><a href="#community-gallery" className="text-link">Explore the photographs <HiArrowUpRight /></a></div>
+          <div><p className="eyebrow">THE PEOPLE. THE PARTNERSHIPS. THE PROGRESS.</p><h1>Our community.{' '}<br className="heading-break" /><em>Shared progress.</em></h1><p>Good technology brings people together. A glimpse of our installations, hands-on learning and moments with the teams we support.</p><a href="#community-gallery" className="text-link">Explore the photographs <HiArrowUpRight /></a></div>
           {hero && <button className="community-hero-photo" onClick={() => { changeCompany('all'); setSelection({ id: hero.id }) }} aria-label={`View ${hero.title}`}><img src={galleryImage(hero.cover_image)} alt={hero.cover_alt || hero.title} width="960" height="640" /><span><span>IN GOOD COMPANY</span><strong>{hero.title}</strong><HiArrowUpRight /></span></button>}
         </div>
       </div>
     </section>
     <section className="section community-section" id="community-gallery" ref={gallery}>
       <div className="wrap">
-        <div className="community-heading"><div><p className="eyebrow">A CLOSER LOOK AT OUR WORK</p><h2>One community.<br />Many connections.</h2></div><p>Choose a company to explore its photographs.<br />Open a story and swipe through the moments.</p></div>
+        <div className="community-heading"><div><p className="eyebrow">A CLOSER LOOK AT OUR WORK</p><h2>One community.{' '}<br className="heading-break" />Many connections.</h2></div><p>Choose a company to explore its photographs. Open a story and swipe through the moments.</p></div>
         <div className="community-companies" role="group" aria-label="Filter community photographs by company">
           <button className="community-all" aria-pressed={company === 'all'} onClick={() => changeCompany('all')}><HiOutlinePhoto /><span>All companies</span></button>
           {manufacturerBrands.map((item) => <button key={item.id} className={item.logo.theme === 'dark' ? 'company-dark' : ''} aria-label={item.name} aria-pressed={company === item.id} onClick={() => changeCompany(item.id)}><img src={item.logo.src} alt={item.name} width={item.logo.width} height={item.logo.height} /><span>{item.shortName || item.name}</span></button>)}

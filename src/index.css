@@ -5072,3 +5072,98 @@ em {
   .service-team-photo > img { aspect-ratio: 16/10; }
   .service-team-identity { display: flex; }
 }
+
+/* Desktop editorial typography: one typeface, natural breaks and connected copy. */
+@media (min-width: 801px) {
+  .heading-break {
+    display: none;
+  }
+  .home-hero h1,
+  .page-intro h1,
+  .catalogue-intro h1,
+  .events-intro h1,
+  .community-intro h1 {
+    font-size: clamp(38px, 3.8vw, 56px);
+    font-weight: 600;
+    line-height: 1.16;
+    letter-spacing: -0.04em;
+    max-width: 22ch;
+    text-wrap: balance;
+  }
+  .home-hero h1 em,
+  .page-intro h1 span,
+  .catalogue-intro h1 em,
+  .events-intro h1 em,
+  .community-intro h1 em,
+  .clinical-ranges h2 em,
+  .founder-copy h2 em,
+  .administration-copy h2 em,
+  .team-together-copy h2 em,
+  .engineering-copy h2 em,
+  .lifecycle-heading h2 span,
+  .service-journey-heading h2 span {
+    color: inherit;
+    font: inherit;
+    letter-spacing: inherit;
+  }
+  .section-heading h2,
+  .about-story h2,
+  .founder-copy h2,
+  .administration-copy h2,
+  .team-together-copy h2,
+  .service-team-heading h2,
+  .engineering-copy h2,
+  .lifecycle-heading h2,
+  .service-journey-heading h2,
+  .faq-layout h2,
+  .events-heading h2,
+  .community-heading h2,
+  .cta-section h2 {
+    font-size: clamp(30px, 2.8vw, 42px);
+    font-weight: 600;
+    line-height: 1.24;
+    letter-spacing: -0.035em;
+    max-width: 26ch;
+    text-wrap: balance;
+  }
+  .catalogue-intro {
+    padding-bottom: 40px;
+  }
+  .catalogue-intro-heading {
+    display: block;
+    max-width: 780px;
+    margin-bottom: 28px;
+  }
+  .catalogue-intro h1 {
+    max-width: 26ch;
+    margin-top: 16px;
+  }
+  .catalogue-intro-heading > p {
+    max-width: 66ch;
+    margin-top: 18px;
+    padding: 0;
+    font-size: 15px;
+    line-height: 1.8;
+    text-wrap: pretty;
+  }
+  .page-intro .intro-copy,
+  .hero-explainer,
+  .events-lede,
+  .community-intro > div > p:not(.eyebrow) {
+    font-size: 15px;
+    line-height: 1.8;
+    text-wrap: pretty;
+  }
+  .hero-lede {
+    max-width: 32ch;
+    font-size: 20px;
+    line-height: 1.6;
+    letter-spacing: -0.015em;
+    text-wrap: pretty;
+  }
+  .events-heading > p,
+  .community-heading > p {
+    max-width: 38ch;
+    text-wrap: pretty;
+  }
+}

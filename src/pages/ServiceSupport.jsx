@@ -55,7 +55,7 @@ export default function ServiceSupport() {
         title={
           <>
             Reliable equipment.
-            <br />
+            {' '}<br className="heading-break" />
             <span>Supported for life.</span>
           </>
         }
@@ -67,9 +67,7 @@ export default function ServiceSupport() {
             <div>
               <p className="eyebrow">BEYOND THE INSTALLATION</p>
               <h2 id="lifecycle-heading">
-                Support for the
-                <br />
-                <span>whole equipment lifecycle.</span>
+                Support for the{' '}<br className="heading-break" /><span>whole equipment lifecycle.</span>
               </h2>
             </div>
             <div className="lifecycle-intro">
@@ -101,9 +99,7 @@ export default function ServiceSupport() {
           <div className="service-journey-heading">
             <p className="eyebrow">A SIMPLE WAY TO GET HELP</p>
             <h2 id="service-journey-heading">
-              Tell us what’s happening.
-              <br />
-              <span>We’ll take it from there.</span>
+              Tell us what’s happening.{' '}<br className="heading-break" /><span>We’ll take it from there.</span>
             </h2>
           </div>
           <ol className="service-steps">
@@ -139,9 +135,7 @@ export default function ServiceSupport() {
           <div>
             <p className="eyebrow">GOOD TO KNOW</p>
             <h2>
-              A little clarity
-              <br />
-              before you get in touch.
+              A little clarity{' '}<br className="heading-break" />before you get in touch.
             </h2>
             <Link to="/contact?type=service" className="text-link">
               Send a service inquiry <HiArrowUpRight />
