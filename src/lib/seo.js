@@ -29,7 +29,7 @@ export const publicPages = {
   },
   '/contact': {
     title: 'Contact Medelec Healthcare Solutions | Mohali, Punjab',
-    description: 'Contact Medelec in Mohali for medical equipment quotations, installations and service support. Email info@medelec.in or call +91 93166 66888.',
+    description: 'Contact Medelec in Mohali for medical equipment quotations, installations and service support. Email info@medelec.in or send an inquiry through our website.',
   },
 }
 
@@ -57,7 +57,6 @@ export const businessStructuredData = {
       logo: siteImage,
       image: siteImage,
       description: 'Medical equipment supply, installation and service engineering support across North India.',
-      telephone: '+919316666888',
       email: 'info@medelec.in',
       address: {
         '@type': 'PostalAddress',

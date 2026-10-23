@@ -4,7 +4,6 @@ import { collection, doc, serverTimestamp, setDoc } from 'firebase/firestore/lit
 import {
   HiArrowUpRight,
   HiOutlineMapPin,
-  HiOutlinePhone,
   HiOutlineEnvelope,
   HiOutlineClock,
   HiOutlineCheckCircle,
@@ -118,7 +117,7 @@ export default function Contact() {
       setError(
         unresolved
           ? 'We’re still checking delivery of your inquiry. Your submitted details are kept unchanged while we wait. Check its status below, or contact our team before sending another copy.'
-          : 'We couldn’t confirm receipt of your inquiry. Your details and quote list are still here. Try again, send these details by email, or call our team.',
+          : 'We couldn’t confirm receipt of your inquiry. Your details and quote list are still here. Try again or send these details by email.',
       )
     } finally {
       setSubmitting(false)
@@ -148,15 +147,6 @@ export default function Contact() {
               service coordination.
             </p>
             <div className="contact-methods">
-              <div>
-                <HiOutlinePhone />
-                <div>
-                  <h3>Call our team</h3>
-                  <a href="tel:+919316666888">
-                    +91 93166 66888 <HiArrowUpRight />
-                  </a>
-                </div>
-              </div>
               <div>
                 <HiOutlineEnvelope />
                 <div>
@@ -218,8 +208,8 @@ export default function Contact() {
                   the details you provided.
                 </p>
                 <p className="fine-print">
-                  Need to discuss something sooner? Call{' '}
-                  <a href="tel:+919316666888">+91 93166 66888</a>.
+                  Need to discuss something sooner? Email{' '}
+                  <a href="mailto:info@medelec.in">info@medelec.in</a>.
                 </p>
                 <button
                   className="button button-outline"

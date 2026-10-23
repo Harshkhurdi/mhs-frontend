@@ -51,9 +51,6 @@ export default function Footer() {
           <a href="mailto:info@medelec.in">
             info@medelec.in <HiArrowUpRight />
           </a>
-          <a href="tel:+919316666888">
-            +91 93166 66888
-          </a>
         </div>
       </div>
       <div className="wrap footer-bottom">
