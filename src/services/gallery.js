@@ -1,17 +1,23 @@
-import { arrayRemove, arrayUnion, collection, doc, getDoc, getDocs, query, where, writeBatch, setDoc } from 'firebase/firestore/lite'
+import { arrayRemove, collection, doc, getDoc, getDocs, query, where, writeBatch, setDoc } from 'firebase/firestore/lite'
 import { db } from '../config/firebaseDatabase'
 import { withTimeout } from '../lib/quote'
-import { mergeEvents, validateAlbum } from '../lib/events'
+import { mergeEvents, validateAlbum, VISIBILITY_PREFIX } from '../lib/events'
 import { defaultEvents } from '../data/events'
 
-// Published-only queries cannot return an archived bundled album. Keep its
-// visibility in public metadata, atomically with the album change.
-// Retain the existing hidden_demo_ids field so deployed gallery rules remain compatible.
+// Public queries return this small metadata record when a bundled story is
+// archived. It uses the existing event schema and does not expose its photos.
 function updateBundledVisibility(batch, id, published) {
-  if (!defaultEvents.some((event) => event.id === id)) return
-  batch.set(doc(db, 'siteSettings', 'gallery'), {
-    hidden_demo_ids: published ? arrayRemove(id) : arrayUnion(id),
-  }, { merge: true })
+  const original = defaultEvents.find((event) => event.id === id)
+  if (!original) return
+  const now = Date.now()
+  batch.set(doc(db, 'events', `${VISIBILITY_PREFIX}${id}`), {
+    title: 'Gallery visibility', category: 'Community', event_date: '',
+    location: 'Medelec', summary: 'Visibility metadata for a bundled photo story.',
+    is_published: !published, is_demo: true, cover_image: original.cover_image,
+    cover_alt: 'Gallery visibility', photo_count: 1, created_at: now, updated_at: now,
+  })
+  // Migrate an existing archive entry atomically; never grow the legacy list.
+  batch.set(doc(db, 'siteSettings', 'gallery'), { hidden_demo_ids: arrayRemove(id) }, { merge: true })
 }
 
 export async function loadGallery(admin = false) {

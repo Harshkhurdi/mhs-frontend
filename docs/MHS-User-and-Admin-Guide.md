@@ -539,3 +539,18 @@ Community uses the existing `events/{albumId}` and photo subcollections, the sam
 The About us page includes a dedicated portrait section for **Rajni Koul — Head of Administration**, styled to complement the founder profile. The original supplied portrait is `public/images/rajni-koul-administration.jpeg`. Profile name/title are in `src/data/team.js`; the section copy is in `src/pages/About.jsx`. This leadership portrait is maintained in the website source, separate from the five service-engineer portraits managed through the admin panel. Publish source changes through the usual GitHub/Vercel workflow.
 
 The initial event stories now contain seven selected owner-supplied images: two from the CM visit, two installation views and three training views. Both Events and Community show previews and open the complete photo sequence. Previously saved admin versions continue to take priority over bundled starting content; use Edit album to replace photos in a saved album.
+
+
+## 26 Expanded company archive and team photographs
+
+The galleries now include 21 starting albums and 58 owner-supplied photographs. The newest 51 images follow the owner's three upload batches exactly; the complete mapping is in `docs/company-photo-manifest.json` and `docs/photo-sources.md`. Both public pages show nine stories per page, with company/category filters resetting to the first page. Cards use small thumbnails; full photographs load when their album opens. Events highlights the recognition, team and installation photography in its introductory collage. Community highlights the Hamilton Partner Meeting recognition, while company tabs retain the requested order.
+
+General Medelec albums (team life, dispatch or an installation with no confirmed brand) appear under All companies. For new general posts, select **Medelec / all companies** in the admin company selector. The team group photos are in **Community photographs**. Installation, training, exhibition and visit stories are managed in **Photos & events**. Open an existing album to edit its text, replace photos or archive it as before.
+
+A new **Medelec, together** section on About us uses the two supplied group photos. Use 01/02 to switch views or open both at full size. The original service-engineer section and its KARL STORZ image remain unchanged. No individual in a group photo is assigned a name by face matching. The founder and Head of Administration retain their existing dedicated portraits.
+
+### Archiving a larger starting gallery
+
+The old `siteSettings/gallery.hidden_demo_ids` list has a deployed six-entry limit. New changes use a small rule-compatible metadata document at `events/gallery-visibility--{albumId}` when archiving a bundled starting story. The marker is published only while that starting story is hidden, has `is_demo: true`, and is never rendered as an album. Its visibility is saved atomically with the real album. Publishing again makes the marker non-public. Legacy list entries are removed as the corresponding story is edited, archived or published. This supports more than six archived starting stories without changing deployed rules or adding a storage service. Do not manually edit or treat marker documents as albums.
+
+A Vercel release still does not publish Firebase rules. The separate audit follow-up on staff authorization and stricter enquiry validation remains outstanding.

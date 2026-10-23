@@ -20,9 +20,9 @@ test('community posts retain company association for every supported company usi
 })
 
 test('existing Hamilton stories appear in their company and general stories remain in all companies', () => {
-  assert.equal(communityAlbums(defaultEvents).length, 3)
-  assert.equal(communityAlbums(defaultEvents, 'hamilton').length, 2)
-  assert.equal(communityAlbums(defaultEvents, 'kiran').length, 0)
+  assert.equal(communityAlbums(defaultEvents).length, 21)
+  assert.equal(communityAlbums(defaultEvents, 'hamilton').length, 13)
+  assert.equal(communityAlbums(defaultEvents, 'kiran').length, 1)
   assert.equal(communityCompany({ id: 'community--unsupported--123' }), '')
   assert.equal(communityCompany(defaultEvents[0]), '')
 })

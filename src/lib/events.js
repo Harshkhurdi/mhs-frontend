@@ -11,12 +11,17 @@ export function galleryImage(value) {
   return safeImageUrl(value)
 }
 
+export const VISIBILITY_PREFIX = 'gallery-visibility--'
+
 export function mergeEvents(remote = [], includeDrafts = false, hiddenAlbumIds = []) {
   const hidden = new Set(Array.isArray(hiddenAlbumIds) ? hiddenAlbumIds : [])
+  for (const event of remote) {
+    if (event?.is_demo === true && event.is_published === true && event.id?.startsWith(VISIBILITY_PREFIX)) hidden.add(event.id.slice(VISIBILITY_PREFIX.length))
+  }
   const result = new Map(defaultEvents.map((event) => [event.id, event]))
   for (const event of remote) {
     // Retire all sample albums, including older copies saved in Firestore.
-    if (!event?.id || typeof event.title !== 'string' || event.is_demo || event.id.startsWith('demo-')) continue
+    if (!event?.id || typeof event.title !== 'string' || event.is_demo || event.id.startsWith(VISIBILITY_PREFIX) || event.id.startsWith('demo-')) continue
     if (!includeDrafts && hidden.has(event.id)) continue
     const original = result.get(event.id)
     result.delete(event.id)

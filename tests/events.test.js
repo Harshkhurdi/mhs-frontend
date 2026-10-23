@@ -2,13 +2,13 @@ import test from 'node:test'
 import assert from 'node:assert/strict'
 import { existsSync } from 'node:fs'
 import { defaultEvents } from '../src/data/events.js'
-import { galleryImage, mergeEvents, validateAlbum } from '../src/lib/events.js'
+import { galleryImage, mergeEvents, validateAlbum, VISIBILITY_PREFIX } from '../src/lib/events.js'
 import { manufacturerBrands } from '../src/data/products.js'
 import { mergeCatalogue, sortCatalogue } from '../src/lib/catalogue.js'
 
 test('curated photo stories use real local photographs in the requested order', () => {
-  assert.deepEqual(defaultEvents.map((event) => event.category), ['Visit', 'Installation', 'Training'])
-  assert.equal(defaultEvents.reduce((total, event) => total + event.photos.length, 0), 7)
+  assert.deepEqual(defaultEvents.slice(0, 3).map((event) => event.category), ['Visit', 'Installation', 'Training'])
+  assert.equal(defaultEvents.reduce((total, event) => total + event.photos.length, 0), 58)
   for (const event of defaultEvents) {
     assert.equal(event.is_demo, false)
     assert.equal(event.event_date, '')
@@ -22,7 +22,7 @@ test('archived stories stay hidden, replacements retain their order and old demo
   assert.equal(mergeEvents([saved])[0].title, saved.title)
   assert.equal(mergeEvents([{ ...saved, is_published: false }]).some(e => e.id === original.id), false)
   assert.equal(mergeEvents([{ ...saved, is_published: false }], true).find(e => e.id === original.id).is_published, false)
-  assert.equal(mergeEvents([{ ...saved, id: 'demo-old', is_demo: true }]).length, 3)
+  assert.equal(mergeEvents([{ ...saved, id: 'demo-old', is_demo: true }]).length, defaultEvents.length)
 })
 test('public archive metadata hides bundled albums absent from published-only query results', () => {
   const original = defaultEvents[0]
@@ -61,4 +61,16 @@ test('archive metadata wins over a stale published query snapshot', () => {
   const event = defaultEvents[0]
   assert.equal(mergeEvents([event], false, [event.id]).some((row) => row.id === event.id), false)
   assert.equal(mergeEvents([event], true, [event.id]).some((row) => row.id === event.id), true)
+})
+
+
+test('public archive markers hide more than six bundled stories and never render as albums', () => {
+  const stories = defaultEvents.slice(0, 8)
+  const markers = stories.map((event) => ({ id: VISIBILITY_PREFIX + event.id, is_demo: true, is_published: true, title: 'Visibility metadata' }))
+  const result = mergeEvents([...stories, ...markers])
+  assert.ok(stories.every((event) => !result.some((item) => item.id === event.id)))
+  assert.equal(result.length, defaultEvents.length - 8)
+  assert.equal(mergeEvents(markers, true).length, defaultEvents.length)
+  const restored = mergeEvents(markers.slice(1))
+  assert.equal(restored.some((event) => event.id === stories[0].id), true)
 })

@@ -1,3 +1,5 @@
+import { companyStories, additionalVisitPhotos } from './companyStories.js'
+
 export const eventCategories = ['Visit', 'Installation', 'Training', 'Conference', 'Workshop', 'Community']
 
 // Event dates were not supplied. Leave them blank rather than inventing a date.
@@ -12,6 +14,7 @@ export const defaultEvents = [
     photos: [
       photo('punjab-cm-equipment-visit', 'Punjab Chief Minister Bhagwant Mann views newly installed medical equipment during an on-site demonstration.'),
       photo('punjab-cm-equipment-demonstration', 'The equipment demonstration continues with the visiting delegation and hospital team.'),
+      ...additionalVisitPhotos,
     ],
   },
   {
@@ -35,9 +38,10 @@ export const defaultEvents = [
       photo('hamilton-c6-training-team', 'Participants share questions and practical guidance alongside the equipment during clinical training.'),
     ],
   },
+  ...companyStories,
 ].map((event, display_order) => ({
   ...event, display_order, is_published: true, is_demo: false, updated_at: 0,
-  cover_image: event.photos[0].thumbnail, cover_alt: event.photos[0].alt,
+  cover_image: event.cover_image || event.photos[0].thumbnail, cover_alt: event.cover_alt || event.photos[0].alt,
   photo_count: event.photos.length,
   photos: event.photos.map((image, position) => ({ ...image, position })),
 }))

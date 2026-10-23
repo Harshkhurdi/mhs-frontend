@@ -35,6 +35,7 @@ export default function Community() {
   const currentPage = Math.min(page, pages - 1)
   const visible = albums.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE)
   const selected = selection ? albums.find((event) => event.id === selection.id) : null
+  const hero = events.find((event) => event.id === 'community--hamilton--partner-meeting-dubai-2025') || events[0]
   const brand = manufacturerBrands.find((item) => item.id === company)
   function changeCompany(id) {
     setPage(0); setSelection(null)
@@ -56,7 +57,7 @@ export default function Community() {
         <div className="breadcrumb"><Link to="/">Home</Link><span>/</span><span>Community</span></div>
         <div className="community-intro">
           <div><p className="eyebrow">THE PEOPLE. THE PARTNERSHIPS. THE PROGRESS.</p><h1>Our community.<br /><em>Shared progress.</em></h1><p>Good technology brings people together. A glimpse of our installations, hands-on learning and moments with the teams we support.</p><a href="#community-gallery" className="text-link">Explore the photographs <HiArrowUpRight /></a></div>
-          {events[0] && <button className="community-hero-photo" onClick={() => { changeCompany('all'); setSelection({ id: events[0].id }) }} aria-label={`View ${events[0].title}`}><img src={galleryImage(events[0].cover_image)} alt={events[0].cover_alt || events[0].title} width="960" height="640" /><span><span>IN GOOD COMPANY</span><strong>{events[0].title}</strong><HiArrowUpRight /></span></button>}
+          {hero && <button className="community-hero-photo" onClick={() => { changeCompany('all'); setSelection({ id: hero.id }) }} aria-label={`View ${hero.title}`}><img src={galleryImage(hero.cover_image)} alt={hero.cover_alt || hero.title} width="960" height="640" /><span><span>IN GOOD COMPANY</span><strong>{hero.title}</strong><HiArrowUpRight /></span></button>}
         </div>
       </div>
     </section>

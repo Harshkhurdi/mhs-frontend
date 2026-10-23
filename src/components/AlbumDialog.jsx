@@ -5,7 +5,7 @@ import { communityCompany, swipeDirection } from '../lib/community'
 import { manufacturerBrands } from '../data/products'
 import { loadAlbumPhotos } from '../services/gallery'
 
-export default function AlbumDialog({ event, onClose, onAdjacent, startAtEnd = false }) {
+export default function AlbumDialog({ event, onClose, onAdjacent, startAtEnd = false, initialIndex = 0 }) {
   const dialog = useRef(null)
   const touch = useRef(null)
   const [photos, setPhotos] = useState([])
@@ -18,12 +18,12 @@ export default function AlbumDialog({ event, onClose, onAdjacent, startAtEnd = f
     document.body.style.overflow = 'hidden'
     let cancelled = false
     loadAlbumPhotos(event).then((data) => {
-      if (!cancelled) { setPhotos(data); setIndex(startAtEnd ? Math.max(0, data.length - 1) : 0) }
+      if (!cancelled) { setPhotos(data); setIndex(startAtEnd ? Math.max(0, data.length - 1) : Math.max(0, Math.min(initialIndex, data.length - 1))) }
     }).catch(() => {
       if (!cancelled) setError('We couldn’t load this album. Close it and try again.')
     }).finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true; document.body.style.overflow = previous }
-  }, [event, startAtEnd])
+  }, [event, startAtEnd, initialIndex])
   const canMove = photos.length > 1 || Boolean(onAdjacent)
   const move = (direction) => {
     if (!photos.length) return

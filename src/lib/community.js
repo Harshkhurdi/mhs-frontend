@@ -9,7 +9,7 @@ export function communityCompany(event) {
 }
 
 export function communityId(company, token) {
-  if (!manufacturerBrands.some((brand) => brand.id === company) || !/^[a-zA-Z0-9_-]+$/.test(token || '')) throw new Error('Choose a supported company before saving.')
+  if ((company !== 'medelec' && !manufacturerBrands.some((brand) => brand.id === company)) || !/^[a-zA-Z0-9_-]+$/.test(token || '')) throw new Error('Choose a supported company before saving.')
   return `community--${company}--${token}`
 }
 

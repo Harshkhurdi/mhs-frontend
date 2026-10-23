@@ -4,6 +4,7 @@ import { galleryImage } from '../lib/events'
 import { HiArrowUpRight, HiOutlineUser } from 'react-icons/hi2'
 import { Link } from 'react-router-dom'
 import { director, headOfAdministration, teamMembers } from '../data/team'
+import TeamTogether from '../components/TeamTogether'
 import PageIntro from '../components/PageIntro'
 import CallToAction from '../components/CallToAction'
 
@@ -130,6 +131,7 @@ export default function About() {
           </figure>
         </div>
       </section>
+      <TeamTogether />
       <section className="section engineers-section" id="service-engineers" aria-labelledby="engineers-heading">
         <div className="wrap">
           <div className="engineers-heading">

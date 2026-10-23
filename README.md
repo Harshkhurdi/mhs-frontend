@@ -80,3 +80,10 @@ Staff can upload event albums under **Admin → Photos & events** and portraits 
 
 
 The About page also features Rajni Koul, Head of Administration, in a portrait section alongside the founder and service team. Owner-supplied event photos are arranged into seven selected images across the CM visit, installation and training stories. Sources are recorded in `docs/photo-sources.md`.
+
+
+## Expanded company photo archive
+
+The owner’s three upload batches add 51 photographs in 19 specified groups (the additional CM photograph joins its existing visit story). The gallery now has 21 albums and 58 photos, nine-story pagination on both public pages, real recognition/installation photography, and a separate team group-photo section on About. Original founder/administration profiles and the existing engineer feature are preserved. Exact source mapping: `docs/company-photo-manifest.json`; caption evidence: `docs/photo-sources.md`.
+
+Bundled story archive state uses rule-compatible `events/gallery-visibility--{albumId}` metadata markers rather than growing the legacy six-item visibility list. Markers never render as albums, and no new Firebase rules are required for this compatibility change. See guide section 26.
