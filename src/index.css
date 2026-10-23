@@ -844,11 +844,6 @@
 .footer-grid a:hover {
   color: #c9d4ff;
 }
-.footer-grid .footer-email {
-  font-size: 15px !important;
-  color: #fff !important;
-  font-weight: 500;
-}
 .footer-bottom {
   border-top: 1px solid #34405c;
   display: flex;

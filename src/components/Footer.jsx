@@ -48,7 +48,7 @@ export default function Footer() {
             <br />
             Sector 74, Mohali, Punjab — 160055
           </a>
-          <a className="footer-email" href="mailto:info@medelec.in">
+          <a href="mailto:info@medelec.in">
             info@medelec.in <HiArrowUpRight />
           </a>
           <a href="tel:+919316666888">
