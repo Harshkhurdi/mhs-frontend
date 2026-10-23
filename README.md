@@ -11,7 +11,7 @@ To check an incoming enquiry: open https://medelec.vercel.app/admin/login, sign 
 ## Website
 
 - Responsive home, company, service and contact pages.
-- Manufacturer reference library with 313 distinct equipment models, accessories and product families across eight supported brand ranges, official photography and direct manufacturer links. Published Firestore listings enrich matching entries and append supported custom equipment. Search, clinical and manufacturer filters, sorting and pagination are reflected in the URL.
+- Manufacturer reference library with 310 distinct equipment models, accessories and product families across eight supported brand ranges, official photography and direct manufacturer links. Published Firestore listings enrich matching entries and append supported custom equipment. Search, clinical and manufacturer filters, sorting and pagination are reflected in the URL.
 - Quote list with quantities, removal and local browser persistence. Legacy session quote lists are migrated.
 - Contact and service inquiries saved to the existing `inquiries` collection. Failed submissions retain the form and selection. After a timeout, **Check inquiry status** awaits the original write without sending another copy; unresolved fields remain locked. Email fallback explicitly opens a draft and never claims delivery.
 - Staff sign-in at `/admin/login`; catalogue creation, editing, reversible archive/publish and inquiry inbox at `/admin`.

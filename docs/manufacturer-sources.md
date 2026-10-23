@@ -1,6 +1,6 @@
 # Manufacturer catalogue sources
 
-Expanded and checked on 21 October 2026. This reference library contains 313 equipment models, accessories and product families across eight supported brand ranges. It is not an exhaustive worldwide SKU inventory or a statement of local stock, regulatory clearance, territorial authorisation or availability. Confirm configurations and availability before quoting.
+Expanded and checked on 21 October 2026. This reference library contains 310 equipment models, accessories and product families across eight supported brand ranges. It is not an exhaustive worldwide SKU inventory or a statement of local stock, regulatory clearance, territorial authorisation or availability. Confirm configurations and availability before quoting.
 
 | Manufacturer | Entries | With PDF literature |
 | --- | ---: | ---: |
@@ -10,7 +10,7 @@ Expanded and checked on 21 October 2026. This reference library contains 313 equ
 | Kiran Medical | 51 | 47 |
 | Samsung Healthcare | 30 | 0 |
 | LINET | 50 | 37 |
-| Helmier | 9 | 1 |
+| Helmier | 6 | 1 |
 | Nihon Kohden | 4 | 4 |
 
 Every entry has an official product page and a real manufacturer photograph served locally as compressed WebP. 198 entries have verified PDF literature links, representing 170 distinct documents. Shared literature is identified by its title in product details; some documents cover a manufacturer range rather than one configuration. Other entries link to their official product information. Samsung document downloads may require a manufacturer account.
@@ -334,11 +334,8 @@ Helmier entries follow its official published supply portfolio. The Graseby 2000
 | Product | Official information | Literature | Original image |
 | --- | --- | --- | --- |
 | Graseby 2000 / 2100 syringe pumps | [Product](https://www.helmier.com/products-2/infusion-pumps/syringe-pumps/graseby-2000-2100/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2022/12/Graseby2000Syringepumppng.png) |
-| Graseby C9 syringe pump | [Product](https://www.helmier.com/products-2/infusion-pumps/syringe-pumps/graseby-c9/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2023/01/Graseby_C9.jpg) |
 | CADD Solis ambulatory infusion system | [Product](https://www.helmier.com/products-2/infusion-pumps/ambulator-pumps/lvp-pumps/) | [Document](https://www.icumed.com/media/3kib3ro1/p22-5599-cadd-solis-brochure-v4_web_ada.pdf) | [Photo](https://www.helmier.com/wp-content/uploads/2023/01/LVP-Pumps.jpg) |
-| CADD Legacy PCA pump | [Product](https://www.helmier.com/products-2/infusion-pumps/ambulator-pumps/cadd-pumps/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2023/01/cadd-pump.jpg) |
 | Aerotherm IQ patient warming system | [Product](https://www.helmier.com/products-2/convective-warmers-and-blankets/aerotherm/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2023/09/Aerotherm_Machine_Final_Edited_Jul_23.png) |
-| Hydrotherm fluid warmer | [Product](https://www.helmier.com/products-2/fluid-warmer/hydrotherm/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2023/08/hydrotherm_front.png) |
 | HOTLINE blood and fluid warmer | [Product](https://www.helmier.com/products-2/fluid-warmer/hotline/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2022/11/Hotlinefluidwarmerpng.png) |
 | HOTLINE L-70 administration sets | [Product](https://www.helmier.com/products-2/fluid-warmer/l-70/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2022/11/SM071013-1512L70png.png) |
 | Level 1 H-1200 fast flow fluid warmer | [Product](https://www.helmier.com/products-2/fluid-warmer/h-1200/) | Official product page | [Photo](https://www.helmier.com/wp-content/uploads/2022/11/H1200silopng2.png) |

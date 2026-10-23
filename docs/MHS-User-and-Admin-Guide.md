@@ -67,7 +67,7 @@ Visitors do not need an account to browse equipment, build a quote list or submi
 
 The address bar contains the catalogue filters. Staff can copy the full filtered URL and send it to a customer. For example, [Samsung equipment](https://medelec.vercel.app/solutions?brand=samsung) opens that manufacturer range.
 
-The reference library currently contains 313 equipment models, accessories and product families: Hamilton Medical 16, KARL STORZ 140, Spacelabs Healthcare 13, Kiran Medical 51, Samsung Healthcare 30, LINET 50, Helmier 9, Nihon Kohden 4. Nihon Kohden is limited to defibrillators and AEDs. Helmier entries describe its published supply range; some devices retain their original Graseby/CADD/HOTLINE product brands. A family may cover several variants. This is a manufacturer reference range, not a real-time stock list. All entries link to official product information; 198 entries also have PDF literature, representing 170 distinct documents. Confirm regional availability and configurations before quoting.
+The reference library currently contains 310 equipment models, accessories and product families: Hamilton Medical 16, KARL STORZ 140, Spacelabs Healthcare 13, Kiran Medical 51, Samsung Healthcare 30, LINET 50, Helmier 6, Nihon Kohden 4. Nihon Kohden is limited to defibrillators and AEDs. Helmier entries describe its published supply range; some devices retain their original Graseby/CADD/HOTLINE product brands. A family may cover several variants. This is a manufacturer reference range, not a real-time stock list. All entries link to official product information; 198 entries also have PDF literature, representing 170 distinct documents. Confirm regional availability and configurations before quoting.
 
 ## 4 Building and managing a quote list
 
@@ -220,7 +220,7 @@ Deleting an enquiry is not the normal follow-up action. It removes the record an
 
 ## 11 Adding and editing equipment through Admin
 
-The **Equipment catalogue** tab manages documents in the `products` collection. It does not edit the separate 313-entry manufacturer reference file.
+The **Equipment catalogue** tab manages documents in the `products` collection. It does not edit the separate 310-entry manufacturer reference file.
 
 1. Sign in and open **Equipment catalogue**.
 2. Select **Add product**, or **Edit** beside an existing row.

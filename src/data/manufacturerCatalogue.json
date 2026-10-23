@@ -5167,23 +5167,6 @@
       "image": "/images/products/helmier-graseby-2000-2100.webp"
     },
     {
-      "id": "helmier-graseby-c9",
-      "name": "Graseby C9 syringe pump",
-      "brand": "helmier",
-      "specialty": "infusion-therapy",
-      "categoryLabel": "Syringe infusion pumps",
-      "applications": [
-        "Syringe infusion pumps",
-        "Helmier supply range"
-      ],
-      "sourceUrl": "https://www.helmier.com/products-2/infusion-pumps/syringe-pumps/graseby-c9/",
-      "imageUrl": "https://www.helmier.com/wp-content/uploads/2023/01/Graseby_C9.jpg",
-      "description": "Compact, stackable syringe pump with multiple infusion programming modes, listed in Helmier’s infusion range.",
-      "literatureTitle": "Official Helmier product information",
-      "verifiedAt": "2026-10-21",
-      "image": "/images/products/helmier-graseby-c9.webp"
-    },
-    {
       "id": "helmier-cadd-solis",
       "name": "CADD Solis ambulatory infusion system",
       "brand": "helmier",
@@ -5202,23 +5185,6 @@
       "pdfUrl": "https://www.icumed.com/media/3kib3ro1/p22-5599-cadd-solis-brochure-v4_web_ada.pdf"
     },
     {
-      "id": "helmier-cadd-legacy-pca",
-      "name": "CADD Legacy PCA pump",
-      "brand": "helmier",
-      "specialty": "infusion-therapy",
-      "categoryLabel": "PCA pumps",
-      "applications": [
-        "PCA pumps",
-        "Helmier supply range"
-      ],
-      "sourceUrl": "https://www.helmier.com/products-2/infusion-pumps/ambulator-pumps/cadd-pumps/",
-      "imageUrl": "https://www.helmier.com/wp-content/uploads/2023/01/cadd-pump.jpg",
-      "description": "Portable CADD Legacy PCA infusion system from Helmier’s published pain management range.",
-      "literatureTitle": "Official Helmier product information",
-      "verifiedAt": "2026-10-21",
-      "image": "/images/products/helmier-cadd-legacy-pca.webp"
-    },
-    {
       "id": "helmier-aerotherm-iq",
       "name": "Aerotherm IQ patient warming system",
       "brand": "helmier",
@@ -5234,23 +5200,6 @@
       "literatureTitle": "Official Helmier product information",
       "verifiedAt": "2026-10-21",
       "image": "/images/products/helmier-aerotherm-iq.webp"
-    },
-    {
-      "id": "helmier-hydrotherm",
-      "name": "Hydrotherm fluid warmer",
-      "brand": "helmier",
-      "specialty": "temperature-management",
-      "categoryLabel": "Blood & fluid warmers",
-      "applications": [
-        "Blood & fluid warmers",
-        "Helmier supply range"
-      ],
-      "sourceUrl": "https://www.helmier.com/products-2/fluid-warmer/hydrotherm/",
-      "imageUrl": "https://www.helmier.com/wp-content/uploads/2023/08/hydrotherm_front.png",
-      "description": "Fluid warming system in Helmier’s temperature management portfolio. Refer to the official product page for compatible applications and accessories.",
-      "literatureTitle": "Official Helmier product information",
-      "verifiedAt": "2026-10-21",
-      "image": "/images/products/helmier-hydrotherm.webp"
     },
     {
       "id": "helmier-hotline",

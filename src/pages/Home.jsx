@@ -18,7 +18,7 @@ const range = catalogue.products
 const showcaseIds = [
   'hamilton-c6',
   'karl-storz-8404zx',
-  'spacelabs-qube',
+  'spacelabs-xprezzon',
   'kiran-flat-panel-based-digital-carm',
   'samsung-r20',
   'linet-multicare-x',
@@ -72,7 +72,7 @@ const categories = [
     id: 'patient-monitoring',
     name: 'Patient monitoring',
     note: 'Bedside. Transport. Central surveillance.',
-    imageId: 'spacelabs-qube',
+    imageId: 'spacelabs-xprezzon',
   },
   {
     id: 'cardiology',
