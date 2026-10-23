@@ -27,8 +27,7 @@ export default function Events() {
   const pageCount = Math.max(1, Math.ceil(filtered.length / 9))
   const currentPage = Math.min(page, pageCount - 1)
   const visible = filtered.slice(currentPage * 9, (currentPage + 1) * 9)
-  const heroIds = ['community--hamilton--partner-meeting-dubai-2025', 'community--medelec--our-team', 'community--hamilton--homi-bhabha-sangrur-c3']
-  const heroEvents = [...heroIds.map((id) => events.find((event) => event.id === id)).filter(Boolean), ...events].filter((event, index, list) => list.findIndex((item) => item.id === event.id) === index).slice(0, 3)
+  const heroEvents = events.slice(0, 3)
   function changePage(direction) {
     setPage(Math.max(0, Math.min(pageCount - 1, currentPage + direction)))
     gallery.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })

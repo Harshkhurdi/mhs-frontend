@@ -1,3 +1,4 @@
+import { compareStoriesByImpact } from './storyOrder.js'
 import { manufacturerBrands } from '../data/products.js'
 
 // Company IDs live in the document ID so uploads use the existing gallery
@@ -15,7 +16,7 @@ export function communityId(company, token) {
 
 export function communityAlbums(events, company = 'all') {
   return events.filter((event) => event.is_published === true && (company === 'all' || communityCompany(event) === company))
-    .sort((a, b) => (Number(b.created_at) || 0) - (Number(a.created_at) || 0))
+    .sort(compareStoriesByImpact)
 }
 
 export function swipeDirection(start, end) {

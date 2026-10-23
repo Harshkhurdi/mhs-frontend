@@ -19,7 +19,7 @@ test('curated photo stories use real local photographs in the requested order', 
 test('archived stories stay hidden, replacements retain their order and old demos never return', () => {
   const original = defaultEvents[0]
   const saved = { ...original, title: 'Updated staff album' }
-  assert.equal(mergeEvents([saved])[0].title, saved.title)
+  assert.equal(mergeEvents([saved]).find(event => event.id === original.id).title, saved.title)
   assert.equal(mergeEvents([{ ...saved, is_published: false }]).some(e => e.id === original.id), false)
   assert.equal(mergeEvents([{ ...saved, is_published: false }], true).find(e => e.id === original.id).is_published, false)
   assert.equal(mergeEvents([{ ...saved, id: 'demo-old', is_demo: true }]).length, defaultEvents.length)

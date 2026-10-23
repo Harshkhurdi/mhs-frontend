@@ -1,3 +1,4 @@
+import { compareStoriesByImpact } from './storyOrder.js'
 import { defaultEvents, eventCategories } from '../data/events.js'
 import { safeImageUrl } from './quote.js'
 
@@ -27,7 +28,7 @@ export function mergeEvents(remote = [], includeDrafts = false, hiddenAlbumIds =
     result.delete(event.id)
     if (includeDrafts || event.is_published === true) result.set(event.id, { ...original, ...event, display_order: original?.display_order ?? 3, remote: true })
   }
-  return [...result.values()].filter((event) => includeDrafts || !hidden.has(event.id)).sort((a, b) => (a.display_order ?? 3) - (b.display_order ?? 3) || String(b.event_date).localeCompare(String(a.event_date)) || a.title.localeCompare(b.title))
+  return [...result.values()].filter((event) => includeDrafts || !hidden.has(event.id)).sort(compareStoriesByImpact)
 }
 
 export function validateAlbum(form, photos) {

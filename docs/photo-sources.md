@@ -30,7 +30,7 @@ The seven selected photographs are grouped into the existing three stories on Ev
 
 ## Owner-supplied company archive — 23 October 2026
 
-All 51 new photographs are included, grouped in the exact order described by the owner. Seven previously supplied event images remain, giving 58 photographs across 21 albums. The additional CM photograph joins the existing visit story. The two office group photographs also appear in a separate new About section; the existing founder, administration and service-engineer sections, including the KARL STORZ equipment image, are preserved.
+All 51 new photographs are included, grouped in the exact order described by the owner. Seven previously supplied event images remain, giving 58 photographs across 21 albums. The additional CM photograph joins the existing visit story. The two office group photographs also appear in a separate new About section; the existing founder and administration sections are preserved. The service-engineer section was subsequently simplified to a text roster at the owner’s request, with its side equipment photograph removed.
 
 | Upload batch | Photo positions within batch | Album |
 | --- | --- | --- |
@@ -57,3 +57,10 @@ All 51 new photographs are included, grouped in the exact order described by the
 `docs/company-photo-manifest.json` records the exact source filename, batch, sequential photo number, album and public image path for every new image. Source images are converted to WebP without creative alteration; a separate bounded thumbnail is generated for cards. Full photographs retain their supplied aspect ratios in the viewer. Filenames and upload timestamps are not treated as event dates.
 
 The recognition backdrop visibly reads **Partner Meeting 2025**, **24–26 September, Dubai**, and **For 2024 performance**. It lists Medelec Healthcare Solutions, India. Copy uses those facts without inventing a trophy category, ranking or sales figure. The Kiran and Ultisys marks are visible in the founder/equipment image. CEO title and other named-person identifications come from the owner; no personal name is inferred from a face. The Aaj Tak frame is presented as a news appearance, not an endorsement. The OT light and dispatch album have no manufacturer association because one was not confirmed.
+
+
+## Gallery presentation update — 23 October 2026
+
+Events and Community share one editorial impact order: Hamilton performance recognition, the Punjab CM visit, Aaj Tak coverage and Hamilton leadership lead, followed by clinical installations, training, founder/equipment and exhibition stories. Office team photographs, dispatch and recreation close the galleries. Company/category filters retain this order, and hero photographs follow the same priorities. Photographs inside each album retain their original sequence. Future admin uploads join their category’s tier; recent uploads do not displace the leading curated stories.
+
+The About service team now uses a full-width text roster beneath the group photographs. It retains all five names, titles and responsibilities, without the previous side photograph or individual photo placeholders.

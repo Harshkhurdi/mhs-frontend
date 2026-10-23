@@ -35,7 +35,7 @@ export default function Community() {
   const currentPage = Math.min(page, pages - 1)
   const visible = albums.slice(currentPage * PAGE_SIZE, (currentPage + 1) * PAGE_SIZE)
   const selected = selection ? albums.find((event) => event.id === selection.id) : null
-  const hero = events.find((event) => event.id === 'community--hamilton--partner-meeting-dubai-2025') || events[0]
+  const hero = communityAlbums(events)[0]
   const brand = manufacturerBrands.find((item) => item.id === company)
   function changeCompany(id) {
     setPage(0); setSelection(null)

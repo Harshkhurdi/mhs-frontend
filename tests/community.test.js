@@ -3,7 +3,7 @@ import assert from 'node:assert/strict'
 import { communityAlbums, communityCompany, communityId, swipeDirection } from '../src/lib/community.js'
 import { manufacturerBrands } from '../src/data/products.js'
 import { defaultEvents } from '../src/data/events.js'
-import { validateAlbum } from '../src/lib/events.js'
+import { validateAlbum, mergeEvents } from '../src/lib/events.js'
 
 test('community posts retain company association for every supported company using existing gallery records', () => {
   const photo = defaultEvents[0].photos[0]
@@ -37,10 +37,27 @@ test('swipe navigation distinguishes horizontal gestures from scrolling and taps
 })
 
 
-test('newly uploaded community stories appear first without changing the source list', () => {
+test('both galleries prioritise impact consistently, including filtered and edited stories', () => {
+  const lead = [
+    'community--hamilton--partner-meeting-dubai-2025',
+    'punjab-cm-equipment-visit',
+    'community--hamilton--aaj-tak-coverage',
+    'community--hamilton--founder-leadership',
+  ]
   const older = { ...defaultEvents[0], id: communityId('kiran', 'older'), created_at: 100 }
   const newer = { ...older, id: communityId('kiran', 'newer'), created_at: 200 }
   const input = [...defaultEvents, older, newer]
-  assert.deepEqual(communityAlbums(input).slice(0, 2).map((event) => event.id), [newer.id, older.id])
-  assert.equal(input[0].id, defaultEvents[0].id)
+  const before = input.map(event => event.id)
+  const ordered = communityAlbums(input)
+  assert.deepEqual(ordered.slice(0, 4).map(event => event.id), lead)
+  assert.deepEqual(ordered.filter(event => [newer.id, older.id].includes(event.id)).map(event => event.id), [newer.id, older.id])
+  assert.deepEqual(ordered.slice(-3).map(event => event.id), [
+    'community--medelec--our-team', 'community--medelec--equipment-dispatch', 'community--medelec--team-pool',
+  ])
+  assert.deepEqual(input.map(event => event.id), before)
+  const edited = { ...defaultEvents.find(event => event.id.endsWith('team-pool')), created_at: 999999, display_order: -1 }
+  const events = mergeEvents([edited, older, newer])
+  assert.deepEqual(events.map(event => event.id), ordered.map(event => event.id))
+  assert.deepEqual(communityAlbums(events, 'hamilton').map(event => event.id), events.filter(event => communityCompany(event) === 'hamilton').map(event => event.id))
+  assert.equal(mergeEvents([], false, [lead[0]])[0].id, lead[1])
 })

@@ -1,7 +1,4 @@
-import { useEffect, useState } from 'react'
-import { loadTeamPhotos } from '../services/gallery'
-import { galleryImage } from '../lib/events'
-import { HiArrowUpRight, HiOutlineUser } from 'react-icons/hi2'
+import { HiArrowUpRight } from 'react-icons/hi2'
 import { Link } from 'react-router-dom'
 import { director, headOfAdministration, teamMembers } from '../data/team'
 import TeamTogether from '../components/TeamTogether'
@@ -9,12 +6,6 @@ import PageIntro from '../components/PageIntro'
 import CallToAction from '../components/CallToAction'
 
 export default function About() {
-  const [portraits, setPortraits] = useState({})
-  useEffect(() => {
-    let active = true
-    loadTeamPhotos().then((photos) => { if (active) setPortraits(photos) }).catch(() => {})
-    return () => { active = false }
-  }, [])
   return (
     <>
       <PageIntro
@@ -132,62 +123,30 @@ export default function About() {
         </div>
       </section>
       <TeamTogether />
-      <section className="section engineers-section" id="service-engineers" aria-labelledby="engineers-heading">
+      <section className="section service-team" id="service-engineers" aria-labelledby="engineers-heading">
         <div className="wrap">
-          <div className="engineers-heading">
+          <div className="service-team-heading">
             <div>
-              <p className="eyebrow">THE PEOPLE BEHIND THE PROMISE</p>
-              <h2 id="engineers-heading">
-                One team.
-                <br />
-                <span>Service engineers.</span>
-              </h2>
+              <p className="eyebrow">HERE TO KEEP YOU WORKING</p>
+              <h2 id="engineers-heading">Your service team.</h2>
             </div>
-            <p>
-              Our service engineers install, maintain and service the medical
-              equipment we supply, supporting your facility throughout its life.
-            </p>
+            <p>From installation to ongoing care, meet the engineers who support your equipment.</p>
           </div>
-          <div className="engineers-feature">
-            <figure className="engineers-photo">
-              <div className="engineers-photo-frame">
-                <img
-                  src="/images/products/karl-storz-or1-integration-hd.webp"
-                  alt="KARL STORZ integrated operating room equipment"
-                  width="2540"
-                  height="1429"
-                  loading="lazy"
-                  decoding="async"
-                />
-                <span className="engineers-photo-label">EQUIPMENT CARE. HUMAN COMMITMENT.</span>
-              </div>
-              <figcaption>
-                <p className="eyebrow">EXPERTISE THAT STAYS WITH YOU</p>
-                <h3>Care in every detail.</h3>
-                <p>From a careful installation to the next service visit, our team helps keep your equipment ready for care.</p>
-                <span className="engineers-photo-credit">Integrated operating room · KARL STORZ</span>
-              </figcaption>
-            </figure>
-            <div className="engineer-roster">
-              {teamMembers.map((m) => (
-                <article className="engineer-profile" key={m.id}>
-                  <div className="engineer-identity">
-                    <span className="engineer-avatar">{galleryImage(portraits[m.id] || m.image) ? <img src={galleryImage(portraits[m.id] || m.image)} alt={m.name} loading="lazy" /> : <HiOutlineUser aria-hidden="true" />}</span>
-                    <div>
-                      <h3>{m.name}</h3>
-                      <p className="engineer-role">{m.role}</p>
-                    </div>
-                  </div>
-                  <p className="engineer-focus">{m.focus}</p>
-                </article>
-              ))}
-            </div>
+          <div className="service-team-roster">
+            {teamMembers.map((member, index) => (
+              <article className="service-team-member" key={member.id}>
+                <span className="service-team-number" aria-hidden="true">{String(index + 1).padStart(2, '0')}</span>
+                <div className="service-team-identity">
+                  <h3>{member.name}</h3>
+                  <p>{member.role}</p>
+                </div>
+                <p className="service-team-focus">{member.focus}</p>
+              </article>
+            ))}
           </div>
-          <div className="engineers-followthrough">
-            <p>From installation to ongoing care, a team you can come back to.</p>
-            <Link to="/service" className="text-link">
-              How we support your equipment <HiArrowUpRight />
-            </Link>
+          <div className="service-team-footer">
+            <p>Practical expertise. Support that stays.</p>
+            <Link to="/service" className="text-link">Explore our service support <HiArrowUpRight /></Link>
           </div>
         </div>
       </section>
