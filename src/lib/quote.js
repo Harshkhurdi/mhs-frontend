@@ -38,7 +38,7 @@ export function safeExternalUrl(value) {
 export function safeImageUrl(value) {
   if (
     typeof value === 'string' &&
-    /^\/images\/(products|brand)\/[a-zA-Z0-9._-]+\.(webp|png|jpe?g)$/.test(
+    /^\/(?:images\/(?:products|brand)\/|media\/[a-f0-9]{16}-)[a-zA-Z0-9._-]+\.(webp|png|jpe?g|svg)$/.test(
       value,
     )
   )

@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
-import { collection, doc, serverTimestamp, setDoc } from 'firebase/firestore/lite'
+import { doc, serverTimestamp, setDoc } from 'firebase/firestore/lite'
 import {
   HiArrowUpRight,
   HiOutlineMapPin,
@@ -12,7 +12,7 @@ import { db } from '../config/firebaseDatabase'
 import { useRFQ } from '../components/RFQContext'
 import { QuoteItems } from '../components/QuoteDrawer'
 import PageIntro from '../components/PageIntro'
-import { inquiryContactError } from '../lib/inquirySubmission'
+import { clearPendingInquiry, deliverPendingInquiry, inquiryContactError, newPendingInquiry, readPendingInquiry, sameInquiryItems, savePendingInquiry } from '../lib/inquirySubmission'
 import {
   createInquirySubmission,
   inquiryEmail,
@@ -46,20 +46,24 @@ function restoreDraft() {
 export default function Contact() {
   const { items, clearSubmittedItems, totalItems } = useRFQ()
   const [params] = useSearchParams()
-  const [form, setForm] = useState(restoreDraft)
+  const [pending, setPending] = useState(readPendingInquiry)
+  const [form, setForm] = useState(() => pending?.payload ? Object.fromEntries(Object.keys(emptyForm).map(key => [key, pending.payload[key]])) : restoreDraft())
+  const [website, setWebsite] = useState('')
   const [submitting, setSubmitting] = useState(false)
   const [submitted, setSubmitted] = useState(false)
-  const [awaitingReceipt, setAwaitingReceipt] = useState(false)
-  const [error, setError] = useState('')
+  const [awaitingReceipt, setAwaitingReceipt] = useState(Boolean(pending))
+  const [error, setError] = useState(pending ? 'An earlier inquiry is awaiting confirmation. Keep its reference and check delivery before sending another copy.' : '')
   const inquiryRef = useRef(null)
   const sending = useRef(false)
+  const shownItems = pending?.payload?.items || items
+  const shownTotal = pending ? shownItems.reduce((sum, item) => sum + item.quantity, 0) : totalItems
   function change(e) {
     const next = { ...form, [e.target.name]: e.target.value }
     setForm(next)
     try {
       sessionStorage.setItem(draftKey, JSON.stringify(next))
     } catch {
-      /* The form works without storage. */
+      /* Keep details in memory for the email fallback. */
     }
   }
   async function submit(e) {
@@ -81,42 +85,50 @@ export default function Contact() {
     setSubmitting(true)
     sending.current = true
     try {
-      if (!db) throw new Error('Inquiry service unavailable')
-      if (!inquiryRef.current || inquiryRef.current.status === 'failed') {
-        const document = doc(collection(db, 'inquiries'))
-        const payload = {
+      let active = pending
+      if (active?.blocked) throw new Error('Your earlier delivery reference could not be restored. Please contact our team before sending another inquiry.')
+      if (!active) {
+        active = newPendingInquiry({
           ...cleaned,
-          items: items.map(({ id, name, quantity }) => ({
-            id,
-            name,
-            quantity,
-          })),
+          items: items.map(({ id, name, quantity }) => ({ id, name, quantity })),
           type: params.get('type') === 'service' ? 'service' : 'equipment',
-          status: 'new',
-          created_at: serverTimestamp(),
+        }, import.meta.env.VITE_INQUIRY_API_ENABLED === 'true' ? 'api' : 'legacy')
+        active.website = website
+        savePendingInquiry(active)
+        setPending(active)
+        if (active.mode === 'legacy') {
+          if (!db) { clearPendingInquiry(); setPending(null); throw new Error('Inquiry service unavailable') }
+          const document = doc(db, 'inquiries', active.id)
+          inquiryRef.current = createInquirySubmission(() => setDoc(document, {
+            ...active.payload, status: 'new', is_deleted: false, created_at: serverTimestamp(),
+          }))
         }
-        inquiryRef.current = Object.assign(
-          createInquirySubmission(() => setDoc(document, payload)),
-          { selectedItems: items },
-        )
       }
-      const submission = inquiryRef.current
-      await withTimeout(submission.promise)
+      if (active.mode === 'api') {
+        await withTimeout(deliverPendingInquiry(active))
+      } else {
+        // Anonymous reads stay denied. An unresolved remounted inquiry must not
+        // allocate another ID or overwrite an already-committed document.
+        if (!inquiryRef.current) throw new Error('Please ask our team to confirm receipt using the reference below. We cannot safely check this earlier delivery online.')
+        await withTimeout(inquiryRef.current.promise)
+      }
       setSubmitted(true)
       setAwaitingReceipt(false)
-      clearSubmittedItems(submission.selectedItems)
+      if (sameInquiryItems(items, active.payload.items)) clearSubmittedItems(items)
+      clearPendingInquiry()
+      setPending(null)
       inquiryRef.current = null
       try {
         sessionStorage.removeItem(draftKey)
       } catch {
         /* No draft to clear. */
       }
-    } catch {
-      const unresolved = Boolean(inquiryRef.current && inquiryRef.current.status !== 'failed')
+    } catch (failure) {
+      const unresolved = Boolean(readPendingInquiry())
       setAwaitingReceipt(unresolved)
       setError(
         unresolved
-          ? 'We’re still checking delivery of your inquiry. Your submitted details are kept unchanged while we wait. Check its status below, or contact our team before sending another copy.'
+          ? `${failure.message || 'We are still checking delivery.'} Your submitted details are kept unchanged. Check delivery below or contact our team with your reference before sending another copy.`
           : 'We couldn’t confirm receipt of your inquiry. Your details and quote list are still here. Try again or send these details by email.',
       )
     } finally {
@@ -226,7 +238,7 @@ export default function Contact() {
                 <div className="form-heading">
                   <span className="eyebrow">START A CONVERSATION</span>
                   <h2>
-                    {params.get('type') === 'service'
+                    {(pending?.payload?.type || params.get('type')) === 'service'
                       ? 'Request service support'
                       : 'Tell us what you need'}
                   </h2>
@@ -235,16 +247,22 @@ export default function Contact() {
                     required.
                   </p>
                 </div>
-                {items.length > 0 && (
+                {shownItems.length > 0 && (
                   <div className="contact-quote">
                     <div>
-                      <strong>Your equipment selection</strong>
-                      <span>{totalItems} units</span>
+                      <strong>{pending ? 'Submitted equipment selection' : 'Your equipment selection'}</strong>
+                      <span>{shownTotal} units</span>
                     </div>
-                    <QuoteItems />
+                    {pending ? (
+                      <ul className="quote-items">{shownItems.map(item => <li key={item.id}><strong>{item.name}</strong><span>Quantity: {item.quantity}</span></li>)}</ul>
+                    ) : <QuoteItems />}
                   </div>
                 )}
                 <form onSubmit={submit}>
+                  <div hidden aria-hidden="true">
+                    <label htmlFor="contact-website">Website</label>
+                    <input id="contact-website" name="website" tabIndex={-1} autoComplete="off" value={website} onChange={event => setWebsite(event.target.value)} />
+                  </div>
                   <fieldset disabled={submitting || awaitingReceipt}>
                     <div className="form-grid">
                       <div>
@@ -340,8 +358,9 @@ export default function Contact() {
                   {error && (
                     <div className="form-error" role="alert">
                       <p>{error}</p>
+                      {pending?.id && <p className="fine-print">Inquiry reference: {pending.id}</p>}
                       <a
-                        href={inquiryEmail(form, items)}
+                        href={inquiryEmail({ ...form, message: pending?.id ? `Please confirm delivery of website inquiry ${pending.id} before processing another copy.\n\n${form.message}` : form.message }, pending?.payload?.items || items)}
                         className="text-link"
                       >
                         Open an email with these details <HiArrowUpRight />

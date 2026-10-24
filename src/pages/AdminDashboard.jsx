@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 import AdminEvents from '../components/AdminEvents'
-import { setInquiryDeleted } from '../services/inquiries'
+import { loadInquiryPage, setInquiryDeleted } from '../services/inquiries'
 import AdminTeamPhotos from '../components/AdminTeamPhotos'
 import PageMeta from '../components/PageMeta'
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore/lite'
@@ -9,8 +9,10 @@ import { useAuth } from '../context/AuthContext'
 import { db } from '../config/firebaseDatabase'
 import { clinicalSpecialties, manufacturerBrands } from '../data/products'
 import { safeExternalUrl, withTimeout } from '../lib/quote'
-import { inquiryDateValue as dateValue, normalizeInquiry } from '../lib/inquiries'
+import { inquiryDateValue as dateValue } from '../lib/inquiries'
 import { normalizeProduct } from '../lib/catalogue'
+import { correctProductSpecialty, productSpecialtyError } from '../lib/adminProducts'
+import { invalidatePublicContent } from '../lib/publicCache'
 
 const emptyProduct = {
   name: '',
@@ -41,9 +43,29 @@ export default function AdminDashboard() {
   const [editing, setEditing] = useState(null)
   const [form, setForm] = useState({ ...emptyProduct })
   const [busy, setBusy] = useState(false)
-  const [showTrash, setShowTrash] = useState(false)
-  const inquiryRows = rows.filter((row) => (row.is_deleted === true) === showTrash)
+  const [inquiryView, setInquiryView] = useState('inbox')
+  const [cursors, setCursors] = useState([null])
+  const [pageIndex, setPageIndex] = useState(0)
+  const [pageResult, setPageResult] = useState({ cursor: null, hasMore: false, scanned: 0 })
+  const inquiryCursor = cursors[pageIndex]
+  const showTrash = inquiryView === 'trash'
   const pendingId = useRef(null)
+  const editorInput = useRef(null)
+  const editorOrigin = useRef(null)
+  const editButtons = useRef(new Map())
+  const addProductButton = useRef(null)
+  const restoreFocus = useRef(false)
+  useEffect(() => {
+    if (editing) {
+      editorInput.current?.focus()
+      editorInput.current?.scrollIntoView({ block: 'center' })
+    } else if (restoreFocus.current && !loading) {
+      restoreFocus.current = false
+      const origin = editorOrigin.current
+      const target = origin?.element?.isConnected ? origin.element : editButtons.current.get(origin?.id) || addProductButton.current
+      target?.focus()
+    }
+  }, [editing, loading])
   useEffect(() => {
     if (!['products', 'inquiries'].includes(tab)) return
     let cancelled = false
@@ -51,13 +73,15 @@ export default function AdminDashboard() {
       setLoading(true)
       setError('')
       try {
-        const snapshot = await withTimeout(getDocs(collection(db, tab)))
-        const data = snapshot.docs
-          .map((d) => tab === 'inquiries'
-            ? normalizeInquiry(d.data(), d.id)
-            : normalizeProduct(d.data(), d.id))
-          .sort((a, b) => dateValue(b.created_at) - dateValue(a.created_at))
-        if (!cancelled) setRows(data)
+        if (tab === 'inquiries') {
+          const result = await loadInquiryPage(inquiryView, inquiryCursor)
+          if (!cancelled) { setRows(result.rows); setPageResult(result) }
+        } else {
+          const snapshot = await withTimeout(getDocs(collection(db, 'products')))
+          const data = snapshot.docs.map((d) => normalizeProduct(d.data(), d.id))
+            .sort((a, b) => dateValue(b.created_at) - dateValue(a.created_at))
+          if (!cancelled) setRows(data)
+        }
       } catch {
         if (!cancelled) {
           setError(
@@ -73,32 +97,62 @@ export default function AdminDashboard() {
     return () => {
       cancelled = true
     }
-  }, [tab, refresh])
+  }, [tab, refresh, inquiryView, inquiryCursor])
   const change = (e) =>
-    setForm((prev) => ({
+    setForm((prev) => correctProductSpecialty({
       ...prev,
       [e.target.name]:
         e.target.type === 'checkbox' ? e.target.checked : e.target.value,
     }))
-  function edit(product) {
+  function edit(product, origin) {
     setError('')
     setNotice('')
     pendingId.current = null
+    editorOrigin.current = { element: origin, id: product?.id }
+    editorInput.current?.focus()
+    if (product?.brand === 'nihon-kohden' && product.specialty !== 'defibrillation') {
+      setNotice('This Nihon Kohden record used an unsupported specialty. The editor now shows Defibrillators & AEDs; save to apply the correction.')
+    }
     setForm(
-      product
+      correctProductSpecialty(product
         ? Object.fromEntries(
             Object.keys(emptyProduct).map((k) => [
               k,
               product[k] ?? emptyProduct[k],
             ]),
           )
-        : { ...emptyProduct },
+        : { ...emptyProduct }),
     )
     setEditing(product?.id || 'new')
+  }
+  function closeEditor() {
+    restoreFocus.current = true
+    setEditing(null)
+  }
+  function changeInquiryView(view) {
+    setInquiryView(view)
+    setCursors([null])
+    setPageIndex(0)
+    setRows([])
+    setLoading(true)
+    setNotice('')
+  }
+  function changeInquiryPage(next) {
+    if (busy || loading) return
+    if (next > pageIndex) {
+      if (!pageResult.hasMore || !pageResult.cursor) return
+      setCursors((current) => [...current.slice(0, pageIndex + 1), pageResult.cursor])
+    }
+    setPageIndex(next)
+    setRows([])
+    setLoading(true)
+    setNotice('')
   }
   async function save(e) {
     e.preventDefault()
     if (busy) return
+    const specialtyError = productSpecialtyError(form)
+    if (specialtyError) { setError(specialtyError); return }
     if (!form.name.trim() || !form.description.trim()) {
       setError('Name and description cannot be blank.')
       return
@@ -133,7 +187,9 @@ export default function AdminDashboard() {
       }
       if (editing === 'new') payload.created_at = Date.now()
       await withTimeout(setDoc(pendingId.current, payload, { merge: true }))
-      setEditing(null)
+      invalidatePublicContent()
+      setLoading(true)
+      closeEditor()
       pendingId.current = null
       setNotice('Product saved.')
       setRefresh((n) => n + 1)
@@ -147,6 +203,8 @@ export default function AdminDashboard() {
   }
   async function toggle(product) {
     if (busy) return
+    const specialtyError = productSpecialtyError(product)
+    if (!product.is_published && specialtyError) { setError(specialtyError); return }
     setBusy(true)
     setError('')
     setNotice('')
@@ -158,6 +216,7 @@ export default function AdminDashboard() {
           { merge: true },
         ),
       )
+      invalidatePublicContent()
       setNotice(
         product.is_published
           ? 'Product archived. You can publish it again at any time.'
@@ -186,7 +245,7 @@ export default function AdminDashboard() {
     setNotice('')
     try {
       await setInquiryDeleted(inquiry.id, deleted)
-      setRows((current) => current.map((row) => row.id === inquiry.id ? { ...row, is_deleted: deleted } : row))
+      setRows((current) => current.filter((row) => row.id !== inquiry.id))
       setNotice(deleted ? 'Inquiry moved to Trash. Open Trash to restore it at any time.' : 'Inquiry restored to your inbox.')
     } catch {
       setError('Unable to confirm this change. Refresh the inbox to check its current status, then try again.')
@@ -226,10 +285,12 @@ export default function AdminDashboard() {
               aria-current={tab === key ? 'page' : undefined}
               className={tab === key ? 'active' : ''}
               onClick={() => {
-                if (!busy) {
+                if (!busy && key !== tab) {
                   setTab(key)
                   setEditing(null)
                   setNotice('')
+                  setRows([])
+                  setLoading(true)
                 }
               }}
               disabled={busy}
@@ -243,13 +304,13 @@ export default function AdminDashboard() {
           <p className="text-sm text-text-muted">
             {tab === 'products'
               ? 'Create, edit, publish or archive equipment. Archived products stay available here.'
-              : 'Review submitted inquiries. Dates are shown in Indian Standard Time.'}
+              : 'Browse up to 25 records per page in stable record order. Dates are shown in Indian Standard Time.'}
           </p>
           <div className="flex gap-4">
-            {tab === 'inquiries' && <label className="inquiry-trash-toggle"><input type="checkbox" checked={showTrash} disabled={busy || loading} onChange={(e) => { setShowTrash(e.target.checked); setNotice('') }} />Trash ({rows.filter((row) => row.is_deleted === true).length})</label>}
+            {tab === 'inquiries' && <label>Inquiry view<select aria-label="Inquiry view" value={inquiryView} disabled={busy || loading} onChange={(event) => changeInquiryView(event.target.value)}><option value="inbox">Inbox</option><option value="trash">Trash</option><option value="legacy">Legacy records</option></select></label>}
             <button
               className="text-link"
-              onClick={() => setRefresh((n) => n + 1)}
+              onClick={() => { setLoading(true); setRefresh((n) => n + 1) }}
               disabled={busy || loading}
             >
               Refresh
@@ -257,7 +318,8 @@ export default function AdminDashboard() {
             {tab === 'products' && (
               <button
                 className="button button-small"
-                onClick={() => edit(null)}
+                ref={addProductButton}
+                onClick={(event) => edit(null, event.currentTarget)}
                 disabled={busy}
               >
                 <HiOutlinePlus /> Add product
@@ -265,6 +327,7 @@ export default function AdminDashboard() {
             )}
           </div>
         </div>
+        {tab === 'inquiries' && <p className="fine-print mb-6">Older inquiries without an inbox marker remain available under Legacy records. Each legacy page scans at most 25 records and may contain no matches; use Next scan to continue. No records are migrated or deleted by browsing.</p>}
         {error && (
           <p className="form-error mb-6" role="alert">
             {error}
@@ -291,6 +354,7 @@ export default function AdminDashboard() {
                 <div className="full-width">
                   <label htmlFor="product-name">Product name *</label>
                   <input
+                    ref={editorInput}
                     id="product-name"
                     name="name"
                     required
@@ -324,12 +388,13 @@ export default function AdminDashboard() {
                     value={form.specialty}
                     onChange={change}
                   >
-                    {clinicalSpecialties.map((s) => (
+                    {clinicalSpecialties.filter((specialty) => form.brand !== 'nihon-kohden' || specialty.id === 'defibrillation').map((s) => (
                       <option value={s.id} key={s.id}>
                         {s.name}
                       </option>
                     ))}
                   </select>
+                  {form.brand === 'nihon-kohden' && <p className="fine-print">Nihon Kohden is available for defibrillators and AEDs only.</p>}
                 </div>
                 <div className="full-width">
                   <label htmlFor="product-description">Description *</label>
@@ -388,7 +453,7 @@ export default function AdminDashboard() {
                 <button
                   type="button"
                   className="button button-outline"
-                  onClick={() => setEditing(null)}
+                  onClick={closeEditor}
                 >
                   Cancel
                 </button>
@@ -405,12 +470,12 @@ export default function AdminDashboard() {
             <h2>
               {tab === 'products'
                 ? 'Your catalogue starts here.'
-                : 'No inquiries yet.'}
+                : inquiryView === 'legacy' ? 'No legacy inquiries in this scan.' : showTrash ? 'This Trash page is empty.' : 'This inbox page is empty.'}
             </h2>
             <p>
               {tab === 'products'
                 ? 'Add your first product to make it available to visitors.'
-                : 'Submitted contact forms and quote requests will appear here.'}
+                : inquiryView === 'legacy' ? 'Continue scanning to find older records, or return to Inbox.' : 'Choose Legacy records to check older inquiries, or refresh this view.'}
             </p>
           </div>
         ) : tab === 'products' ? (
@@ -454,8 +519,9 @@ export default function AdminDashboard() {
                       <div className="flex gap-4">
                         <button
                           className="text-link"
+                          ref={(element) => { if (element) editButtons.current.set(p.id, element); else editButtons.current.delete(p.id) }}
                           disabled={busy}
-                          onClick={() => edit(p)}
+                          onClick={(event) => edit(p, event.currentTarget)}
                         >
                           Edit
                         </button>
@@ -475,8 +541,7 @@ export default function AdminDashboard() {
           </div>
         ) : (
           <div className="inquiry-cards">
-            {!inquiryRows.length && !loading && <p className="empty-state">{showTrash ? 'Trash is empty.' : 'No inquiries in your inbox.'}</p>}
-            {inquiryRows.map((i) => (
+            {rows.map((i) => (
               <article className="admin-inquiry" key={i.id}>
                 <header>
                   <div>
@@ -520,6 +585,11 @@ export default function AdminDashboard() {
             ))}
           </div>
         )}
+        {tab === 'inquiries' && <nav className="community-pagination" aria-label="Inquiry pages">
+          <button type="button" disabled={loading || busy || pageIndex === 0} onClick={() => changeInquiryPage(pageIndex - 1)}>Previous {inquiryView === 'legacy' ? 'scan' : 'page'}</button>
+          <span role="status" aria-live="polite">{inquiryView === 'legacy' ? 'Scan' : 'Page'} {pageIndex + 1}{!loading && !error ? ` · ${rows.length} inquiries${inquiryView === 'legacy' ? ` from ${pageResult.scanned} scanned records` : ''}` : ''}</span>
+          <button type="button" disabled={loading || busy || Boolean(error) || !pageResult.hasMore} onClick={() => changeInquiryPage(pageIndex + 1)}>Next {inquiryView === 'legacy' ? 'scan' : 'page'}</button>
+        </nav>}
         </>}
       </div>
     </section>

@@ -1,5 +1,4 @@
 import { initializeApp } from 'firebase/app'
-import { getAuth } from 'firebase/auth'
 
 const firebaseConfig = {
   apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
@@ -23,5 +22,3 @@ if (missing.length > 0) {
 
 export const isFirebaseConfigured = missing.length === 0
 export const app = isFirebaseConfigured ? initializeApp(firebaseConfig) : null
-
-export const auth = app ? getAuth(app) : null

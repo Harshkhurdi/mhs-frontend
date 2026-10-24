@@ -72,12 +72,12 @@ export default function AdminEvents({ community = false }) {
     setBusy(true); setError(''); setNotice('')
     try {
       await setAlbumPublished(event, !event.is_published)
-      setNotice(event.is_published ? 'Album archived. Its photographs are retained.' : 'Album published.')
+      setNotice(event.is_published ? 'Album archived from the gallery. Original published image links are retained.' : 'Album published.')
       refreshAlbums()
     } catch { setError('Unable to confirm the status change. Refresh the album list before trying again.') } finally { setBusy(false) }
   }
   return <div className="admin-gallery">
-    <div className="admin-gallery-toolbar"><p>{community ? 'Choose a company, upload even a single photograph, then save and publish. It will appear on Community immediately. Add a title or description if you wish.' : 'Create an album, upload photographs and publish when it is ready. Our selected photo stories can be edited or archived here.'}</p><div><button className="text-link" disabled={busy || loading} onClick={refreshAlbums}>Refresh</button><button className="button button-small" disabled={busy} onClick={() => edit(null)}><HiOutlinePlus />{community ? 'Add photographs' : 'Add album'}</button></div></div>
+    <p className="fine-print">Archiving hides an album from the gallery. It does not withdraw an already published image URL. To withdraw a photograph, remove its published file and deploy that removal.</p><div className="admin-gallery-toolbar"><p>{community ? 'Choose a company, upload even a single photograph, then save and publish. It will appear on Community immediately. Add a title or description if you wish.' : 'Create an album, upload photographs and publish when it is ready. Our selected photo stories can be edited or archived here.'}</p><div><button className="text-link" disabled={busy || loading} onClick={refreshAlbums}>Refresh</button><button className="button button-small" disabled={busy} onClick={() => edit(null)}><HiOutlinePlus />{community ? 'Add photographs' : 'Add album'}</button></div></div>
     {error && <p className="form-error" role="alert">{error}</p>}{notice && <p className="admin-success" role="status">{notice}</p>}
     {editing && <form ref={editor} className="album-editor" onSubmit={save}>
       <fieldset disabled={busy}>

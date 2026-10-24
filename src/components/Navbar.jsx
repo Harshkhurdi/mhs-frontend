@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react'
+import { useContext, useRef, useState } from 'react'
 import { Link, NavLink } from 'react-router-dom'
 import {
   HiArrowUpRight,
@@ -7,7 +7,7 @@ import {
   HiOutlineClipboardDocumentList,
 } from 'react-icons/hi2'
 import { useRFQ } from './RFQContext'
-import { useAuth } from '../context/AuthContext'
+import { StaffContext } from '../context/StaffContext'
 import Brand from './Brand'
 
 const links = [
@@ -23,7 +23,7 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
   const menuButton = useRef(null)
   const { totalItems, setIsOpen } = useRFQ()
-  const { user } = useAuth()
+  const { user } = useContext(StaffContext)
   return (
     <header className="site-header" onKeyDown={(event) => {
       if (open && event.key === 'Escape') {

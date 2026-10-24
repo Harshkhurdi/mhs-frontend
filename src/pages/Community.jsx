@@ -1,3 +1,4 @@
+import { usePublicContentVersion } from '../lib/usePublicContentVersion'
 import { useEffect, useRef, useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import { HiArrowUpRight, HiChevronLeft, HiChevronRight, HiOutlinePhoto } from 'react-icons/hi2'
@@ -11,6 +12,7 @@ import { loadGallery } from '../services/gallery'
 const PAGE_SIZE = 9
 
 export default function Community() {
+  const contentVersion = usePublicContentVersion()
   const [params, setParams] = useSearchParams()
   const requestedCompany = params.get('company')
   const company = manufacturerBrands.some((brand) => brand.id === requestedCompany) ? requestedCompany : 'all'
@@ -29,7 +31,7 @@ export default function Community() {
       if (!cancelled) setError('We couldn’t load the community photographs. Please try again.')
     }).finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
-  }, [refresh])
+  }, [refresh, contentVersion])
   const albums = communityAlbums(events, company)
   const pages = Math.max(1, Math.ceil(albums.length / PAGE_SIZE))
   const currentPage = Math.min(page, pages - 1)

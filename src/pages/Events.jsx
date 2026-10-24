@@ -1,3 +1,4 @@
+import { usePublicContentVersion } from '../lib/usePublicContentVersion'
 import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { HiArrowUpRight, HiOutlinePhoto, HiOutlineMapPin, HiChevronLeft, HiChevronRight } from 'react-icons/hi2'
@@ -9,6 +10,7 @@ import { loadGallery } from '../services/gallery'
 
 
 export default function Events() {
+  const contentVersion = usePublicContentVersion()
   const [events, setEvents] = useState([])
   const [category, setCategory] = useState('All')
   const [page, setPage] = useState(0)
@@ -22,7 +24,7 @@ export default function Events() {
       if (!cancelled) setError('The photo albums are temporarily unavailable. Please refresh to try again.')
     }).finally(() => { if (!cancelled) setLoading(false) })
     return () => { cancelled = true }
-  }, [])
+  }, [contentVersion])
   const filtered = events.filter((event) => category === 'All' || event.category === category)
   const pageCount = Math.max(1, Math.ceil(filtered.length / 9))
   const currentPage = Math.min(page, pageCount - 1)

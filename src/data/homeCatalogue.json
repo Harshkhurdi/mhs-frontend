@@ -1,0 +1,152 @@
+{
+  "total": 310,
+  "products": [
+    {
+      "id": "hamilton-breathing-circuit-sets",
+      "name": "Breathing circuit sets",
+      "brand": "hamilton",
+      "image": "/images/products/hamilton-breathing-circuit-sets.webp",
+      "categoryLabel": "Respiratory consumables"
+    },
+    {
+      "id": "hamilton-c6",
+      "name": "HAMILTON-C6",
+      "brand": "hamilton",
+      "image": "/images/products/hamilton-c6.webp",
+      "categoryLabel": "Critical care ventilator"
+    },
+    {
+      "id": "hamilton-hf90",
+      "name": "HAMILTON-HF90",
+      "brand": "hamilton",
+      "image": "/images/products/hamilton-hf90.webp",
+      "categoryLabel": "High-flow therapy"
+    },
+    {
+      "id": "linet-eleganza-5",
+      "name": "Eleganza 5",
+      "brand": "linet",
+      "image": "/images/products/linet-eleganza-5.webp",
+      "categoryLabel": "Intensive care bed"
+    },
+    {
+      "id": "linet-multicare-x",
+      "name": "Multicare X",
+      "brand": "linet",
+      "image": "/images/products/linet-multicare-x.webp",
+      "categoryLabel": "Intensive care bed"
+    },
+    {
+      "id": "linet-sprint-200",
+      "name": "Sprint 200",
+      "brand": "linet",
+      "image": "/images/products/linet-sprint-200.webp",
+      "categoryLabel": "Patient transport"
+    },
+    {
+      "id": "linet-virtuoso",
+      "name": "Virtuoso",
+      "brand": "linet",
+      "image": "/images/products/linet-virtuoso.webp",
+      "categoryLabel": "Pressure care mattress"
+    },
+    {
+      "id": "samsung-gm85-elite",
+      "name": "GM85 Elite",
+      "brand": "samsung",
+      "image": "/images/products/samsung-gm85-elite.webp",
+      "categoryLabel": "Digital radiography"
+    },
+    {
+      "id": "samsung-hera-z20",
+      "name": "HERA Z20",
+      "brand": "samsung",
+      "image": "/images/products/samsung-hera-z20.webp",
+      "categoryLabel": "Ultrasound system"
+    },
+    {
+      "id": "samsung-r20",
+      "name": "R20",
+      "brand": "samsung",
+      "image": "/images/products/samsung-r20.webp",
+      "categoryLabel": "Ultrasound system"
+    },
+    {
+      "id": "spacelabs-cardioexpress-sl18a",
+      "name": "CardioExpress SL18A",
+      "brand": "spacelabs",
+      "image": "/images/products/spacelabs-cardioexpress-sl18a.webp",
+      "categoryLabel": "Resting ECG"
+    },
+    {
+      "id": "spacelabs-xprezzon",
+      "name": "Xprezzon bedside monitor",
+      "brand": "spacelabs",
+      "image": "/images/products/spacelabs-xprezzon.webp",
+      "categoryLabel": "Bedside monitor"
+    },
+    {
+      "id": "karl-storz-ui600",
+      "name": "ENDOFLATOR + (UI600)",
+      "brand": "karl-storz",
+      "image": "/images/products/karl-storz-ui600.webp",
+      "categoryLabel": "Insufflation"
+    },
+    {
+      "id": "karl-storz-th121",
+      "name": "IMAGE1 S 4U RUBINA, OPAL1 NIR/ICG (TH121)",
+      "brand": "karl-storz",
+      "image": "/images/products/karl-storz-th121.webp",
+      "categoryLabel": "Endoscopic imaging"
+    },
+    {
+      "id": "karl-storz-tp101",
+      "name": "TELE PACK + (TP101)",
+      "brand": "karl-storz",
+      "image": "/images/products/karl-storz-tp101.webp",
+      "categoryLabel": "Endoscopic imaging"
+    },
+    {
+      "id": "karl-storz-8404zx",
+      "name": "C-MAC Monitor for CMOS Endoscopes (8404ZX)",
+      "brand": "karl-storz",
+      "image": "/images/products/karl-storz-8404zx.webp",
+      "categoryLabel": "Airway management"
+    },
+    {
+      "id": "kiran-flat-panel-based-digital-carm",
+      "name": "Flat Panel based Digital C-Arm",
+      "brand": "kiran",
+      "image": "/images/products/kiran-flat-panel-based-digital-carm.webp",
+      "categoryLabel": "C Arm"
+    },
+    {
+      "id": "kiran-coat-apron-flex-back",
+      "name": "Coat Apron - Flex Back",
+      "brand": "kiran",
+      "image": "/images/products/kiran-coat-apron-flex-back.webp",
+      "categoryLabel": "Radiation Protection Apron"
+    },
+    {
+      "id": "helmier-graseby-2000-2100",
+      "name": "Graseby 2000 / 2100 syringe pumps",
+      "brand": "helmier",
+      "image": "/images/products/helmier-graseby-2000-2100.webp",
+      "categoryLabel": "Syringe infusion pumps"
+    },
+    {
+      "id": "helmier-aerotherm-iq",
+      "name": "Aerotherm IQ patient warming system",
+      "brand": "helmier",
+      "image": "/images/products/helmier-aerotherm-iq.webp",
+      "categoryLabel": "Patient warming systems"
+    },
+    {
+      "id": "nihon-kohden-tec-5600",
+      "name": "cardiolife TEC-5600 series defibrillators",
+      "brand": "nihon-kohden",
+      "image": "/images/products/nihon-kohden-tec-5600.webp",
+      "categoryLabel": "Defibrillators"
+    }
+  ]
+}

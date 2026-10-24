@@ -26,7 +26,8 @@ service cloud.firestore {
     }
     function image(value, size) {
       return value is string && value.size() <= size &&
-        (value.matches('data:image/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+') || value.matches('/images/events/[a-zA-Z0-9_-]+[.]webp'));
+        (value.matches('data:image/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+') || value.matches('/images/events/[a-zA-Z0-9_-]+[.]webp')
+          || value.matches('/media/[a-f0-9]{16}-[a-zA-Z0-9_-]+[.]webp'));
     }
     // Public catalogue reads; only approved staff may manage products.
     match /products/{productId} {
@@ -34,9 +35,12 @@ service cloud.firestore {
       allow create, update, delete: if staff();
     }
     match /inquiries/{inquiryId} {
-      allow create: if request.resource.data.keys().hasOnly([
+      // Leave legacy intake working until the reviewed server cutover is ready.
+      allow create: if (!exists(/databases/$(database)/documents/siteSettings/inquiryIntake)
+        || get(/databases/$(database)/documents/siteSettings/inquiryIntake).data.server_only != true)
+        && request.resource.data.keys().hasOnly([
         'name', 'hospital', 'department', 'email', 'phone', 'message',
-        'items', 'type', 'status', 'created_at'
+        'items', 'type', 'status', 'created_at', 'is_deleted'
       ]) && shortText(request.resource.data.name, 120)
         && shortText(request.resource.data.hospital, 180)
         && shortText(request.resource.data.department, 200)
@@ -46,6 +50,7 @@ service cloud.firestore {
         && request.resource.data.items is list && request.resource.data.items.size() <= 500
         && request.resource.data.type in ['equipment', 'service']
         && request.resource.data.status == 'new'
+        && (!('is_deleted' in request.resource.data) || request.resource.data.is_deleted == false)
         && inquiryCreatedAt(request.resource.data.created_at);
       allow read: if staff();
       // Staff can remove an inquiry from the inbox and restore it from Trash.
@@ -73,12 +78,28 @@ service cloud.firestore {
         && request.resource.data.created_at is number && request.resource.data.updated_at is number;
       match /photos/{photoId} {
         allow read: if staff() || (resource.data.is_published == true && get(/databases/$(database)/documents/events/$(eventId)).data.is_published == true);
-        allow create, update: if staff() && request.resource.data.keys().hasOnly(['src', 'thumbnail', 'alt', 'position', 'is_published', 'updated_at'])
-          && image(request.resource.data.src, 650000) && image(request.resource.data.thumbnail, 65000)
+        allow create, update: if staff() && request.resource.data.keys().hasOnly(['src', 'thumbnail', 'alt', 'position', 'is_published', 'updated_at', 'asset_id'])
+          && (image(request.resource.data.src, 650000) || (request.resource.data.src == '' && request.resource.data.asset_id == photoId))
+          && (!('asset_id' in request.resource.data) || request.resource.data.asset_id == photoId) && image(request.resource.data.thumbnail, 65000)
           && shortText(request.resource.data.alt, 240)
           && request.resource.data.position is int && request.resource.data.position >= 0 && request.resource.data.position < 10
           && request.resource.data.is_published is bool && request.resource.data.updated_at is number;
       }
+      match /photoAssets/{photoId} {
+        allow read: if staff() || (resource.data.is_published == true
+          && get(/databases/$(database)/documents/events/$(eventId)).data.is_published == true
+          && get(/databases/$(database)/documents/events/$(eventId)/photos/$(photoId)).data.is_published == true);
+        allow create, update: if staff()
+          && request.resource.data.keys().hasOnly(['src', 'is_published', 'updated_at'])
+          && image(request.resource.data.src, 650000)
+          && request.resource.data.is_published is bool && request.resource.data.updated_at is number;
+      }
+    }
+    match /siteSettings/inquiryIntake {
+      allow read: if staff();
+      allow create, update: if staff()
+        && request.resource.data.keys().hasOnly(['server_only'])
+        && request.resource.data.server_only is bool;
     }
     match /siteSettings/gallery {
       allow read: if true;
@@ -87,7 +108,8 @@ service cloud.firestore {
         && (!('hidden_demo_ids' in request.resource.data) || (request.resource.data.hidden_demo_ids is list && request.resource.data.hidden_demo_ids.size() <= 6));
     }
     match /teamProfiles/{engineerId} {
-      allow read: if true;
+      // Draft assets for future staff portraits are private.
+      allow read: if staff();
       allow create, update: if staff() && engineerId in ['bahudar', 'prikshit', 'ashish', 'surender', 'virender']
         && request.resource.data.keys().hasOnly(['photo', 'updated_at'])
         && (request.resource.data.photo == '' || image(request.resource.data.photo, 250000))

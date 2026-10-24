@@ -1,9 +1,10 @@
+import legacyPhotoPaths from './legacyPhotoPaths.js'
 import { companyStories, additionalVisitPhotos } from './companyStories.js'
 
 export const eventCategories = ['Visit', 'Installation', 'Training', 'Conference', 'Workshop', 'Community']
 
 // Event dates were not supplied. Leave them blank rather than inventing a date.
-const photo = (id, alt) => ({ id, src: `/images/events/${id}.webp`, thumbnail: `/images/events/${id}.webp`, alt })
+const photo = (id, alt) => ({ id, ...legacyPhotoPaths[id], alt })
 
 export const defaultEvents = [
   {

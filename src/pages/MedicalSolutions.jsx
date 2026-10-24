@@ -1,4 +1,5 @@
-import { useEffect, useState } from 'react'
+import { usePublicContentVersion } from '../lib/usePublicContentVersion'
+import { useEffect, useRef, useState } from 'react'
 import { useSearchParams, Link } from 'react-router-dom'
 import { collection, getDocs, query, where } from 'firebase/firestore/lite'
 import {
@@ -22,6 +23,7 @@ import {
 import ProductCard from '../components/ProductCard'
 import ProductDetails from '../components/ProductDetails'
 import PageMeta from '../components/PageMeta'
+import { publicResource } from '../lib/publicCache'
 
 const pageSize = 18
 const checkedDate = new Intl.DateTimeFormat('en-GB', {
@@ -31,10 +33,13 @@ const checkedDate = new Intl.DateTimeFormat('en-GB', {
   timeZone: 'UTC',
 }).format(new Date(reference.verifiedAt))
 export default function MedicalSolutions() {
+  const contentVersion = usePublicContentVersion()
   const [params, setParams] = useSearchParams()
   const [liveProducts, setLiveProducts] = useState([])
   const [selected, setSelected] = useState(null)
   const [filtersOpen, setFiltersOpen] = useState(false)
+  const filterTrigger = useRef(null)
+  const filterPanel = useRef(null)
   const specialty = params.get('specialty') || ''
   const brand = params.get('brand') || ''
   const search = params.get('q') || ''
@@ -52,12 +57,12 @@ export default function MedicalSolutions() {
       if (!db) return
       try {
         const snapshot = await withTimeout(
-          getDocs(
+          publicResource('published-products', () => getDocs(
             query(
               collection(db, 'products'),
               where('is_published', '==', true),
             ),
-          ),
+          )),
           8000,
         )
         if (!cancelled)
@@ -77,7 +82,7 @@ export default function MedicalSolutions() {
     return () => {
       cancelled = true
     }
-  }, [])
+  }, [contentVersion])
   const products = mergeCatalogue(reference.products, liveProducts)
   const filtered = sortCatalogue(
     filterCatalogue(products, { specialty, brand, search }),
@@ -94,16 +99,20 @@ export default function MedicalSolutions() {
     currentPage * pageSize,
   )
   useEffect(() => {
-    if (filtersOpen)
-      document
-        .getElementById('equipment-filters')
-        ?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    if (filtersOpen) {
+      filterPanel.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      filterPanel.current?.querySelector('button[aria-pressed="true"]')?.focus({ preventScroll: true })
+    }
   }, [filtersOpen])
+  function closeFilters() {
+    if (filtersOpen) filterTrigger.current?.focus({ preventScroll: true })
+    setFiltersOpen(false)
+  }
   const filtersCount = Number(Boolean(specialty)) + Number(Boolean(brand))
   const hasFilters = specialty || brand || search
   const reset = () => {
     setParams({}, { replace: true })
-    setFiltersOpen(false)
+    closeFilters()
   }
   function goPage(page) {
     const next = new URLSearchParams(params)
@@ -183,6 +192,8 @@ export default function MedicalSolutions() {
           </div>
           <div className="catalogue-layout">
             <aside
+              ref={filterPanel}
+              onKeyDown={event => { if (filtersOpen && event.key === 'Escape') { event.preventDefault(); closeFilters() } }}
               className={`catalogue-sidebar ${filtersOpen ? 'filters-open' : ''}`}
               id="equipment-filters"
             >
@@ -191,7 +202,7 @@ export default function MedicalSolutions() {
                 <button
                   aria-label="Close filters"
                   className="mobile-filter-close"
-                  onClick={() => setFiltersOpen(false)}
+                  onClick={closeFilters}
                 >
                   <HiOutlineXMark />
                 </button>
@@ -202,7 +213,7 @@ export default function MedicalSolutions() {
                   className={!specialty ? 'selected' : ''}
                   onClick={() => {
                     setFilter('specialty', '')
-                    setFiltersOpen(false)
+                    closeFilters()
                   }}
                 >
                   All equipment <span>{products.length}</span>
@@ -214,7 +225,7 @@ export default function MedicalSolutions() {
                     className={specialty === s.id ? 'selected' : ''}
                     onClick={() => {
                       setFilter('specialty', s.id)
-                      setFiltersOpen(false)
+                      closeFilters()
                     }}
                   >
                     {s.name}
@@ -265,6 +276,7 @@ export default function MedicalSolutions() {
                 <div className="results-controls">
                   <button
                     className="mobile-filter-button"
+                    ref={filterTrigger}
                     aria-expanded={filtersOpen}
                     aria-controls="equipment-filters"
                     onClick={() => setFiltersOpen(!filtersOpen)}

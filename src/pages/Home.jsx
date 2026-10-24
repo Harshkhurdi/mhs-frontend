@@ -11,7 +11,7 @@ import {
 } from 'react-icons/hi2'
 import PageMeta from '../components/PageMeta'
 import CallToAction from '../components/CallToAction'
-import catalogue from '../data/manufacturerCatalogue.json'
+import catalogue from '../data/homeCatalogue.json'
 import { manufacturerBrands } from '../data/products'
 
 const range = catalogue.products
@@ -135,7 +135,7 @@ export default function Home() {
             </div>
             <div className="hero-facts">
               <div>
-                <strong>{range.length}</strong>
+                <strong>{catalogue.total}</strong>
                 <span>equipment & product families</span>
               </div>
               <div>

@@ -8,7 +8,7 @@ export const MAX_PHOTO_CHARS = 650000
 export function galleryImage(value) {
   if (typeof value !== 'string') return ''
   if (value.length <= MAX_PHOTO_CHARS && /^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+$/.test(value)) return value
-  if (/^\/images\/events\/[a-zA-Z0-9_-]+\.webp$/.test(value)) return value
+  if (/^\/(?:images\/events\/|media\/[a-f0-9]{16}-)[a-zA-Z0-9_-]+\.webp$/.test(value)) return value
   return safeImageUrl(value)
 }
 
