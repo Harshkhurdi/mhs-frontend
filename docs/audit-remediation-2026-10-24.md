@@ -36,3 +36,9 @@ Website lint, helper/UI tests and static production build are run on the final s
 The replacement execution environment has no authenticated Firebase CLI account. GitHub publication can trigger the existing Vercel deployment, but it does not deploy Firestore rules or Firebase Hosting. Do not mark those cloud changes complete until an owner signs into Firebase and deploys the respective project configuration. No service-account credential was created.
 
 CSP remains report-only until observed against production auth/database/image behavior. Cross-origin alias redirects, existing-album migration and inquiry activation require their documented operational checks. This checklist does not claim all 35 findings are already remediated in production.
+
+## Published release verification
+
+Website implementation `9aff99b714e261cb462ab1772aa8e2512a73d188` was published to main and Vercel reported success. Live `https://www.medelec.in` checks confirmed all seven public pages and both admin shell routes return 200, unknown routes return 404, `/home` redirects308 to `/`, robots allows fetching admin noindex, and the hashed thumbnail returns200 with one-year immutable caching. Browser verification loaded all21 community stories, displayed the redesigned full-resolution viewer, advanced/returned photographs, and restored focus to the gallery trigger on close. The saved screenshot is `photo-viewer-live-2026-10-24.jpg`.
+
+Inventory implementation is published in its independent repository as `e44ccd130c01b6ee6752231aa02a46525500151a`. The supporting backend rules mirror is published as `3cf3e1b5861a8ca6c36e7700c4224b7db1a29ce8`. These GitHub releases do not change the pending Firebase authentication/Hosting/rules or server-credential requirements above. No production data was written during verification.
