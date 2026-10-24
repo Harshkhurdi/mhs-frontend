@@ -75,7 +75,7 @@ export async function saveAlbum(form, photos, previousIds = []) {
     created_at: form.created_at || timestamp, updated_at: timestamp,
   })
   photos.forEach((photo, position) => {
-    const split = import.meta.env.VITE_GALLERY_SPLIT_ASSETS_ENABLED === 'true' && photo.src.startsWith('data:image/')
+    const split = import.meta.env.VITE_GALLERY_SPLIT_ASSETS_ENABLED !== 'false' && photo.src.startsWith('data:image/')
     if (split) batch.set(doc(db, 'events', id, 'photoAssets', photo.id), {
       src: photo.src, is_published: true, updated_at: timestamp,
     })

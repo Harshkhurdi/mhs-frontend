@@ -42,3 +42,10 @@ test('saving immutable bundled aliases persists canonical source paths across fu
   await saveAlbum(form, [{ id: 'p1', src: '/media/0123456789abcdef-training.webp', thumbnail: '/media/0123456789abcdef-training-thumb.webp', alt: 'Training team' }])
   expect(mocks.set.mock.calls.find(([ref]) => ref.path.endsWith('photos/p1'))[1]).toMatchObject({ src: '/images/events/training.webp', thumbnail: '/images/events/training-thumb.webp' })
 })
+
+test('new uploads use the split format by default after the rules rollout', async () => {
+  vi.stubEnv('VITE_GALLERY_SPLIT_ASSETS_ENABLED', undefined)
+  await saveAlbum(form, [{ id: 'p1', src: data, thumbnail: thumb, alt: 'Training team' }])
+  expect(mocks.set.mock.calls.find(([ref]) => ref.path.endsWith('photoAssets/p1'))[1].src).toBe(data)
+  expect(mocks.set.mock.calls.find(([ref]) => ref.path.endsWith('photos/p1'))[1]).toMatchObject({ src: thumb, asset_id: 'p1' })
+})

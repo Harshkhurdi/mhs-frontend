@@ -4,9 +4,9 @@ The new viewer preserves full photographs with contain sizing, a separate story 
 
 Seven original legacy photographs now have genuine 480px-bounded WebP thumbnails. All original static URLs remain available. Production builds additionally emit content-hashed `/media/<16hex>-<filename>` aliases and cache those aliases immutably; replacing an image produces a new URL. Gallery saves normalize bundled aliases back to `/images/events/...`, so saved records do not retain a retired deployment hash. No long immutable cache is applied to replaceable original paths.
 
-## Split uploaded assets: staged rollout
+## Split uploaded assets: active for new uploads
 
-`VITE_GALLERY_SPLIT_ASSETS_ENABLED` defaults to false. Keep it false until the new Firestore rules have been deployed to `mhs-project-7235e`; otherwise uploads would fail under the older rules. The redesigned viewer and static image optimizations work with either format.
+The reviewed Firestore rules were deployed to `mhs-project-7235e` on 24 October 2026. `VITE_GALLERY_SPLIT_ASSETS_ENABLED` now defaults to enabled for new uploads; explicitly set it to `false` for the documented write-format rollback. The redesigned viewer supports both formats. A read-only production inspection found zero remote event/album/photo documents, so no existing uploaded originals require migration. All current 21 albums and 58 photographs remain bundled static assets.
 
 When enabled, saving an uploaded photo atomically writes lightweight `events/{album}/photos/{photo}` metadata (`src` is its thumbnail, `asset_id` equals photo ID) and full image bytes to `events/{album}/photoAssets/{photo}` (`src`, `is_published`, `updated_at`). Public asset reads require the album, photo metadata and asset to be published. The viewer reads the selected original plus at most one adjacent original. Editors deliberately load all originals.
 

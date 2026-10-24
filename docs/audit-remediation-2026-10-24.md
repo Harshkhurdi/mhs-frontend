@@ -6,7 +6,7 @@ Source baseline: website `2011111efec318bab2936d1077dc761df1130868`; inventory `
 | --- | --- |
 | MHS-SEC-01 | Signed challenge, honeypot, complete 500-item validation, atomic per-IP/global quotas and private idempotent receipts implemented and emulator-tested. **Activation pending server credential/flags/private gate**; legacy intake remains usable. See inquiry-intake-setup.md. |
 | MHS-SEC-02 | Session-only staff authentication initializes before restore/sign-in; unapproved/failed migrations stay denied. |
-| MHS-SEC-03 | New rules restrict future-use portrait documents to staff. Requires Firebase rules deployment. |
+| MHS-SEC-03 | Reviewed rules deployed to mhs-project-7235e; future-use portrait documents are now staff-only. |
 | MHS-SEC-04 | Admin archive copy and gallery rollout documentation distinguish hiding from actual image withdrawal. |
 | MHS-SEC-05 | Full restrictive CSP staged in Report-Only; existing enforced object/base/frame protections retained. No telemetry collector or untested strict enforcement added. |
 | MHS-DEP-01 | Vite development tooling patched to 8.3.5; transitive dependency audit reviewed. |
@@ -14,7 +14,7 @@ Source baseline: website `2011111efec318bab2936d1077dc761df1130868`; inventory `
 | MHS-FUN-02 | Nihon Kohden editor forces defibrillation and publishing validates it. |
 | MHS-FUN-03 | Superseded by later user instruction: retain Virender as Senior Engineer. |
 | MHS-PER-01 | Lazy staff SDK/About/Service routes and compact generated homepage catalogue. Full 310-entry catalogue stays on Solutions. |
-| MHS-PER-02 | Compatible selected/adjacent original reader + split metadata/asset writes implemented behind rollout flag. **Existing live albums not migrated; flag pending rules deployment**. HTTP object-storage migration remains separate; see gallery-asset-rollout.md. |
+| MHS-PER-02 | Compatible selected/adjacent original reader and split metadata/asset writes enabled for new uploads after reviewed rules deployment. Production inspection found zero uploaded remote albums/photos, so no historical migration is required. The 21 static albums/58 photos remain unchanged. Optional HTTP object-storage delivery remains a separate provider change; see gallery-asset-rollout.md. |
 | MHS-PER-03 | Bounded 15-second public metadata cache deduplicates in-flight reads; write/cross-tab invalidation and visible-page refresh. Client pagination retained to preserve complete filter counts. |
 | MHS-PER-04 | Separate server-filtered Inbox/Trash 25-record cursor pages; explicit 25-record legacy scans preserve missing flags. Counts show loaded/scanned records, not collection totals. Uses stable ID order, avoiding mixed date types and new composite indexes. |
 | MHS-PER-05 | Seven actual legacy thumbnails generated; full originals preserved. |
@@ -42,3 +42,10 @@ CSP remains report-only until observed against production auth/database/image be
 Website implementation `9aff99b714e261cb462ab1772aa8e2512a73d188` was published to main and Vercel reported success. Live `https://www.medelec.in` checks confirmed all seven public pages and both admin shell routes return 200, unknown routes return 404, `/home` redirects308 to `/`, robots allows fetching admin noindex, and the hashed thumbnail returns200 with one-year immutable caching. Browser verification loaded all21 community stories, displayed the redesigned full-resolution viewer, advanced/returned photographs, and restored focus to the gallery trigger on close. The saved screenshot is `photo-viewer-live-2026-10-24.jpg`.
 
 Inventory implementation is published in its independent repository as `e44ccd130c01b6ee6752231aa02a46525500151a`. The supporting backend rules mirror is published as `3cf3e1b5861a8ca6c36e7700c4224b7db1a29ce8`. These GitHub releases do not change the pending Firebase authentication/Hosting/rules or server-credential requirements above. No production data was written during verification.
+
+
+## Website cloud completion — 24 October 2026
+
+The original computer retained its existing Firebase session. Using a private temporary copy of that session, the exact reviewed rules from website release 3a7b14b9ada5429cbae842544d7db3531071cf79 compiled and deployed successfully to mhs-project-7235e. This completes the staff-only draft-portrait rule rollout and enables the compatible split gallery schema. Read-only inspection found zero event documents, remote albums or remote photo documents; existing photographs are bundled static files, so no production photo migration or data writes were necessary. New uploads default to the split format; the explicit false flag remains available for rollback.
+
+Inventory deployment is intentionally handed off to its separate agent. Inquiry activation still needs the dedicated server runtime credential/signing key and Vercel flags/private gate; the legacy form remains available. Alternate-host redirects remain pending saved-quote/auth-origin migration checks. No new server credential, IAM grant or inquiry-intake gate was created during this step.
