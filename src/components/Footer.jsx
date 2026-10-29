@@ -58,6 +58,27 @@ export default function Footer() {
           >
             Inventory management
           </a>
+          <a
+            href="https://maildesk-theta.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            MailDesk
+          </a>
+          <a
+            href="https://gem-tracker-rho.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            GeM Tender Tracker
+          </a>
+          <a
+            href="https://pulse-frontend-git-main-harsh-1c69.vercel.app/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Pulse
+          </a>
         </div>
       </div>
       <div className="wrap footer-bottom">
